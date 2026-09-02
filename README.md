@@ -43,11 +43,19 @@ Copy `.env.example` → `.env.local`. Only two values belong in the browser:
 Never put the Supabase **service-role** key in this file — it is a server-only secret and FORGE
 never needs it.
 
-Gemini keys are **server-side secrets**, set on the Edge Function, never in `.env.local`:
+Gemini keys are **server-side secrets**. FORGE ships the same AI endpoint for two hosts — use
+whichever you deploy on:
 
-```bash
-supabase secrets set GEMINI_API_KEY_1=... GEMINI_API_KEY_2=... GEMINI_API_KEY_3=...
-```
+- **Netlify** (`netlify/functions/ai.mts`, live at `/api/ai`) — set the keys as Netlify environment
+  variables: `netlify env:set GEMINI_API_KEY_1 <key> --secret --context production`.
+- **Supabase Edge Function** (`supabase/functions/ai`) — `supabase secrets set GEMINI_API_KEY_1=...`.
+
+Point the browser at whichever you run with `VITE_AI_FUNCTION_URL` (`/api/ai` for Netlify; it
+defaults to the Supabase function URL otherwise).
+
+Vision analysis over several photos takes longer than a synchronous function may run, so
+`physique_analysis` is dispatched to a background function (`ai-background.mts`), which parks the
+result in a Netlify blob that the client polls at `/api/ai-result`. Every other task answers directly.
 
 Optional secrets: `GEMINI_MODEL` (default `gemini-2.5-flash`), `ALLOWED_ORIGIN` (CORS lock-down).
 

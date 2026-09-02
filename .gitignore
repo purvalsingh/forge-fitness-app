@@ -18,3 +18,5 @@ coverage
 
 # Local Netlify folder
 .netlify
+supabase/.temp
+deno.lock

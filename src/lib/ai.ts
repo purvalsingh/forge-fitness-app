@@ -26,7 +26,7 @@ export const ParsedFood = z.object({
 })
 export type ParsedFood = z.infer<typeof ParsedFood>
 
-const FoodListResponse = z.object({ items: z.array(ParsedFood).min(1).max(25) })
+const FoodListResponse = z.object({ items: z.array(ParsedFood).max(25) })
 
 const TargetAdviceResponse = z.object({
   summary: z.string().min(1).max(600),
@@ -46,18 +46,42 @@ const InsightsResponse = z.object({
   })).max(6),
 })
 
+async function authHeaders(): Promise<Record<string, string>> {
+  const { data } = supabase ? await supabase.auth.getSession() : { data: { session: null } }
+  return {
+    'content-type': 'application/json',
+    ...(data.session?.access_token ? { authorization: `Bearer ${data.session.access_token}` } : {}),
+    ...(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } : {}),
+  }
+}
+
+const POLL_INTERVAL_MS = 2500
+const POLL_TIMEOUT_MS = 180_000
+
+/** Long tasks answer 202 + job_id; poll the result endpoint until it resolves or we give up. */
+async function pollJob(jobId: string): Promise<unknown> {
+  const resultUrl = FN_URL.replace(/\/ai$/, '/ai-result')
+  const deadline = Date.now() + POLL_TIMEOUT_MS
+  while (Date.now() < deadline) {
+    await new Promise(r => setTimeout(r, POLL_INTERVAL_MS))
+    let res: Response
+    try { res = await fetch(`${resultUrl}?job=${encodeURIComponent(jobId)}`, { headers: await authHeaders() }) }
+    catch { continue }
+    if (res.status === 202) continue
+    if (res.status === 503) throw new AIUnavailable()
+    if (!res.ok) throw new AIUnavailable(`AI request failed (${res.status})`)
+    return res.json().catch(() => null)
+  }
+  throw new AIUnavailable('The AI is taking longer than expected. Try again in a moment.')
+}
+
 async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, retry = true): Promise<T> {
   if (!FN_URL) throw new AIUnavailable('AI is not configured')
   let res: Response
   try {
-    const { data } = supabase ? await supabase.auth.getSession() : { data: { session: null } }
     res = await fetch(FN_URL, {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        ...(data.session?.access_token ? { authorization: `Bearer ${data.session.access_token}` } : {}),
-        ...(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } : {}),
-      },
+      headers: await authHeaders(),
       body: JSON.stringify({ task, payload }),
     })
   } catch {
@@ -66,7 +90,10 @@ async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, ret
   if (res.status === 503) throw new AIUnavailable()
   if (!res.ok) throw new AIUnavailable(`AI request failed (${res.status})`)
 
-  const json = await res.json().catch(() => null)
+  let json = await res.json().catch(() => null)
+  if (res.status === 202 && json && typeof (json as { job_id?: string }).job_id === 'string') {
+    json = await pollJob((json as { job_id: string }).job_id)
+  }
   const parsed = schema.safeParse(json)
   if (parsed.success) return parsed.data
   if (retry) return call(task, payload, schema, false)

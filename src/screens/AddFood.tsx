@@ -161,7 +161,11 @@ function DescribeTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: s
       {busy ? <Spinner label="Analysing" /> : (
         <Button disabled={!ai.configured || text.trim().length < 3} onClick={async () => {
           setBusy(true); setErr(null)
-          try { setItems(await ai.parseFoodText(text)) }
+          try {
+            const out = await ai.parseFoodText(text)
+            if (out.length === 0) setErr('No foods recognised in that description. Try naming the foods and amounts, or use Search.')
+            else setItems(out)
+          }
           catch (e) { setErr(e instanceof AIUnavailable ? e.message : 'Could not analyse that. Enter it manually.') }
           finally { setBusy(false) }
         }}>Analyse with AI</Button>

@@ -68,6 +68,11 @@ export default function Camera() {
     setStage('analysing'); setErr(null)
     try {
       const res = await ai.analyzePhoto(preview.base64, preview.mime)
+      if (res.length === 0) {
+        setErr('No food recognised in that photo. Try a clearer shot of the plate, or search for the food manually.')
+        setStage('capture')
+        return
+      }
       setItems(res); setStage('review')
     } catch (e) {
       setErr(e instanceof AIUnavailable ? e.message : 'Unable to analyse this image. You can search for the food manually.')
