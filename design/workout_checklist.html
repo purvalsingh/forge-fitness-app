@@ -1,0 +1,245 @@
+<meta charset="UTF-8">
+<style>
+  :root{
+    --bg:#141210;
+    --panel:#1c1916;
+    --panel-2:#221e1a;
+    --line:#332c25;
+    --steel:#8a8579;
+    --paper:#efe9de;
+    --iron:#c95a2b;
+    --iron-dim:#7a3a1e;
+    --done:#4a7c59;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;background:var(--bg);color:var(--paper);font-family:'Segoe UI',system-ui,sans-serif;}
+  .wrap{max-width:440px;margin:0 auto;padding:18px 14px 40px;}
+
+  .plate{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
+  .plate h1{
+    font-family:'Arial Black',Impact,sans-serif;
+    font-size:22px;letter-spacing:0.5px;margin:0;
+    text-transform:uppercase;
+  }
+  .plate .sub{font-size:10px;color:var(--steel);letter-spacing:2px;text-transform:uppercase;}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;padding:9px 14px;border-radius:3px;
+    background:var(--panel);border:1px solid var(--line);
+    color:var(--steel);font-size:12px;font-weight:700;letter-spacing:0.5px;
+    text-transform:uppercase;cursor:pointer;white-space:nowrap;
+  }
+  .tab.active{background:var(--iron);color:#1a1310;border-color:var(--iron);}
+
+  .day-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .day-title h2{font-size:15px;margin:0;text-transform:uppercase;letter-spacing:1px;font-weight:800;}
+  .day-title .tag{font-size:10px;color:var(--iron);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
+
+  .progress-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+  .progress-track{flex:1;height:5px;background:var(--panel-2);border-radius:3px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--iron);width:0%;transition:width .25s ease;}
+  .progress-num{font-size:11px;color:var(--steel);min-width:34px;text-align:right;}
+
+  .ex{
+    display:flex;align-items:flex-start;gap:12px;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:13px 12px;margin-bottom:8px;cursor:pointer;transition:background .15s, border-color .15s;
+  }
+  .ex.done{background:var(--panel-2);border-color:#2b3d2e;}
+  .box{
+    flex:0 0 22px;height:22px;width:22px;border-radius:4px;
+    border:2px solid var(--steel);margin-top:1px;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s, background .15s;
+  }
+  .ex.done .box{background:var(--done);border-color:var(--done);}
+  .box svg{width:13px;height:13px;opacity:0;transition:opacity .15s;}
+  .ex.done .box svg{opacity:1;}
+  .ex-body{flex:1;}
+  .ex-name{font-size:14.5px;font-weight:600;line-height:1.3;}
+  .ex.done .ex-name{color:var(--steel);text-decoration:line-through;text-decoration-color:var(--steel);}
+  .ex-set{font-size:12px;color:var(--iron);font-weight:700;margin-top:2px;}
+  .ex.done .ex-set{color:#5a6b5c;}
+
+  .divider{height:1px;background:var(--line);margin:18px 0 14px;}
+  .notes{font-size:12px;color:var(--steel);line-height:1.7;padding-left:2px;}
+  .notes b{color:var(--paper);}
+
+  .foot-row{display:flex;gap:8px;margin-top:18px;}
+  .reset-btn{
+    flex:1;padding:11px;border-radius:5px;background:transparent;
+    border:1px solid var(--line);color:var(--steel);font-size:12px;
+    font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  }
+  .reset-btn:active{border-color:var(--iron);color:var(--iron);}
+
+  .hidden{display:none;}
+  .loading{text-align:center;color:var(--steel);font-size:12px;padding:30px 0;}
+</style>
+
+<div class="wrap">
+  <div class="plate">
+    <div>
+      <h1>Push / Pull Ledger</h1>
+      <div class="sub">Strength + Aesthetics · 4-Day Split</div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="day-title">
+    <h2 id="dayHeading"></h2>
+    <span class="tag" id="dayTag"></span>
+  </div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    <div class="progress-num" id="progNum">0/0</div>
+  </div>
+
+  <div id="exList"></div>
+
+  <div class="foot-row">
+    <button class="reset-btn" id="resetBtn">Reset this day</button>
+  </div>
+
+  <div class="divider"></div>
+  <div class="notes">
+    <div><b>Squat:</b> keep it to full depth, hip crease below knee. Add ~2.5kg/week only if depth stays clean.</div>
+    <div style="margin-top:6px;"><b>Deadlift:</b> off program — already strong relative to BW (145kg). RDL is programmed as a real working lift, not just maintenance.</div>
+    <div style="margin-top:6px;"><b>Supersets:</b> tricep/bicep isolation moves are paired with the prior exercise — alternate sets to save time, not back-to-back separate blocks.</div>
+    <div style="margin-top:6px;"><b>Shoulders:</b> already covered — press (Day 1) + rear delt/lateral (Day 3) hits all three heads.</div>
+    <div style="margin-top:6px;"><b>Strength days (1,2):</b> rest 2–3 min, push close to your limit on the last set.</div>
+    <div style="margin-top:6px;"><b>Aesthetic days (3,4):</b> rest 60–90 sec, focus on the squeeze.</div>
+    <div style="margin-top:6px;"><b>Short week?</b> Run Day 1 → 2 → 3 and prioritize the lifts.</div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  { id: 'd1', label: 'Day 1', tag: 'Upper — Strength', exercises: [
+    ['Bench Press', '4 x 5 · 58–60kg'],
+    ['Weighted Pull-ups', '4 x 5 · +20–25kg'],
+    ['Seated Cable Row', '3 x 8 · moderate'],
+    ['DB Shoulder Press', '3 x 8 · 14–18kg/hand'],
+    ['Cable Tricep Pushdown (superset w/ above)', '3 x 12'],
+    ['Lat Pulldown, wide grip', '3 x 10 · moderate'],
+    ['DB Bicep Curl (superset w/ above)', '3 x 10 · moderate'],
+    ['Hanging Knee Raise', '3 x 15'],
+  ]},
+  { id: 'd2', label: 'Day 2', tag: 'Lower — Strength', exercises: [
+    ['Squat, rack — FULL DEPTH', '4 x 5 · 70–75kg, build to 85+'],
+    ['Hack Squat', '3 x 8 · mod-heavy'],
+    ['Romanian Deadlift (DB)', '3 x 8 · 70–80kg'],
+    ['Leg Extension', '3 x 12 · moderate'],
+    ['Standing Calf Raise', '4 x 15 · moderate'],
+    ['Plank', '3 x 45sec'],
+  ]},
+  { id: 'd3', label: 'Day 3', tag: 'Upper — Aesthetics', exercises: [
+    ['Incline DB Press', '3 x 10'],
+    ['Overhead Cable Tricep Ext. (superset w/ above)', '3 x 12'],
+    ['Pec Dec Fly', '3 x 12'],
+    ['Cable Lower-Chest Fly', '3 x 12'],
+    ['Lat Pulldown, close grip', '3 x 10'],
+    ['Cable Rear Delt Fly', '3 x 15'],
+    ['Cable Lateral Raise', '3 x 15'],
+    ['Cable Bicep Curl (superset w/ above)', '3 x 12'],
+    ['Cable Crunch', '3 x 15'],
+  ]},
+  { id: 'd4', label: 'Day 4', tag: 'Lower — Aesthetics', exercises: [
+    ['Hack Squat', '3 x 12'],
+    ['DB Reverse Lunge', '3 x 10 /leg'],
+    ['Leg Extension', '3 x 15'],
+    ['Leg Curl (or DB RDL)', '3 x 12'],
+    ['DB Hip Thrust', '3 x 15'],
+    ['Calf Raise', '4 x 15'],
+    ['Plank', '3 x 45sec'],
+  ]},
+  { id: 'd5', label: 'Day 5', tag: 'Arms & Weak Points', exercises: [
+    ['Cable Bicep Curl', '3 x 12'],
+    ['DB Hammer Curl', '3 x 12'],
+    ['Cable Tricep Pushdown', '3 x 12'],
+    ['Overhead Cable Tricep Ext.', '3 x 12'],
+    ['Face Pulls', '3 x 15'],
+  ]},
+];
+
+let activeDay = 'd1';
+let state = {}; // { d1: [bool,bool,...], ... }
+
+const tabsEl = document.getElementById('tabs');
+const listEl = document.getElementById('exList');
+const headingEl = document.getElementById('dayHeading');
+const tagEl = document.getElementById('dayTag');
+const fillEl = document.getElementById('progFill');
+const numEl = document.getElementById('progNum');
+
+function buildTabs(){
+  tabsEl.innerHTML = '';
+  DATA.forEach(d => {
+    const b = document.createElement('div');
+    b.className = 'tab' + (d.id === activeDay ? ' active' : '');
+    b.textContent = d.label;
+    b.onclick = () => { activeDay = d.id; render(); };
+    tabsEl.appendChild(b);
+  });
+}
+
+function checkIcon(){
+  return '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#141210" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+function render(){
+  buildTabs();
+  const day = DATA.find(d => d.id === activeDay);
+  headingEl.textContent = day.label;
+  tagEl.textContent = day.tag;
+
+  if (!state[day.id]) state[day.id] = new Array(day.exercises.length).fill(false);
+  const marks = state[day.id];
+
+  listEl.innerHTML = '';
+  day.exercises.forEach((ex, i) => {
+    const row = document.createElement('div');
+    row.className = 'ex' + (marks[i] ? ' done' : '');
+    row.innerHTML = `
+      <div class="box">${checkIcon()}</div>
+      <div class="ex-body">
+        <div class="ex-name">${ex[0]}</div>
+        <div class="ex-set">${ex[1]}</div>
+      </div>`;
+    row.onclick = () => toggle(day.id, i);
+    listEl.appendChild(row);
+  });
+
+  const done = marks.filter(Boolean).length;
+  const total = marks.length;
+  numEl.textContent = `${done}/${total}`;
+  fillEl.style.width = (total ? (done/total*100) : 0) + '%';
+}
+
+async function toggle(dayId, idx){
+  state[dayId][idx] = !state[dayId][idx];
+  render();
+  try { await window.storage.set('workout-progress', JSON.stringify(state)); } catch(e){}
+}
+
+document.getElementById('resetBtn').onclick = async () => {
+  const day = DATA.find(d => d.id === activeDay);
+  state[day.id] = new Array(day.exercises.length).fill(false);
+  render();
+  try { await window.storage.set('workout-progress', JSON.stringify(state)); } catch(e){}
+};
+
+async function init(){
+  try {
+    const res = await window.storage.get('workout-progress');
+    if (res && res.value) state = JSON.parse(res.value);
+  } catch(e) { state = {}; }
+  render();
+}
+
+init();
+</script>

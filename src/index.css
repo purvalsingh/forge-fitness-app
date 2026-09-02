@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-ink-900: #1A0A0F;
+  --color-ink-800: #121011;
+  --color-wine-900: #2A0F17;
+  --color-wine-700: #5A1825;
+  --color-wine-600: #7A2638;
+  --color-blush-400: #A95D70;
+  --color-blush-100: #F6E6EA;
+  --color-cream: #F5F0EA;
+  --color-good: #6E9C7E;
+  --color-warn: #C8963E;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #12080B;
+  --bg-grad: radial-gradient(120% 90% at 50% -10%, #2A0F17 0%, #1A0A0F 45%, #121011 100%);
+  --surface: rgba(42, 15, 23, 0.55);
+  --surface-solid: #231016;
+  --surface-raised: #2E1520;
+  --glass: rgba(122, 38, 56, 0.16);
+  --glass-border: rgba(246, 230, 234, 0.10);
+  --line: rgba(246, 230, 234, 0.09);
+  --text: #F6E6EA;
+  --text-dim: #C4A2AC;
+  --text-mute: #8E6C77;
+  --accent: #A95D70;
+  --accent-strong: #7A2638;
+  --shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F5F0EA;
+  --bg-grad: radial-gradient(120% 90% at 50% -10%, #F9E9EC 0%, #F5F0EA 55%, #EFE6E2 100%);
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-solid: #FFFFFF;
+  --surface-raised: #FFF7F5;
+  --glass: rgba(169, 93, 112, 0.10);
+  --glass-border: rgba(90, 24, 37, 0.12);
+  --line: rgba(90, 24, 37, 0.12);
+  --text: #2A0F17;
+  --text-dim: #6B4350;
+  --text-mute: #9B7C86;
+  --accent: #7A2638;
+  --accent-strong: #5A1825;
+  --shadow: 0 14px 32px -22px rgba(90, 24, 37, 0.45);
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  background-image: var(--bg-grad);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+input, select, textarea, button { font: inherit; color: inherit; }
+input, select, textarea {
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  width: 100%;
+  outline: none;
+}
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.eyebrow { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--text-mute); font-weight: 700; }
+.card { background: var(--surface-solid); border: 1px solid var(--line); border-radius: 18px; }
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: var(--shadow);
+}
+.raised { background: var(--surface-raised); border: 1px solid var(--line); border-radius: 16px; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+.safe-bottom { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
