@@ -22,14 +22,14 @@ export default function DayDetail() {
 
   return (
     <Screen title={nice} sub="Day detail" back={() => nav(-1 as never)}>
-      <Card glass className="grid place-items-center">
-        <ScoreArc value={adh.score} label="Completion" />
+      <Card paper className="grid place-items-center">
+        <ScoreArc value={adh.score} label="Completion" onPaper />
         <div className="mt-2 grid w-full grid-cols-3 gap-2 text-center">
           {(['diet', 'workout', 'steps'] as const).map(k => (
-            <div key={k} className="raised py-2">
+            <div key={k} className="paper-inset py-2">
               <div className="eyebrow">{k}</div>
-              <div className="text-[12px] font-bold" style={{
-                color: adh[k] === 'complete' ? 'var(--color-good)' : adh[k] === 'partial' ? 'var(--color-warn)' : 'var(--text-mute)',
+              <div className="text-[12px] font-bold uppercase tracking-wide" style={{
+                color: adh[k] === 'complete' ? 'var(--sage)' : adh[k] === 'partial' ? 'var(--amber)' : 'var(--paper-ink-dim)',
               }}>{adh[k] === 'na' ? 'N/A' : adh[k]}</div>
             </div>
           ))}
@@ -38,7 +38,7 @@ export default function DayDetail() {
 
       <Card className="mt-3">
         <div className="eyebrow">Diet</div>
-        <div className="mt-1 text-[20px] font-black">{Math.round(totals.calories).toLocaleString()} kcal</div>
+        <div className="figure mt-1 text-[22px]">{Math.round(totals.calories).toLocaleString()} kcal</div>
         <div className="text-[12px]" style={{ color: 'var(--text-mute)' }}>
           P {round1(totals.protein_g)}g · C {round1(totals.carbs_g)}g · F {round1(totals.fat_g)}g
           {s.target ? ` · target ${s.target.calories} kcal` : ''}

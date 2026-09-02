@@ -169,13 +169,14 @@ export default function Physique() {
         className="grid h-10 w-10 place-items-center rounded-full border" style={{ borderColor: 'var(--line)' }}>
         <Icon name="plus" size={18} /></button>}>
 
-      <Card glass>
-        <div className="eyebrow">Physique progress timeline</div>
-        <p className="mt-1 text-[13px]" style={{ color: 'var(--text-dim)' }}>
+      <Card paper>
+        <div className="eyebrow">Physique Lab</div>
+        <h2 className="title title-lg mt-1">Define your road to elite performance</h2>
+        <p className="mt-2 text-[13px]" style={{ color: 'var(--paper-ink-dim)' }}>
           Check in with photos every few weeks. FORGE tracks observable changes over time and turns them into
           training priorities, a plan and a nutrition strategy — all of which you approve before anything changes.
         </p>
-        <div className="mt-3"><Button onClick={() => setStep('upload')}>New check-in</Button></div>
+        <div className="mt-3"><Button variant="paper" onClick={() => setStep('upload')}>New check-in</Button></div>
       </Card>
 
       {s.checkins.length === 0

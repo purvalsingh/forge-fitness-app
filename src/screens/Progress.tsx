@@ -4,7 +4,7 @@ import { Area, AreaChart, Bar as RBar, BarChart, CartesianGrid, Line, LineChart,
 import { useStore, useToday } from '../store'
 import { daysBack, sumTotals, sessionVolume, trend, streak, bestStreak } from '../lib/calc'
 import { adherenceFor, activeDates } from '../lib/derive'
-import { Button, Card, Empty, Field, Screen, Sheet, Stat, Tabs } from '../ui'
+import { Button, Card, Empty, Field, Screen, Sheet, Tabs } from '../ui'
 import { uid } from '../lib/db'
 
 const RANGES = { '7D': 7, '30D': 30, '3M': 90, '6M': 180, '1Y': 365 } as const
@@ -61,24 +61,33 @@ export default function Progress() {
 
       <Tabs value={range} onChange={setRange} options={(Object.keys(RANGES) as Range[]).map(r => ({ value: r, label: r }))} />
 
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <Stat label="Weight" value={latestWeight ? `${latestWeight.weight_kg} kg` : '—'}
-          sub={s.goal ? `Target ${s.goal.target_weight_kg} kg` : undefined} />
-        <Stat label="Avg calories" value={avgCal ? Math.round(avgCal).toLocaleString() : '—'} />
-        <Stat label="Avg protein" value={avgProtein ? `${Math.round(avgProtein)} g` : '—'} />
-        <Stat label="Avg steps" value={avgSteps ? Math.round(avgSteps).toLocaleString() : '—'} />
-      </div>
+      <Card paper className="mt-3">
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            ['Weight', latestWeight ? `${latestWeight.weight_kg} kg` : '—', s.goal ? `Target ${s.goal.target_weight_kg} kg` : ''],
+            ['Avg calories', avgCal ? Math.round(avgCal).toLocaleString() : '—', 'kcal / day'],
+            ['Avg protein', avgProtein ? `${Math.round(avgProtein)} g` : '—', 'per day'],
+            ['Avg steps', avgSteps ? Math.round(avgSteps).toLocaleString() : '—', 'per day'],
+          ].map(([label, value, sub]) => (
+            <div key={label} className="paper-inset p-3">
+              <div className="eyebrow">{label}</div>
+              <div className="figure mt-1 text-[20px] leading-none">{value}</div>
+              {sub && <div className="mt-1 text-[10px]" style={{ color: 'var(--paper-ink-dim)' }}>{sub}</div>}
+            </div>
+          ))}
+        </div>
+      </Card>
 
       <Card className="mt-3">
         <div className="eyebrow">Streaks</div>
         <div className="mt-2 grid grid-cols-3 gap-2 text-center">
-          <div><div className="text-[20px] font-black">{curStreak}</div><div className="eyebrow">Current</div></div>
-          <div><div className="text-[20px] font-black">{best}</div><div className="eyebrow">Best</div></div>
-          <div><div className="text-[20px] font-black">{perfect}</div><div className="eyebrow">Perfect</div></div>
+          <div><div className="figure text-[22px]">{curStreak}</div><div className="eyebrow">Current</div></div>
+          <div><div className="figure text-[22px]">{best}</div><div className="eyebrow">Best</div></div>
+          <div><div className="figure text-[22px]">{perfect}</div><div className="eyebrow">Perfect</div></div>
         </div>
         <div className="mt-2 grid grid-cols-2 gap-2 text-center">
-          <div className="raised p-2"><div className="text-[16px] font-extrabold">{dietStreak}</div><div className="eyebrow">Diet streak</div></div>
-          <div className="raised p-2"><div className="text-[16px] font-extrabold">{workoutStreak}</div><div className="eyebrow">Workout streak</div></div>
+          <div className="raised p-2"><div className="figure text-[17px]">{dietStreak}</div><div className="eyebrow">Diet streak</div></div>
+          <div className="raised p-2"><div className="figure text-[17px]">{workoutStreak}</div><div className="eyebrow">Workout streak</div></div>
         </div>
       </Card>
 
@@ -87,11 +96,11 @@ export default function Progress() {
           : (
             <ResponsiveContainer width="100%" height={170}>
               <LineChart data={weightPoints.map(p => ({ ...p, date: p.date.slice(5) }))} margin={{ left: -18, right: 6, top: 6 }}>
-                <CartesianGrid stroke="var(--glass-border)" vertical={false} />
+                <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
                 <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={24} />
                 <YAxis tick={tick} tickLine={false} axisLine={false} domain={['dataMin - 1', 'dataMax + 1']} width={38} />
                 <Tooltip contentStyle={tooltip} />
-                <Line dataKey="weight_kg" name="Measured" stroke="var(--color-blush-400)" dot={{ r: 2 }} strokeWidth={1} />
+                <Line dataKey="weight_kg" name="Measured" stroke="var(--accent)" dot={{ r: 2 }} strokeWidth={1} />
                 <Line dataKey="trend" name="Trend" stroke="var(--accent-strong)" dot={false} strokeWidth={2.5} />
               </LineChart>
             </ResponsiveContainer>
@@ -101,11 +110,11 @@ export default function Progress() {
       <ChartCard title="Calories">
         <ResponsiveContainer width="100%" height={160}>
           <AreaChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
-            <CartesianGrid stroke="var(--glass-border)" vertical={false} />
+            <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} />
             <Tooltip contentStyle={tooltip} />
-            <Area dataKey="calories" stroke="var(--accent)" fill="var(--glass)" strokeWidth={2} connectNulls />
+            <Area dataKey="calories" stroke="var(--accent)" fill="rgba(169,93,112,0.16)" strokeWidth={2} connectNulls />
           </AreaChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -113,12 +122,12 @@ export default function Progress() {
       <ChartCard title="Protein & steps">
         <ResponsiveContainer width="100%" height={160}>
           <LineChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
-            <CartesianGrid stroke="var(--glass-border)" vertical={false} />
+            <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} />
             <Tooltip contentStyle={tooltip} />
             <Line dataKey="protein" stroke="var(--accent)" dot={false} strokeWidth={2} connectNulls />
-            <Line dataKey="steps" stroke="var(--color-blush-400)" dot={false} strokeWidth={1.5} connectNulls yAxisId={0} />
+            <Line dataKey="steps" stroke="var(--accent)" dot={false} strokeWidth={1.5} connectNulls yAxisId={0} />
           </LineChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -126,7 +135,7 @@ export default function Progress() {
       <ChartCard title="Adherence">
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
-            <CartesianGrid stroke="var(--glass-border)" vertical={false} />
+            <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} domain={[0, 100]} />
             <Tooltip contentStyle={tooltip} />
@@ -138,7 +147,7 @@ export default function Progress() {
       <ChartCard title={`Training volume · ${trained} sessions`}>
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
-            <CartesianGrid stroke="var(--glass-border)" vertical={false} />
+            <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} />
             <Tooltip contentStyle={tooltip} />
@@ -157,12 +166,17 @@ export default function Progress() {
 }
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
-  return <Card className="mt-3"><div className="eyebrow mb-2">{title}</div>{children}</Card>
+  return (
+    <Card className="mt-3">
+      <div className="title mb-2 text-[17px]">{title}</div>
+      {children}
+    </Card>
+  )
 }
 
-const tick = { fill: 'var(--text-mute)', fontSize: 10 }
+const tick = { fill: 'var(--text-mute)', fontSize: 10, fontFamily: 'var(--font-sans)' }
 const tooltip = {
-  background: 'var(--surface-raised)', border: '1px solid var(--line)',
+  background: 'var(--surface-high)', border: '1px solid var(--line)',
   borderRadius: 12, fontSize: 12, color: 'var(--text)',
 }
 function avg(xs: (number | null)[]) {

@@ -19,16 +19,16 @@ export default function Diet() {
 
   return (
     <Screen title="Diet" sub={date}>
-      <Card glass>
+      <Card paper>
         <div className="eyebrow">Calories</div>
         <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-[34px] font-black leading-none">{Math.round(totals.calories).toLocaleString()}</span>
-          <span className="text-[14px]" style={{ color: 'var(--text-mute)' }}>/ {t ? t.calories.toLocaleString() : '—'}</span>
+          <span className="figure text-[38px] leading-none">{Math.round(totals.calories).toLocaleString()}</span>
+          <span className="text-[14px]" style={{ color: 'var(--paper-ink-dim)' }}>/ {t ? t.calories.toLocaleString() : '—'}</span>
         </div>
-        <div className="mt-1 text-[11px]" style={{ color: 'var(--text-mute)' }}>
+        <div className="mt-1 text-[11px]" style={{ color: 'var(--paper-ink-dim)' }}>
           {t ? `Remaining: ${Math.round(remaining).toLocaleString()} kcal` : 'Set a target to track remaining calories'}
         </div>
-        <div className="mt-3"><Bar value={t ? totals.calories / t.calories : 0} height={8} /></div>
+        <div className="mt-3"><Bar value={t ? totals.calories / t.calories : 0} height={8} onPaper /></div>
         <div className="mt-3 grid grid-cols-3 gap-2">
           {(['protein_g', 'carbs_g', 'fat_g'] as const).map(k => {
             const label = k === 'protein_g' ? 'Protein' : k === 'carbs_g' ? 'Carbs' : 'Fat'
@@ -37,11 +37,11 @@ export default function Diet() {
               <div key={k}>
                 <div className="mb-1 flex items-baseline justify-between">
                   <span className="eyebrow">{label}</span>
-                  <span className="text-[11px]" style={{ color: 'var(--text-dim)' }}>
+                  <span className="figure text-[11px]" style={{ color: 'var(--paper-ink-dim)' }}>
                     {Math.round(totals[k])}{target ? `/${target}` : ''}g
                   </span>
                 </div>
-                <Bar value={target ? totals[k] / target : 0} />
+                <Bar value={target ? totals[k] / target : 0} onPaper />
               </div>
             )
           })}
@@ -65,11 +65,11 @@ export default function Diet() {
             <Card key={m.id}>
               <div className="flex items-baseline justify-between">
                 <div>
-                  <div className="text-[15px] font-extrabold">{m.name}</div>
+                  <div className="title text-[18px]">{m.name}</div>
                   <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>{m.time}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[15px] font-extrabold">{Math.round(mt?.calories ?? 0)}</div>
+                  <div className="figure text-[17px]">{Math.round(mt?.calories ?? 0)}</div>
                   <div className="eyebrow">kcal</div>
                 </div>
               </div>

@@ -35,20 +35,20 @@ export default function More() {
   const nav = useNavigate()
   return (
     <Screen title="More" sub="FORGE">
-      <Card glass>
+      <Card paper>
         <div className="eyebrow">Profile</div>
-        <div className="mt-1 text-[16px] font-extrabold">{s.profile?.display_name || 'Athlete'}</div>
-        <div className="text-[12px]" style={{ color: 'var(--text-mute)' }}>
+        <div className="title mt-1 text-[22px]">{s.profile?.display_name || 'Athlete'}</div>
+        <div className="text-[12px]" style={{ color: 'var(--paper-ink-dim)' }}>
           {s.goal ? `${s.goal.mode.toUpperCase()} · ${s.goal.current_weight_kg} kg → ${s.goal.target_weight_kg} kg` : 'No goal set'}
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
-          <div className="raised p-2">
+          <div className="paper-inset p-2.5">
             <div className="eyebrow">Backend</div>
-            <div>{supabaseConfigured ? 'Supabase' : 'Local device'}</div>
+            <div className="font-bold">{supabaseConfigured ? 'Supabase' : 'Local device'}</div>
           </div>
-          <div className="raised p-2">
+          <div className="paper-inset p-2.5">
             <div className="eyebrow">AI</div>
-            <div>{ai.configured ? 'Configured' : 'Not configured'}</div>
+            <div className="font-bold">{ai.configured ? 'Configured' : 'Not configured'}</div>
           </div>
         </div>
       </Card>

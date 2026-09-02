@@ -43,20 +43,20 @@ export default function Goals() {
         {MODES.map(m => (
           <Card key={m.value} glass={g.mode === m.value} onClick={() => set({ mode: m.value })}
             className="text-center" style={g.mode === m.value ? { borderColor: 'var(--accent)' } : undefined}>
-            <div className="text-[14px] font-extrabold uppercase">{m.title}</div>
+            <div className="title text-[18px]">{m.title}</div>
             <div className="mt-1 text-[10px]" style={{ color: 'var(--text-mute)' }}>{m.body}</div>
           </Card>
         ))}
       </div>
 
-      <Card className="mt-3">
+      <Card paper className="mt-3">
         <div className="eyebrow">Progress to target</div>
         <div className="mt-1 flex items-baseline justify-between">
-          <span className="text-[22px] font-black">{latest} kg</span>
-          <span className="text-[12px]" style={{ color: 'var(--text-mute)' }}>target {g.target_weight_kg} kg</span>
+          <span className="figure text-[26px]">{latest} kg</span>
+          <span className="text-[12px]" style={{ color: 'var(--paper-ink-dim)' }}>target {g.target_weight_kg} kg</span>
         </div>
-        <div className="mt-2"><Bar value={progress} height={8} /></div>
-        <div className="mt-1 text-[11px]" style={{ color: 'var(--text-mute)' }}>
+        <div className="mt-2"><Bar value={progress} height={8} onPaper /></div>
+        <div className="mt-1 text-[11px]" style={{ color: 'var(--paper-ink-dim)' }}>
           {Math.round(progress * 100)}% · started at {start} kg
         </div>
       </Card>

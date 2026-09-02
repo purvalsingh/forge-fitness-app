@@ -34,14 +34,32 @@ const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '')
 
 /** Common spellings that do not match the catalog's naming. */
 const ALIASES: Record<string, string> = {
-  vadapav: 'vada pav', wadapav: 'vada pav', pavbhaji: 'pav bhaji',
-  golgappa: 'pani puri', puchka: 'pani puri', panipuri: 'pani puri',
-  chhole: 'chole', chole: 'chickpea', rajmah: 'rajma', dahi: 'yogurt',
-  curd: 'yogurt', roti: 'chapati', chapathi: 'chapati', atta: 'wheat flour',
-  brinjal: 'eggplant', ladyfinger: 'okra', bhindi: 'okra', capsicum: 'pepper',
-  maida: 'wheat flour, white', suji: 'semolina', rava: 'semolina',
+  // Street food and dish spellings
+  vadapav: 'vada pav', wadapav: 'vada pav', vadapao: 'vada pav',
+  pavbhaji: 'pav bhaji', paobhaji: 'pav bhaji',
+  golgappa: 'pani puri', golgappe: 'pani puri', puchka: 'pani puri',
+  phuchka: 'pani puri', panipuri: 'pani puri', gupchup: 'pani puri',
+  dahibhalla: 'dahi vada', dahibhalle: 'dahi vada', dahivada: 'dahi vada',
+  kandapoha: 'poha', batatapoha: 'poha', usal: 'matki usal',
+  macherjhol: 'macher jhol', mistidoi: 'mishti doi', meencurry: 'kerala fish curry',
+  chholebhature: 'chole bhature', cholebhature: 'chole bhature',
+  aloopratha: 'aloo paratha', parantha: 'paratha', prantha: 'paratha',
+  poori: 'puri', bhatura: 'bhature', kadhai: 'kadai', manchurian: 'manchurian',
+  maggie: 'maggi', biriyani: 'biryani', biriani: 'biryani',
+  // Ingredient names
+  chhole: 'chickpea', chole: 'chickpea', rajmah: 'rajma',
+  dahi: 'yogurt', curd: 'yogurt', chaas: 'buttermilk',
+  roti: 'chapati', chapathi: 'chapati', atta: 'wheat flour',
+  brinjal: 'eggplant', baingan: 'eggplant', ladyfinger: 'okra', bhindi: 'okra',
+  capsicum: 'pepper', shimlamirch: 'pepper', lauki: 'gourd', doodhi: 'gourd',
+  karela: 'bitter gourd', arbi: 'taro', kaddu: 'pumpkin', shakarkandi: 'sweet potato',
+  maida: 'wheat flour, white', suji: 'semolina', rava: 'semolina', sooji: 'semolina',
   jeera: 'cumin', haldi: 'turmeric', dhania: 'coriander', methi: 'fenugreek',
-  paneer: 'paneer', ghee: 'ghee', lassi: 'lassi', chai: 'tea',
+  sarson: 'mustard greens', palak: 'spinach', gobi: 'cauliflower', matar: 'peas',
+  chawal: 'rice', doodh: 'milk', anda: 'egg', murgh: 'chicken', gosht: 'mutton',
+  machli: 'fish', jhinga: 'shrimp', kaju: 'cashew', badam: 'almond',
+  moongphali: 'peanut', til: 'sesame', nariyal: 'coconut', imli: 'tamarind',
+  gud: 'jaggery', chini: 'sugar', namak: 'salt', chai: 'tea',
 }
 
 export interface SearchResult extends CatalogFood { score: number }

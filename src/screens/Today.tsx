@@ -42,16 +42,16 @@ export default function Today() {
     <Screen>
       <div className="mb-4 flex items-end justify-between">
         <div>
-          <div className="eyebrow">FORGE</div>
-          <h1 className="text-[26px] font-black leading-none tracking-tight">Today</h1>
+          <div className="eyebrow">Forge</div>
+          <h1 className="title title-xl">Today</h1>
           <div className="mt-1 text-[12px]" style={{ color: 'var(--text-mute)' }}>{nice}</div>
         </div>
         <Link to="/more/settings" aria-label="Settings" className="grid h-10 w-10 place-items-center rounded-full border"
           style={{ borderColor: 'var(--line)' }}><Icon name="gear" size={18} /></Link>
       </div>
 
-      <Card glass className="grid place-items-center">
-        <ScoreArc value={adh.score} label="Today's score" />
+      <Card paper className="grid place-items-center">
+        <ScoreArc value={adh.score} label="Today's score" onPaper />
         <div className="mt-3 grid w-full grid-cols-3 gap-2">
           <StatusPill label="Diet" state={adh.diet} onClick={() => nav('/diet')} />
           <StatusPill label="Workout" state={adh.workout} onClick={() => nav('/workout')} />
@@ -69,7 +69,7 @@ export default function Today() {
           {t ? (
             <>
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-[28px] font-black">{Math.round(totals.calories).toLocaleString()}</span>
+                <span className="figure text-[30px]">{Math.round(totals.calories).toLocaleString()}</span>
                 <span className="text-[13px]" style={{ color: 'var(--text-mute)' }}>/ {t.calories.toLocaleString()} kcal</span>
               </div>
               <div className="mt-2"><Bar value={pct(totals.calories, t.calories)} /></div>
@@ -102,8 +102,8 @@ export default function Today() {
                 <button key={m.id} onClick={() => nav('/diet')} className="raised p-3 text-left">
                   <div className="text-[13px] font-bold">{m.name}</div>
                   <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>{m.time}</div>
-                  <div className="mt-2 text-[15px] font-extrabold">{Math.round(mt?.calories ?? 0)} <span className="text-[11px] font-medium">kcal</span></div>
-                  <div className="text-[11px]" style={{ color: mt ? 'var(--color-good)' : 'var(--text-mute)' }}>
+                  <div className="figure mt-2 text-[16px]">{Math.round(mt?.calories ?? 0)} <span className="text-[11px] font-medium">kcal</span></div>
+                  <div className="text-[11px]" style={{ color: mt ? 'var(--sage)' : 'var(--text-mute)' }}>
                     {mt ? 'Logged' : 'Not logged'}
                   </div>
                 </button>
@@ -115,10 +115,10 @@ export default function Today() {
         <Card>
           <div className="eyebrow">Today's workout</div>
           {isRest ? (
-            <div className="mt-2 text-[14px] font-bold">Rest day</div>
+            <div className="title mt-2 text-[19px]">Rest day</div>
           ) : todayDay ? (
             <>
-              <div className="mt-1 text-[16px] font-extrabold">{todayDay.name}</div>
+              <div className="title mt-1 text-[19px]">{todayDay.name}</div>
               <div className="text-[12px]" style={{ color: 'var(--text-mute)' }}>
                 {todayDay.focus} · {todayDay.exercises.length} exercises
                 {session ? ` · ${session.exercises.reduce((a, e) => a + e.sets.filter(x => x.done).length, 0)} sets done` : ''}
@@ -137,7 +137,7 @@ export default function Today() {
         <div className="grid grid-cols-2 gap-3">
           <Card>
             <div className="eyebrow">Current streak</div>
-            <div className="mt-1 text-[24px] font-black">{cur} <span className="text-[12px] font-bold">days</span></div>
+            <div className="figure mt-1 text-[26px]">{cur} <span className="text-[12px] font-bold">days</span></div>
           </Card>
           <Card onClick={() => nav('/adherence')}>
             <div className="eyebrow">Monthly adherence</div>
@@ -154,13 +154,13 @@ export default function Today() {
 function StatusPill({ label, state, value, onClick }: {
   label: string; state: 'complete' | 'partial' | 'incomplete' | 'na'; value?: string; onClick: () => void
 }) {
-  const color = state === 'complete' ? 'var(--color-good)' : state === 'partial' ? 'var(--color-warn)' : 'var(--text-mute)'
+  const color = state === 'complete' ? 'var(--sage)' : state === 'partial' ? 'var(--amber)' : 'var(--paper-ink-dim)'
   const text = state === 'complete' ? 'On track' : state === 'partial' ? 'Partial'
     : state === 'na' ? (label === 'Workout' ? 'Rest' : '—') : 'Pending'
   return (
-    <button onClick={onClick} className="raised grid place-items-center gap-1 py-3">
+    <button onClick={onClick} className="paper-inset grid place-items-center gap-1 py-3">
       <span className="eyebrow">{label}</span>
-      <span className="text-[13px] font-bold" style={{ color }}>{value ?? text}</span>
+      <span className="figure text-[13px]" style={{ color }}>{value ?? text}</span>
     </button>
   )
 }

@@ -15,7 +15,8 @@ const offPath = process.argv[3]
 const off = offPath && fs.existsSync(offPath) ? JSON.parse(fs.readFileSync(offPath, 'utf8')) : []
 const composed = JSON.parse(fs.readFileSync(new URL('../data/composed-dishes.json', import.meta.url), 'utf8'))
 const { dishes: indianDishes } = await import('./indian-dishes.mjs')
-const allComposed = [...composed.dishes, ...indianDishes]
+const { dishes: regionalDishes } = await import('./indian-regional.mjs')
+const allComposed = [...composed.dishes, ...indianDishes, ...regionalDishes]
 
 const round = (n, d = 1) => Math.round(n * 10 ** d) / 10 ** d
 

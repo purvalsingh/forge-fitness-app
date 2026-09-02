@@ -30,20 +30,20 @@ export default function Workout() {
         className="grid h-10 w-10 place-items-center rounded-full border" style={{ borderColor: 'var(--line)' }}>
         <Icon name="gear" size={18} /></button>}>
 
-      <Card glass>
+      <Card paper>
         <div className="eyebrow">{plan.name}</div>
-        <h2 className="mt-1 text-[22px] font-black leading-tight">{day.name}</h2>
-        <div className="text-[12px]" style={{ color: 'var(--text-mute)' }}>{day.focus}</div>
+        <h2 className="title title-lg mt-1">{day.name}</h2>
+        <div className="text-[12px]" style={{ color: 'var(--paper-ink-dim)' }}>{day.focus}</div>
         <div className="mt-3">
           <Tabs value={dayId || plan.days[0].id} onChange={setDayId}
             options={plan.days.map((d, i) => ({ value: d.id, label: `Day ${i + 1}` }))} />
         </div>
         <div className="mt-3 flex items-center gap-2">
-          <Bar value={totalSets ? doneSets / totalSets : 0} />
-          <span className="shrink-0 text-[11px]" style={{ color: 'var(--text-mute)' }}>{doneSets}/{totalSets}</span>
+          <Bar value={totalSets ? doneSets / totalSets : 0} onPaper />
+          <span className="figure shrink-0 text-[11px]" style={{ color: 'var(--paper-ink-dim)' }}>{doneSets}/{totalSets}</span>
         </div>
         <div className="mt-3">
-          <Button onClick={() => nav(`/workout/session/${day.id}`)}>
+          <Button variant="paper" onClick={() => nav(`/workout/session/${day.id}`)}>
             {session?.finished_at ? 'View workout' : session ? 'Continue workout' : 'Start workout'}
           </Button>
         </div>
@@ -56,8 +56,8 @@ export default function Workout() {
           return (
             <Card key={ex.id} onClick={() => nav(`/workout/session/${day.id}`)} className="flex items-center gap-3">
               <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md border"
-                style={{ borderColor: done ? 'var(--color-good)' : 'var(--line)', background: done ? 'var(--color-good)' : 'transparent' }}>
-                {done && <Icon name="check" size={14} color="#12080B" />}
+                style={{ borderColor: done ? 'var(--sage)' : 'var(--line)', background: done ? 'var(--sage)' : 'transparent' }}>
+                {done && <Icon name="check" size={14} color="var(--noir)" />}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[14px] font-bold">{ex.name ?? nameOf(ex.exercise_id)}</span>

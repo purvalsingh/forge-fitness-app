@@ -4,7 +4,7 @@ import { useStore } from '../store'
 import { uid } from '../lib/db'
 import { calcTargets, isValidTarget } from '../lib/calc'
 import { ai, AIUnavailable } from '../lib/ai'
-import { Button, Card, Field, Notice, Screen, Spinner, Stat } from '../ui'
+import { Button, Card, Field, Notice, Screen, Spinner } from '../ui'
 import type { NutritionTarget } from '../lib/types'
 
 export default function TargetCalc() {
@@ -49,13 +49,20 @@ export default function TargetCalc() {
 
   return (
     <Screen title="Nutrition target" sub="Calculator" back={() => nav('/more')}>
-      <Card glass>
+      <Card paper>
         <div className="eyebrow">Deterministic baseline</div>
         <div className="mt-1 grid grid-cols-2 gap-2">
-          <Stat label="Maintenance" value={`${base!.maintenance.toLocaleString()} kcal`} />
-          <Stat label="Rate" value={`${base!.rate_kg_per_week.toFixed(2)} kg/wk`} />
-          <Stat label="Goal" value={g.mode.toUpperCase()} />
-          <Stat label="Timeframe" value={base!.weeks_to_target ? `${base!.weeks_to_target} weeks` : '—'} />
+          {[
+            ['Maintenance', `${base!.maintenance.toLocaleString()} kcal`],
+            ['Rate', `${base!.rate_kg_per_week.toFixed(2)} kg/wk`],
+            ['Goal', g.mode.toUpperCase()],
+            ['Timeframe', base!.weeks_to_target ? `${base!.weeks_to_target} weeks` : '—'],
+          ].map(([l, v]) => (
+            <div key={l} className="paper-inset p-3">
+              <div className="eyebrow">{l}</div>
+              <div className="figure mt-1 text-[18px] leading-none">{v}</div>
+            </div>
+          ))}
         </div>
         {base!.warnings.length > 0 && (
           <div className="mt-3 grid gap-2">

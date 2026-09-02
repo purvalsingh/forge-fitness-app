@@ -75,12 +75,12 @@ export default function Session() {
 
   return (
     <Screen title={day.name} sub={finished ? 'Completed' : 'In progress'} back={() => nav('/workout')}>
-      <Card glass>
+      <Card paper>
         <div className="flex items-center gap-2">
-          <Bar value={total ? done / total : 0} height={8} />
-          <span className="shrink-0 text-[12px] font-bold">{done}/{total}</span>
+          <Bar value={total ? done / total : 0} height={8} onPaper />
+          <span className="figure shrink-0 text-[12px]">{done}/{total}</span>
         </div>
-        <div className="mt-3 grid grid-cols-3 gap-2">
+        <div className="mt-3 grid grid-cols-3 gap-2 [&_.raised]:!bg-transparent [&_.raised]:!border-[var(--paper-line)]">
           <Stat label="Sets" value={done} />
           <Stat label="Volume" value={`${Math.round(sessionVolume(session)).toLocaleString()} kg`} />
           <Stat label="Rest" value={rest == null ? '—' : `${rest}s`} />
@@ -98,8 +98,8 @@ export default function Session() {
             <Card key={e.workout_exercise_id}>
               <button className="flex w-full items-center gap-3 text-left" onClick={() => setOpen(open === e.workout_exercise_id ? null : e.workout_exercise_id)}>
                 <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md border"
-                  style={{ borderColor: allDone ? 'var(--color-good)' : 'var(--line)', background: allDone ? 'var(--color-good)' : 'transparent' }}>
-                  {allDone && <Icon name="check" size={14} color="#12080B" />}
+                  style={{ borderColor: allDone ? 'var(--sage)' : 'var(--line)', background: allDone ? 'var(--sage)' : 'transparent' }}>
+                  {allDone && <Icon name="check" size={14} color="var(--noir)" />}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[14px] font-bold">{e.name}</span>
@@ -130,7 +130,7 @@ export default function Session() {
                         disabled={finished}
                         onClick={() => { patchSet(i, j, { done: !st.done }); if (!st.done) setRest(planned?.rest_sec ?? 90) }}
                         className="grid h-10 w-10 place-items-center rounded-xl border"
-                        style={{ borderColor: st.done ? 'var(--color-good)' : 'var(--line)', background: st.done ? 'var(--color-good)' : 'transparent' }}>
+                        style={{ borderColor: st.done ? 'var(--sage)' : 'var(--line)', background: st.done ? 'var(--sage)' : 'transparent' }}>
                         <Icon name="check" size={16} color={st.done ? '#12080B' : 'var(--text-mute)'} />
                       </button>
                     </div>

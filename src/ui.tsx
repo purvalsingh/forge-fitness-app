@@ -16,7 +16,7 @@ export function Screen({ title, sub, right, back, children }: {
           )}
           <div className="min-w-0 flex-1">
             {sub && <div className="eyebrow">{sub}</div>}
-            {title && <h1 className="truncate text-[22px] font-extrabold tracking-tight">{title}</h1>}
+            {title && <h1 className="title title-lg truncate">{title}</h1>}
           </div>
           {right}
         </header>
@@ -26,28 +26,31 @@ export function Screen({ title, sub, right, back, children }: {
   )
 }
 
-export function Card({ children, className = '', glass, onClick, style }: {
-  children: ReactNode; className?: string; glass?: boolean; onClick?: () => void; style?: CSSProperties
+export function Card({ children, className = '', glass, paper, onClick, style }: {
+  children: ReactNode; className?: string; glass?: boolean; paper?: boolean
+  onClick?: () => void; style?: CSSProperties
 }) {
-  const cls = `${glass ? 'glass' : 'card'} p-4 ${onClick ? 'text-left active:scale-[0.995] transition-transform' : ''} ${className}`
+  const surface = paper ? 'paper' : glass ? 'glass' : 'card'
+  const cls = `${surface} p-4 ${onClick ? 'text-left active:scale-[0.995] transition-transform' : ''} ${className}`
   return onClick
     ? <button className={cls} onClick={onClick} style={style}>{children}</button>
     : <div className={cls} style={style}>{children}</div>
 }
 
 export function Button({ children, onClick, variant = 'primary', className = '', disabled, type = 'button' }: {
-  children: ReactNode; onClick?: () => void; variant?: 'primary' | 'ghost' | 'quiet' | 'danger'
+  children: ReactNode; onClick?: () => void; variant?: 'primary' | 'ghost' | 'quiet' | 'paper' | 'danger'
   className?: string; disabled?: boolean; type?: 'button' | 'submit'
 }) {
   const styles: Record<string, CSSProperties> = {
-    primary: { background: 'var(--accent-strong)', color: '#F6E6EA', borderColor: 'transparent' },
+    primary: { background: 'var(--accent-strong)', color: 'var(--color-ivory)', borderColor: 'transparent' },
     ghost: { background: 'transparent', color: 'var(--text)', borderColor: 'var(--line)' },
-    quiet: { background: 'var(--glass)', color: 'var(--text)', borderColor: 'var(--glass-border)' },
+    quiet: { background: 'var(--surface-high)', color: 'var(--text)', borderColor: 'var(--line)' },
+    paper: { background: 'var(--paper-ink)', color: 'var(--paper)', borderColor: 'transparent' },
     danger: { background: 'transparent', color: '#D98A8A', borderColor: 'rgba(217,138,138,.4)' },
   }
   return (
     <button type={type} onClick={onClick} disabled={disabled}
-      className={`min-h-[46px] w-full rounded-2xl border px-4 text-[14px] font-bold tracking-wide uppercase disabled:opacity-45 ${className}`}
+      className={`min-h-[48px] w-full rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em] disabled:opacity-45 ${className}`}
       style={styles[variant]}>{children}</button>
   )
 }
@@ -69,10 +72,10 @@ export function Tabs<T extends string>({ value, onChange, options }: {
     <div role="tablist" className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
       {options.map(o => (
         <button key={o.value} role="tab" aria-selected={value === o.value} onClick={() => onChange(o.value)}
-          className="min-h-[38px] shrink-0 rounded-full border px-4 text-[12px] font-bold tracking-wide uppercase"
+          className="min-h-[38px] shrink-0 rounded-lg border px-4 text-[11px] font-bold uppercase tracking-[0.14em]"
           style={value === o.value
-            ? { background: 'var(--accent-strong)', color: '#F6E6EA', borderColor: 'transparent' }
-            : { background: 'var(--glass)', color: 'var(--text-dim)', borderColor: 'var(--glass-border)' }}>
+            ? { background: 'var(--accent-strong)', color: 'var(--color-ivory)', borderColor: 'transparent' }
+            : { background: 'var(--surface-raised)', color: 'var(--text-dim)', borderColor: 'var(--line)' }}>
           {o.label}
         </button>
       ))}
@@ -81,8 +84,8 @@ export function Tabs<T extends string>({ value, onChange, options }: {
 }
 
 /** Arc gauge used for the daily score on Today. */
-export function ScoreArc({ value, size, label, caption }: {
-  value: number; size?: number; label?: string; caption?: string
+export function ScoreArc({ value, size, label, caption, onPaper }: {
+  value: number; size?: number; label?: string; caption?: string; onPaper?: boolean
 }) {
   const box = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(size ?? 168)
@@ -101,12 +104,14 @@ export function ScoreArc({ value, size, label, caption }: {
   return (
     <div ref={box} className="relative grid w-full place-items-center" style={{ height: px / 2 + 26 }}>
       <svg width={px} height={px / 2 + 8} viewBox={`0 0 ${px} ${px / 2 + 8}`} aria-hidden>
-        <path d={arcPath(px, r)} fill="none" strokeWidth="12" strokeLinecap="round" stroke="var(--glass-border)" />
-        <path d={arcPath(px, r)} fill="none" strokeWidth="12" strokeLinecap="round"
-          stroke="var(--accent)" strokeDasharray={`${c * pct} ${c}`} style={{ transition: 'stroke-dasharray .5s ease' }} />
+        <path d={arcPath(px, r)} fill="none" strokeWidth="10" strokeLinecap="round"
+          stroke={onPaper ? 'var(--paper-line)' : 'var(--glass-border)'} />
+        <path d={arcPath(px, r)} fill="none" strokeWidth="10" strokeLinecap="round"
+          stroke={onPaper ? 'var(--accent-strong)' : 'var(--accent)'}
+          strokeDasharray={`${c * pct} ${c}`} style={{ transition: 'stroke-dasharray .5s ease' }} />
       </svg>
       <div className="absolute bottom-0 text-center">
-        <div className="text-[30px] font-extrabold leading-none">{Math.round(pct * 100)}%</div>
+        <div className="title" style={{ fontSize: 34 }}>{Math.round(pct * 100)}%</div>
         {label && <div className="eyebrow mt-1">{label}</div>}
         {caption && <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>{caption}</div>}
       </div>
@@ -119,8 +124,8 @@ function arcPath(size: number, r: number) {
 }
 
 /** Macro ring. */
-export function Ring({ value, size = 74, stroke = 7, label, sub }: {
-  value: number; size?: number; stroke?: number; label?: string; sub?: string
+export function Ring({ value, size = 74, stroke = 7, label, sub, onPaper }: {
+  value: number; size?: number; stroke?: number; label?: string; sub?: string; onPaper?: boolean
 }) {
   const r = (size - stroke) / 2
   const c = 2 * Math.PI * r
@@ -129,11 +134,13 @@ export function Ring({ value, size = 74, stroke = 7, label, sub }: {
     <div className="grid place-items-center gap-1">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90" aria-hidden>
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} stroke="var(--glass-border)" />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke}
+            stroke={onPaper ? 'var(--paper-line)' : 'var(--glass-border)'} />
           <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} strokeLinecap="round"
-            stroke="var(--accent)" strokeDasharray={`${c * pct} ${c}`} style={{ transition: 'stroke-dasharray .4s ease' }} />
+            stroke={onPaper ? 'var(--accent-strong)' : 'var(--accent)'}
+            strokeDasharray={`${c * pct} ${c}`} style={{ transition: 'stroke-dasharray .4s ease' }} />
         </svg>
-        {label && <div className="absolute inset-0 grid place-items-center text-[12px] font-bold">{label}</div>}
+        {label && <div className="figure absolute inset-0 grid place-items-center text-[13px]">{label}</div>}
       </div>
       {sub && <div className="eyebrow">{sub}</div>}
     </div>
@@ -144,8 +151,8 @@ export function Ring({ value, size = 74, stroke = 7, label, sub }: {
  * Calendar completion indicator. The fill level *is* the number —
  * deliberately no percentage text inside the circle.
  */
-export function FillCircle({ value, size = 30, dim, children }: {
-  value: number; size?: number; dim?: boolean; children?: ReactNode
+export function FillCircle({ value, size = 30, dim, onPaper, children }: {
+  value: number; size?: number; dim?: boolean; onPaper?: boolean; children?: ReactNode
 }) {
   const pct = Math.max(0, Math.min(1, value))
   const r = size / 2 - 1
@@ -153,24 +160,28 @@ export function FillCircle({ value, size = 30, dim, children }: {
   return (
     <span className="relative inline-grid place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} aria-hidden>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--glass-border)" strokeWidth="1.5" />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none"
+          stroke={onPaper ? 'var(--paper-line)' : 'var(--glass-border)'} strokeWidth="1.5" />
         <clipPath id={clipId}>
           <rect x="0" y={size * (1 - pct)} width={size} height={size * pct} />
         </clipPath>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="var(--accent)" opacity={dim ? 0.35 : 0.85}
+        <circle cx={size / 2} cy={size / 2} r={r} fill={onPaper ? 'var(--accent-strong)' : 'var(--accent)'} opacity={dim ? 0.3 : 0.88}
           clipPath={`url(#${clipId})`} />
       </svg>
-      <span className="absolute text-[11px] font-semibold">{children}</span>
+      <span className="figure absolute text-[11px]" style={{ mixBlendMode: onPaper ? 'normal' : undefined }}>{children}</span>
     </span>
   )
 }
 
-export function Bar({ value, height = 6, color }: { value: number; height?: number; color?: string }) {
+export function Bar({ value, height = 6, color, onPaper }: {
+  value: number; height?: number; color?: string; onPaper?: boolean
+}) {
   return (
-    <div className="w-full overflow-hidden rounded-full" style={{ height, background: 'var(--glass-border)' }}>
+    <div className="w-full overflow-hidden rounded-full"
+      style={{ height, background: onPaper ? 'var(--paper-line)' : 'var(--glass-border)' }}>
       <div style={{
         width: `${Math.max(0, Math.min(1, value)) * 100}%`, height: '100%',
-        background: color ?? 'var(--accent)', transition: 'width .4s ease',
+        background: color ?? (onPaper ? 'var(--accent-strong)' : 'var(--accent)'), transition: 'width .4s ease',
       }} />
     </div>
   )
@@ -206,7 +217,7 @@ export function Sheet({ open, onClose, title, children }: {
 export function Empty({ title, body, action }: { title: string; body?: string; action?: ReactNode }) {
   return (
     <div className="card grid place-items-center gap-2 p-8 text-center">
-      <div className="text-[15px] font-bold">{title}</div>
+      <div className="title text-[18px]">{title}</div>
       {body && <div className="text-[13px]" style={{ color: 'var(--text-mute)' }}>{body}</div>}
       {action}
     </div>
@@ -214,10 +225,10 @@ export function Empty({ title, body, action }: { title: string; body?: string; a
 }
 
 export function Notice({ tone = 'info', children }: { tone?: 'info' | 'warn' | 'error'; children: ReactNode }) {
-  const c = tone === 'error' ? '#D98A8A' : tone === 'warn' ? 'var(--color-warn)' : 'var(--accent)'
+  const c = tone === 'error' ? '#D98A8A' : tone === 'warn' ? 'var(--amber)' : 'var(--sage)'
   return (
     <div className="rounded-2xl border px-3 py-2.5 text-[12px]"
-      style={{ borderColor: c, color: 'var(--text-dim)', background: 'var(--glass)' }} role="status">
+      style={{ borderColor: c, color: 'var(--text-dim)', background: 'var(--surface-raised)' }} role="status">
       {children}
     </div>
   )
@@ -262,7 +273,7 @@ export function Stat({ label, value, sub }: { label: string; value: ReactNode; s
   return (
     <div className="raised p-3">
       <div className="eyebrow">{label}</div>
-      <div className="mt-1 text-[19px] font-extrabold leading-none">{value}</div>
+      <div className="figure mt-1 text-[19px] leading-none">{value}</div>
       {sub && <div className="mt-1 text-[11px]" style={{ color: 'var(--text-mute)' }}>{sub}</div>}
     </div>
   )

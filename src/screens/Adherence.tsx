@@ -24,10 +24,10 @@ export default function Adherence() {
 
   return (
     <Screen title="Monthly adherence" sub="Consistency" back={() => nav(-1 as never)}>
-      <Card glass>
+      <Card paper>
         <div className="flex items-center justify-between">
           <button aria-label="Previous month" onClick={() => shift(-1)} className="px-3 py-1 text-[18px]">‹</button>
-          <div className="text-[15px] font-extrabold">{label}</div>
+          <div className="title text-[19px]">{label}</div>
           <button aria-label="Next month" onClick={() => shift(1)} className="px-3 py-1 text-[18px]">›</button>
         </div>
 
@@ -41,7 +41,7 @@ export default function Adherence() {
               <button key={d} onClick={() => nav(`/day/${d}`)} disabled={future}
                 aria-label={`${d}${a ? `, ${Math.round(a.score * 100)} percent complete` : ''}`}
                 className="grid place-items-center gap-0.5 py-1 disabled:opacity-30">
-                <FillCircle value={a?.score ?? 0} dim={!a} size={30}>{Number(d.slice(-2))}</FillCircle>
+                <FillCircle value={a?.score ?? 0} dim={!a} size={30} onPaper>{Number(d.slice(-2))}</FillCircle>
                 <span className="flex gap-[3px]">
                   <Dot on={a?.diet === 'complete'} />
                   <Dot on={a?.workout === 'complete'} />
@@ -52,7 +52,7 @@ export default function Adherence() {
           })}
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-3 text-[10px]" style={{ color: 'var(--text-mute)' }}>
+        <div className="mt-4 flex flex-wrap gap-3 text-[10px]" style={{ color: 'var(--paper-ink-dim)' }}>
           <span className="flex items-center gap-1"><Dot on /> Diet</span>
           <span className="flex items-center gap-1"><Dot on /> Workout</span>
           <span className="flex items-center gap-1"><Dot on /> Steps</span>
@@ -71,5 +71,5 @@ export default function Adherence() {
 
 function Dot({ on }: { on?: boolean }) {
   return <span className="inline-block h-[4px] w-[4px] rounded-full"
-    style={{ background: on ? 'var(--accent)' : 'var(--glass-border)' }} />
+    style={{ background: on ? 'var(--accent-strong)' : 'var(--paper-line)' }} />
 }
