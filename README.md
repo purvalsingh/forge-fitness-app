@@ -89,14 +89,24 @@ rejected, then falls through to the next. If all are unavailable the app shows
 
 The repo is host-agnostic and ships config for the two easiest free options.
 
+**Live site**: https://forge-fitness-app-248.netlify.app (project
+`forge-fitness-app-248`). Redeploy from this machine any time with `npm run deploy`.
+
 **Netlify** (`netlify.toml` included): New site from Git → pick the repo → build `npm run build`,
 publish `dist` → add the two `VITE_` env vars → deploy. Every push to `main` redeploys; pull requests
 get preview deploys.
 
 **Vercel** (`vercel.json` included): Import the repo, framework "Vite", add the env vars, deploy.
 
-Both serve the SPA fallback needed for client-side routing. A GitHub Actions workflow
-(`.github/workflows/ci.yml`) typechecks, tests and builds every push.
+Both serve the SPA fallback needed for client-side routing.
+
+Two settings live behind the Netlify UI and only need one click each, under
+[Project configuration](https://app.netlify.com/projects/forge-fitness-app-248/configuration/general):
+
+- **Access & security → Visitor access → Public** — new free-plan sites start restricted to team
+  members, which is why an unauthenticated phone sees a login redirect.
+- **Build & deploy → Link repository → GitHub → `purvalsingh/forge-fitness-app`** — turns on
+  deploy-on-push and pull-request previews. Until then, `npm run deploy` publishes from your machine.
 
 ### Editing later
 

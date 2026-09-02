@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "deploy": "npm run build && netlify deploy --prod --dir dist"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.114.0",

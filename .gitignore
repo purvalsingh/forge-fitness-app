@@ -15,3 +15,6 @@ coverage
 
 # CI workflow omitted: pushing it needs the GitHub "workflow" OAuth scope.
 # To add it back: gh auth refresh -s workflow  (then restore .github/workflows/ci.yml)
+
+# Local Netlify folder
+.netlify
