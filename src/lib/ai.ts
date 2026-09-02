@@ -133,12 +133,38 @@ export type PhysiqueAnalysisResult = z.infer<typeof PhysiqueAnalysisSchema>
 
 export interface PhysiquePhoto { angle: string; mimeType: string; data: string }
 
+export const GeneratedPlan = z.object({
+  name: z.string().min(1).max(80),
+  rationale: z.string().min(1).max(800),
+  days: z.array(z.object({
+    name: z.string().min(1).max(60),
+    focus: z.string().max(40),
+    exercises: z.array(z.object({
+      name: z.string().min(1).max(60),
+      sets: z.number().int().min(1).max(10),
+      reps: z.string().min(1).max(20),
+      rest_sec: z.number().int().min(20).max(600),
+      tempo: z.string().max(20).optional(),
+      note: z.string().max(160).optional(),
+    })).min(1).max(12),
+  })).min(1).max(7),
+})
+export type GeneratedPlan = z.infer<typeof GeneratedPlan>
+
 export const ai = {
   configured: aiConfigured,
   parseFoodText: (text: string) => call('parse_food_text', { text }, FoodListResponse).then(r => r.items),
   analyzePhoto: (imageBase64: string, mimeType: string) =>
     call('analyze_food_photo', { image: imageBase64, mimeType }, FoodListResponse).then(r => r.items),
   targetAdvice: (input: unknown) => call('target_advice', input, TargetAdviceResponse),
+  generatePlan: (input: {
+    days_per_week: number
+    focus: string
+    preferences?: string
+    priorities?: string[]
+    equipment?: string
+    experience?: string
+  }) => call('generate_workout_plan', input, GeneratedPlan),
   physique: (input: {
     photos: PhysiquePhoto[]
     reference?: { mimeType: string; data: string }

@@ -1,0 +1,217 @@
+{
+  "_comment": "Dishes missing from the USDA exports, built from USDA component foods. Each component is a regex matched against a USDA food name plus the grams in one typical serving. Macros are computed from those components, never invented — but portions vary by kitchen, so these are labelled as estimates in the app.",
+  "dishes": [
+    { "name": "Vada Pav", "cuisine": "Indian", "serving_g": 150, "components": [
+      { "match": "^Bread, white, commercially prepared", "g": 60 },
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 55 },
+      { "match": "^Chickpea flour \\(besan\\)", "g": 15 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 12 },
+      { "match": "^Chutney$", "g": 15 } ] },
+    { "name": "Pav Bhaji", "cuisine": "Indian", "serving_g": 400, "components": [
+      { "match": "^Bread, white, commercially prepared", "g": 120 },
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 120 },
+      { "match": "^Peas, green, cooked, boiled, drained, without salt", "g": 40 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 60 },
+      { "match": "^Onions, raw", "g": 30 },
+      { "match": "^Butter, salted", "g": 25 } ] },
+    { "name": "Misal Pav", "cuisine": "Indian", "serving_g": 400, "components": [
+      { "match": "^Bread, white, commercially prepared", "g": 100 },
+      { "match": "^Mung beans, mature seeds, sprouted, cooked, boiled, drained, without salt", "g": 150 },
+      { "match": "^Onions, raw", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 15 },
+      { "match": "^Snacks, potato chips", "g": 20 } ] },
+    { "name": "Dhokla", "cuisine": "Indian", "serving_g": 150, "components": [
+      { "match": "^Chickpea flour \\(besan\\)", "g": 60 },
+      { "match": "^Yogurt, plain, whole milk", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 8 },
+      { "match": "^Sugars, granulated", "g": 5 } ] },
+    { "name": "Bhature", "cuisine": "Indian", "serving_g": 100, "components": [
+      { "match": "^Wheat flour, white, all-purpose, enriched, bleached", "g": 60 },
+      { "match": "^Yogurt, plain, whole milk", "g": 15 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 18 } ] },
+    { "name": "Rajma (Kidney Bean Curry)", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Beans, kidney, red, mature seeds, cooked, boiled, without salt", "g": 160 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 50 },
+      { "match": "^Onions, raw", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 12 } ] },
+    { "name": "Chana Masala", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Chickpeas \\(garbanzo beans, bengal gram\\), mature seeds, cooked, boiled, without salt", "g": 160 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 50 },
+      { "match": "^Onions, raw", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 12 } ] },
+    { "name": "Dal Makhani", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Lentils, mature seeds, cooked, boiled, without salt", "g": 150 },
+      { "match": "^Beans, kidney, red, mature seeds, cooked, boiled, without salt", "g": 30 },
+      { "match": "^Cream, heavy", "g": 25 },
+      { "match": "^Butter, salted", "g": 12 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 30 } ] },
+    { "name": "Butter Chicken", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 150 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 60 },
+      { "match": "^Cream, heavy", "g": 40 },
+      { "match": "^Butter, salted", "g": 20 },
+      { "match": "^Onions, raw", "g": 25 } ] },
+    { "name": "Chicken Tikka Masala", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 160 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 70 },
+      { "match": "^Yogurt, plain, whole milk", "g": 40 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 15 } ] },
+    { "name": "Chicken Korma", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 150 },
+      { "match": "^Yogurt, plain, whole milk", "g": 50 },
+      { "match": "^Nuts, almonds$", "g": 20 },
+      { "match": "^Cream, heavy", "g": 25 },
+      { "match": "^Onions, raw", "g": 30 } ] },
+    { "name": "Rogan Josh", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Lamb, shoulder, whole .*separable lean only.*cooked, braised|^Lamb, shoulder, whole .*separable lean and fat.*cooked, braised", "g": 150 },
+      { "match": "^Yogurt, plain, whole milk", "g": 50 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 40 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 15 } ] },
+    { "name": "Chicken Vindaloo", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 160 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 60 },
+      { "match": "^Onions, raw", "g": 40 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 18 } ] },
+    { "name": "Keema (Minced Meat Curry)", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Beef, ground, 85% lean meat / 15% fat, patty, cooked, pan-broiled", "g": 150 },
+      { "match": "^Peas, green, cooked, boiled, drained, without salt", "g": 40 },
+      { "match": "^Onions, raw", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 12 } ] },
+    { "name": "Tandoori Chicken", "cuisine": "Indian", "serving_g": 200, "components": [
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 170 },
+      { "match": "^Yogurt, plain, whole milk", "g": 40 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 6 } ] },
+    { "name": "Seekh Kebab", "cuisine": "Indian", "serving_g": 150, "components": [
+      { "match": "^Lamb, ground, cooked, broiled", "g": 130 },
+      { "match": "^Onions, raw", "g": 20 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 6 } ] },
+    { "name": "Aloo Gobi", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 110 },
+      { "match": "^Cauliflower, cooked, boiled, drained, with salt", "g": 110 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 15 },
+      { "match": "^Onions, raw", "g": 20 } ] },
+    { "name": "Baingan Bharta", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Eggplant, cooked, boiled, drained, without salt", "g": 180 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 40 },
+      { "match": "^Onions, raw", "g": 25 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 15 } ] },
+    { "name": "Malai Kofta", "cuisine": "Indian", "serving_g": 280, "components": [
+      { "match": "^Cheese, paneer", "g": 70 },
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 60 },
+      { "match": "^Cream, heavy", "g": 40 },
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 50 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 20 } ] },
+    { "name": "Khichdi", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Rice, white, medium-grain, cooked, unenriched", "g": 180 },
+      { "match": "^Lentils, mature seeds, cooked, boiled, without salt", "g": 90 },
+      { "match": "^Ghee, clarified butter", "g": 10 } ] },
+    { "name": "Curd Rice", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Rice, white, medium-grain, cooked, unenriched", "g": 200 },
+      { "match": "^Yogurt, plain, whole milk", "g": 100 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 5 } ] },
+    { "name": "Lemon Rice", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Rice, white, medium-grain, cooked, unenriched", "g": 210 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 12 },
+      { "match": "^Peanuts, all types, raw", "g": 12 } ] },
+    { "name": "Medu Vada", "cuisine": "Indian", "serving_g": 100, "components": [
+      { "match": "^Beans, black gram \\(urad\\), mature seeds, cooked, boiled, without salt|^Lentils, mature seeds, cooked, boiled, without salt", "g": 70 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 16 },
+      { "match": "^Onions, raw", "g": 10 } ] },
+    { "name": "Uttapam", "cuisine": "Indian", "serving_g": 180, "components": [
+      { "match": "^Rice, white, medium-grain, cooked, unenriched", "g": 90 },
+      { "match": "^Lentils, mature seeds, cooked, boiled, without salt", "g": 40 },
+      { "match": "^Onions, raw", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 10 } ] },
+    { "name": "Appam", "cuisine": "Indian", "serving_g": 120, "components": [
+      { "match": "^Rice, white, medium-grain, cooked, unenriched", "g": 90 },
+      { "match": "^Nuts, coconut milk, canned", "g": 25 },
+      { "match": "^Sugars, granulated", "g": 3 } ] },
+    { "name": "Rasam", "cuisine": "Indian", "serving_g": 200, "components": [
+      { "match": "^Tomatoes, red, ripe, raw, year round average", "g": 60 },
+      { "match": "^Lentils, mature seeds, cooked, boiled, without salt", "g": 30 },
+      { "match": "^Tamarinds, raw", "g": 8 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 5 } ] },
+    { "name": "Thepla", "cuisine": "Indian", "serving_g": 60, "components": [
+      { "match": "^Wheat flour, whole-grain", "g": 35 },
+      { "match": "^Spinach, cooked, boiled, drained, without salt", "g": 12 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 8 } ] },
+    { "name": "Kachori", "cuisine": "Indian", "serving_g": 80, "components": [
+      { "match": "^Wheat flour, white, all-purpose, enriched, bleached", "g": 40 },
+      { "match": "^Lentils, mature seeds, cooked, boiled, without salt", "g": 20 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 16 } ] },
+    { "name": "Pani Puri / Golgappa (6 pieces)", "cuisine": "Indian", "serving_g": 120, "components": [
+      { "match": "^Semolina, enriched", "g": 30 },
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 40 },
+      { "match": "^Chickpeas \\(garbanzo beans, bengal gram\\), mature seeds, cooked, boiled, without salt", "g": 25 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 10 } ] },
+    { "name": "Bhel Puri", "cuisine": "Indian", "serving_g": 150, "components": [
+      { "match": "^Cereals ready-to-eat, rice, puffed, fortified", "g": 45 },
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 40 },
+      { "match": "^Onions, raw", "g": 20 },
+      { "match": "^Chutney$", "g": 20 },
+      { "match": "^Chickpea flour \\(besan\\)", "g": 15 } ] },
+    { "name": "Sev Puri", "cuisine": "Indian", "serving_g": 140, "components": [
+      { "match": "^Semolina, enriched", "g": 30 },
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 40 },
+      { "match": "^Chickpea flour \\(besan\\)", "g": 20 },
+      { "match": "^Chutney$", "g": 20 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 12 } ] },
+    { "name": "Dabeli", "cuisine": "Indian", "serving_g": 160, "components": [
+      { "match": "^Bread, white, commercially prepared", "g": 60 },
+      { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 60 },
+      { "match": "^Peanuts, all types, raw", "g": 12 },
+      { "match": "^Butter, salted", "g": 10 },
+      { "match": "^Chutney$", "g": 15 } ] },
+    { "name": "Kathi Roll (Chicken)", "cuisine": "Indian", "serving_g": 250, "components": [
+      { "match": "^Wheat flour, white, all-purpose, enriched, bleached", "g": 60 },
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 90 },
+      { "match": "^Onions, raw", "g": 25 },
+      { "match": "^Egg, whole, cooked, fried", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 12 } ] },
+    { "name": "Momos (Steamed, Chicken, 6 pieces)", "cuisine": "Indian", "serving_g": 200, "components": [
+      { "match": "^Wheat flour, white, all-purpose, enriched, bleached", "g": 70 },
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 80 },
+      { "match": "^Cabbage, cooked, boiled, drained, without salt", "g": 30 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 6 } ] },
+    { "name": "Raita", "cuisine": "Indian", "serving_g": 150, "components": [
+      { "match": "^Yogurt, plain, whole milk", "g": 120 },
+      { "match": "^Cucumber, with peel, raw", "g": 30 } ] },
+    { "name": "Gulab Jamun (2 pieces)", "cuisine": "Indian", "serving_g": 120, "components": [
+      { "match": "^Milk, dry, whole, without added vitamin D", "g": 30 },
+      { "match": "^Sugars, granulated", "g": 45 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 15 },
+      { "match": "^Wheat flour, white, all-purpose, enriched, bleached", "g": 10 } ] },
+    { "name": "Jalebi", "cuisine": "Indian", "serving_g": 100, "components": [
+      { "match": "^Wheat flour, white, all-purpose, enriched, bleached", "g": 35 },
+      { "match": "^Sugars, granulated", "g": 40 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 18 } ] },
+    { "name": "Rasgulla (2 pieces)", "cuisine": "Indian", "serving_g": 120, "components": [
+      { "match": "^Cheese, cottage, creamed, large or small curd", "g": 50 },
+      { "match": "^Sugars, granulated", "g": 35 } ] },
+    { "name": "Kheer / Rice Pudding", "cuisine": "Indian", "serving_g": 200, "components": [
+      { "match": "^Milk, whole, 3.25% milkfat, with added vitamin D", "g": 140 },
+      { "match": "^Rice, white, medium-grain, cooked, unenriched", "g": 40 },
+      { "match": "^Sugars, granulated", "g": 20 },
+      { "match": "^Nuts, almonds$", "g": 8 } ] },
+    { "name": "Gajar Halwa", "cuisine": "Indian", "serving_g": 150, "components": [
+      { "match": "^Carrots, cooked, boiled, drained, without salt", "g": 80 },
+      { "match": "^Milk, whole, 3.25% milkfat, with added vitamin D", "g": 40 },
+      { "match": "^Sugars, granulated", "g": 25 },
+      { "match": "^Ghee, clarified butter", "g": 12 } ] },
+    { "name": "Besan Laddu", "cuisine": "Indian", "serving_g": 80, "components": [
+      { "match": "^Chickpea flour \\(besan\\)", "g": 35 },
+      { "match": "^Sugars, powdered", "g": 25 },
+      { "match": "^Ghee, clarified butter", "g": 18 } ] },
+    { "name": "Falooda", "cuisine": "Indian", "serving_g": 300, "components": [
+      { "match": "^Milk, whole, 3.25% milkfat, with added vitamin D", "g": 180 },
+      { "match": "^Sugars, granulated", "g": 25 },
+      { "match": "^Noodles, chinese, cellophane or long rice \\(mung beans\\), dehydrated", "g": 15 },
+      { "match": "^Ice creams, vanilla", "g": 50 } ] },
+    { "name": "Chicken Shawarma", "cuisine": "Middle Eastern", "serving_g": 280, "components": [
+      { "match": "^Bread, pita, white, enriched", "g": 80 },
+      { "match": "^Chicken, broilers or fryers, breast, meat only, cooked, roasted", "g": 120 },
+      { "match": "^Yogurt, plain, whole milk", "g": 35 },
+      { "match": "^Onions, raw", "g": 25 },
+      { "match": "^Oil, soybean, salad or cooking$", "g": 10 } ] }
+  ]
+}

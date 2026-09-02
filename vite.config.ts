@@ -31,6 +31,12 @@ export default defineConfig({
         navigateFallback: '/index.html',
         runtimeCaching: [
           {
+            // 3 MB of food data: fetched once, then served from cache — including offline.
+            urlPattern: ({ url }) => url.pathname === '/food-catalog.json',
+            handler: 'CacheFirst',
+            options: { cacheName: 'food-catalog', expiration: { maxEntries: 2, maxAgeSeconds: 60 * 60 * 24 * 90 } },
+          },
+          {
             urlPattern: ({ url }) => url.pathname.startsWith('/rest/v1'),
             handler: 'NetworkFirst',
             options: { cacheName: 'supabase-api', networkTimeoutSeconds: 5 },

@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
-import { Button, Card, Field, Icon, Screen, Sheet } from '../ui'
+import { Button, Card, Field, Icon, Notice, Screen, Sheet, Spinner } from '../ui'
+import { loadCatalog, searchFoods, type CatalogFood } from '../lib/catalog'
 import type { Food, Unit } from '../lib/types'
 
 const UNITS: Unit[] = ['100g', '100ml', 'g', 'ml', 'serving', 'piece', 'slice', 'cup', 'tbsp', 'tsp', 'scoop']
@@ -12,13 +13,19 @@ export default function Foods() {
   const nav = useNavigate()
   const [q, setQ] = useState('')
   const [edit, setEdit] = useState<Food | null>(null)
+  const [catalog, setCatalog] = useState<CatalogFood[] | null>(null)
+
+  useEffect(() => { loadCatalog().then(setCatalog).catch(() => setCatalog([])) }, [])
 
   const list = useMemo(() => {
     const n = q.trim().toLowerCase()
-    return [...s.foods]
+    const mine = [...s.foods]
       .filter(f => !n || f.name.toLowerCase().includes(n))
       .sort((a, b) => Number(Boolean(b.custom)) - Number(Boolean(a.custom)) || a.name.localeCompare(b.name))
-  }, [q, s.foods])
+    if (!catalog) return mine
+    const seen = new Set(mine.map(f => f.name.toLowerCase()))
+    return [...mine, ...searchFoods(catalog, q, 80).filter(f => !seen.has(f.name.toLowerCase()))]
+  }, [q, s.foods, catalog])
 
   const blank = (): Food => ({
     id: uid(), name: '', unit: '100g', base: 100, calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0,
@@ -26,16 +33,17 @@ export default function Foods() {
   })
 
   return (
-    <Screen title="Food database" sub={`${s.foods.length} foods`} back={() => nav('/more')}
+    <Screen title="Food database" sub={catalog ? `${(s.foods.length + catalog.length).toLocaleString()} foods` : `${s.foods.length} foods`} back={() => nav('/more')}
       right={<button aria-label="Add food" onClick={() => setEdit(blank())}
         className="grid h-10 w-10 place-items-center rounded-full border" style={{ borderColor: 'var(--line)' }}>
         <Icon name="plus" size={18} /></button>}>
 
-      <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search foods" aria-label="Search foods" />
+      <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search foods and dishes" aria-label="Search foods" />
+      {!catalog && <Spinner label="Loading food database" />}
 
       <div className="mt-3 grid gap-2">
         {list.map(f => (
-          <Card key={f.id} onClick={() => setEdit(f)} className="flex items-center justify-between">
+          <Card key={f.id} onClick={() => setEdit(f as Food)} className="flex items-center justify-between">
             <span className="min-w-0">
               <span className="block truncate text-[14px] font-bold">{f.name}{f.brand ? ` · ${f.brand}` : ''}</span>
               <span className="block text-[11px]" style={{ color: 'var(--text-mute)' }}>
@@ -48,6 +56,12 @@ export default function Foods() {
       </div>
 
       {edit && <FoodSheet food={edit} onClose={() => setEdit(null)} />}
+      {catalog && catalog.length > 0 && (
+        <div className="mt-4"><Notice>
+          Built-in foods come from USDA FoodData Central (public domain). Dishes marked as estimates are
+          computed from their ingredients — edit any of them into your own copy if your recipe differs.
+        </Notice></div>
+      )}
     </Screen>
   )
 }

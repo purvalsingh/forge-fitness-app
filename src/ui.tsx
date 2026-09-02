@@ -191,8 +191,9 @@ export function Sheet({ open, onClose, title, children }: {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="absolute inset-0" style={{ background: 'rgba(10,4,7,.6)' }} onClick={onClose} />
-      <div ref={ref} tabIndex={-1} className="glass relative max-h-[88vh] w-full max-w-[520px] overflow-y-auto rounded-b-none p-4"
+      <div className="absolute inset-0 backdrop-blur-[2px]" style={{ background: 'var(--scrim)' }} onClick={onClose} />
+      <div ref={ref} tabIndex={-1}
+        className="sheet-surface relative max-h-[88vh] w-full max-w-[520px] overflow-y-auto rounded-t-3xl p-4"
         style={{ paddingBottom: 'calc(20px + env(safe-area-inset-bottom))' }}>
         <div className="mx-auto mb-3 h-1 w-10 rounded-full" style={{ background: 'var(--glass-border)' }} />
         {title && <h2 className="mb-3 text-[17px] font-extrabold">{title}</h2>}

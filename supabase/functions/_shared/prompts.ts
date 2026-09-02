@@ -168,6 +168,61 @@ export function buildRequest(task: string, payload: any) {
         },
       }
     }
+    case 'generate_workout_plan': {
+      const p = payload ?? {}
+      return {
+        contents: [{ role: 'user', parts: [{ text:
+          `Design a ${p.days_per_week}-day-per-week training plan.\n` +
+          `Primary focus: ${p.focus}.\n` +
+          (p.preferences ? `The trainee asked for: ${String(p.preferences).slice(0, 600)}\n` : '') +
+          (p.priorities?.length ? `Weak points to emphasise: ${String(p.priorities).slice(0, 400)}\n` : '') +
+          (p.equipment ? `Equipment available: ${String(p.equipment).slice(0, 200)}\n` : '') +
+          (p.experience ? `Experience level: ${String(p.experience).slice(0, 80)}\n` : '') +
+          `Rules: 4-9 exercises per day. Compound lifts first. Sets 2-6. ` +
+          `Rest 45-240 seconds, longer for heavy compounds. Reps as a string ("5", "8-12", "45 sec"). ` +
+          `Respect the stated focus: strength means low reps and heavy compounds, aesthetics and hypertrophy ` +
+          `mean more volume and isolation work, fat loss keeps rest short and adds conditioning. ` +
+          `Give each day a short descriptive name. Use common gym exercise names. ` +
+          `In "rationale", explain in 2-3 sentences how this plan answers what they asked for.` }] }],
+        generationConfig: {
+          responseMimeType: 'application/json', temperature: 0.6, thinkingConfig: THINKING,
+          responseSchema: {
+            type: 'OBJECT',
+            properties: {
+              name: { type: 'STRING' },
+              rationale: { type: 'STRING' },
+              days: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    name: { type: 'STRING' },
+                    focus: { type: 'STRING' },
+                    exercises: {
+                      type: 'ARRAY',
+                      items: {
+                        type: 'OBJECT',
+                        properties: {
+                          name: { type: 'STRING' },
+                          sets: { type: 'NUMBER' },
+                          reps: { type: 'STRING' },
+                          rest_sec: { type: 'NUMBER' },
+                          tempo: { type: 'STRING' },
+                          note: { type: 'STRING' },
+                        },
+                        required: ['name', 'sets', 'reps', 'rest_sec'],
+                      },
+                    },
+                  },
+                  required: ['name', 'focus', 'exercises'],
+                },
+              },
+            },
+            required: ['name', 'rationale', 'days'],
+          },
+        },
+      }
+    }
     default:
       return null
   }

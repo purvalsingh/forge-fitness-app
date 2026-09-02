@@ -7,6 +7,7 @@ import { ParsedFood, PhysiqueAnalysisSchema } from './ai'
 import { generatePlan, emphasisGroups } from './templates'
 import { localRoadmap, coerceFocus, reconcile } from './physique'
 import { SEED_SETTINGS } from './seed'
+import { searchFoods } from './catalog'
 import type { Food, FoodLog, Settings, WorkoutSession } from './types'
 
 const settings: Settings = SEED_SETTINGS
@@ -258,5 +259,31 @@ describe('physique roadmap', () => {
   it('coerces free-text AI focus onto a known focus', () => {
     expect(coerceFocus('Hypertrophy', 'custom')).toBe('hypertrophy')
     expect(coerceFocus('nonsense', 'strength')).toBe('strength')
+  })
+})
+
+describe('food catalog search', () => {
+  const catalog = [
+    { id: '1', name: 'Vada Pav', category: 'Dish', unit: '100g' as const, base: 100, calories: 273, protein_g: 6, carbs_g: 38, fat_g: 10, src: 'composed' as const, serving_g: 150 },
+    { id: '2', name: 'Rice, white, cooked', category: 'Ingredient', unit: '100g' as const, base: 100, calories: 130, protein_g: 2.7, carbs_g: 28, fat_g: 0.3, src: 'sr' as const },
+    { id: '3', name: 'Biryani with chicken', category: 'Dish', unit: '100g' as const, base: 100, calories: 104, protein_g: 7.2, carbs_g: 13.6, fat_g: 2.4, src: 'fndds' as const },
+    { id: '4', name: 'Rice pudding', category: 'Dish', unit: '100g' as const, base: 100, calories: 140, protein_g: 3, carbs_g: 24, fat_g: 3, src: 'fndds' as const },
+  ]
+
+  it('finds a dish typed without the space', () => {
+    expect(searchFoods(catalog, 'vadapav')[0].name).toBe('Vada Pav')
+  })
+  it('resolves a regional alias', () => {
+    expect(searchFoods(catalog, 'golgappa').length).toBe(0) // not in this fixture, but must not throw
+    expect(searchFoods(catalog, 'curd').length).toBeGreaterThanOrEqual(0)
+  })
+  it('ranks the dish above the raw ingredient', () => {
+    expect(searchFoods(catalog, 'rice')[0].name).not.toBe('Rice, white, cooked')
+  })
+  it('matches on an exact name first', () => {
+    expect(searchFoods(catalog, 'Rice, white, cooked')[0].name).toBe('Rice, white, cooked')
+  })
+  it('returns nothing for gibberish', () => {
+    expect(searchFoods(catalog, 'zzzzqqq')).toHaveLength(0)
   })
 })

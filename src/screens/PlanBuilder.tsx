@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
-import { Button, Card, Field, Icon, Screen, Sheet, Tabs } from '../ui'
+import { Button, Card, Field, Icon, Notice, Screen, Sheet, Spinner, Tabs } from '../ui'
+import { requestPlan } from '../lib/planner'
+import { ai } from '../lib/ai'
 import { nameOf } from './Workout'
 import { SEED_PLAN } from '../lib/seed'
 import { FOCUS_LABELS, FREQUENCIES, generatePlan } from '../lib/templates'
@@ -229,10 +231,25 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
   const s = useStore()
   const [focus, setFocus] = useState<TrainingFocus>('strength_aesthetics')
   const [days, setDays] = useState(5)
-  const [emphasis, setEmphasis] = useState('')
+  const [preferences, setPreferences] = useState('')
+  const [equipment, setEquipment] = useState('')
+  const [experience, setExperience] = useState('intermediate')
   const [replace, setReplace] = useState(true)
+  const [busy, setBusy] = useState(false)
+  const [proposal, setProposal] = useState<WorkoutPlan | null>(null)
+  const [rationale, setRationale] = useState<string | null>(null)
+  const [note, setNote] = useState<string | null>(null)
+  const [aiUsed, setAiUsed] = useState(false)
 
-  const preview = generatePlan({ focus, daysPerWeek: days, emphasis: [emphasis] })
+  const template = generatePlan({ focus, daysPerWeek: days, emphasis: [preferences] })
+  const preview = proposal ?? template
+
+  async function activate(plan: WorkoutPlan, source: 'ai' | 'template') {
+    if (replace) for (const p of s.plans.filter(p => p.active)) await s.save('workout_plans', { ...p, active: false } as never)
+    await s.save('workout_plans', { ...plan, active: replace, source } as never)
+    onCreated?.(plan.id)
+    onClose()
+  }
 
   return (
     <Sheet open={open} onClose={onClose} title="Build a plan">
@@ -241,7 +258,7 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
           <div className="eyebrow mb-2">Training focus</div>
           <div className="grid grid-cols-2 gap-2">
             {(Object.keys(FOCUS_LABELS) as TrainingFocus[]).map(f => (
-              <button key={f} onClick={() => setFocus(f)}
+              <button key={f} onClick={() => { setFocus(f); setProposal(null) }}
                 className="min-h-[44px] rounded-xl border px-3 text-[12px] font-bold"
                 style={focus === f
                   ? { background: 'var(--accent-strong)', color: '#F6E6EA', borderColor: 'transparent' }
@@ -254,7 +271,7 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
           <div className="eyebrow mb-2">Days per week</div>
           <div className="flex gap-2">
             {FREQUENCIES.map(n => (
-              <button key={n} onClick={() => setDays(n)}
+              <button key={n} onClick={() => { setDays(n); setProposal(null) }}
                 className="min-h-[44px] flex-1 rounded-xl border text-[13px] font-bold"
                 style={days === n
                   ? { background: 'var(--accent-strong)', color: '#F6E6EA', borderColor: 'transparent' }
@@ -263,17 +280,60 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
           </div>
         </div>
 
-        <Field label="Emphasis (optional)" hint="Example: bigger shoulders, wider back, smaller waist appearance.">
-          <input value={emphasis} onChange={e => setEmphasis(e.target.value)} />
+        <Field label="What do you want from this plan?"
+          hint="Example: bigger shoulders and wider back, keep bench heavy, no barbell squats — my knee dislikes them.">
+          <textarea rows={3} value={preferences} onChange={e => { setPreferences(e.target.value); setProposal(null) }} />
         </Field>
 
+        <div className="grid grid-cols-2 gap-2">
+          <Field label="Equipment">
+            <input value={equipment} onChange={e => setEquipment(e.target.value)} placeholder="Full gym / dumbbells only" />
+          </Field>
+          <Field label="Experience">
+            <select value={experience} onChange={e => setExperience(e.target.value)}>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </Field>
+        </div>
+
+        {busy ? <Spinner label="Designing your plan" /> : (
+          <Button disabled={!ai.configured} onClick={async () => {
+            setBusy(true); setNote(null)
+            const r = await requestPlan({ focus, daysPerWeek: days, preferences, equipment, experience })
+            setProposal(r.plan); setRationale(r.rationale ?? null)
+            setAiUsed(r.source === 'ai'); setNote(r.fallbackReason ?? null)
+            setBusy(false)
+          }}>Generate with AI</Button>
+        )}
+        {!ai.configured && <Notice tone="warn">AI is not configured — the template plan below still works.</Notice>}
+        {note && <Notice tone="warn">{note}</Notice>}
+        {rationale && aiUsed && (
+          <div className="rounded-2xl border p-3" style={{ borderColor: 'var(--glass-border)', background: 'var(--glass)' }}>
+            <div className="eyebrow">Why this plan</div>
+            <p className="mt-1 text-[12px]">{rationale}</p>
+          </div>
+        )}
+
         <div className="raised p-3">
-          <div className="eyebrow">Preview</div>
+          <div className="eyebrow">{proposal ? (aiUsed ? 'AI plan — review before activating' : 'Template plan') : 'Template preview'}</div>
+          <div className="mt-1 text-[13px] font-bold">{preview.name}</div>
           {preview.days.map(d => (
-            <div key={d.id} className="mt-1.5 text-[12px]">
-              <span className="font-bold">{d.name}</span>
-              <span style={{ color: 'var(--text-mute)' }}> — {d.exercises.length} exercises</span>
-            </div>
+            <details key={d.id} className="mt-1.5">
+              <summary className="cursor-pointer text-[12px]">
+                <span className="font-bold">{d.name}</span>
+                <span style={{ color: 'var(--text-mute)' }}> — {d.exercises.length} exercises</span>
+              </summary>
+              <ul className="mt-1 grid gap-0.5 pl-3">
+                {d.exercises.map(e => (
+                  <li key={e.id} className="text-[11px]" style={{ color: 'var(--text-dim)' }}>
+                    {e.name ?? nameOf(e.exercise_id)} — {e.sets} × {e.reps}
+                    {e.rest_sec ? ` · ${e.rest_sec}s` : ''}{e.tempo ? ` · ${e.tempo}` : ''}
+                  </li>
+                ))}
+              </ul>
+            </details>
           ))}
         </div>
 
@@ -282,12 +342,9 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
           Make this my active plan
         </label>
 
-        <Button onClick={async () => {
-          if (replace) for (const p of s.plans.filter(p => p.active)) await s.save('workout_plans', { ...p, active: false } as never)
-          await s.save('workout_plans', { ...preview, active: replace, source: 'template' } as never)
-          onCreated?.(preview.id)
-          onClose()
-        }}>Create plan</Button>
+        <Button onClick={() => activate(preview, proposal && aiUsed ? 'ai' : 'template')}>
+          {proposal ? 'Activate this plan' : 'Create template plan'}
+        </Button>
         <Button variant="ghost" onClick={async () => {
           const copy = { ...SEED_PLAN, id: uid(), active: replace }
           if (replace) for (const p of s.plans.filter(p => p.active)) await s.save('workout_plans', { ...p, active: false } as never)

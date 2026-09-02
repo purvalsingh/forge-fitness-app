@@ -5,10 +5,11 @@ import { uid } from '../lib/db'
 import { downscale, photos, splitDataUrl } from '../lib/photos'
 import { ai, AIUnavailable } from '../lib/ai'
 import { coerceFocus, localRoadmap, reconcile } from '../lib/physique'
-import { FOCUS_LABELS, generatePlan } from '../lib/templates'
+import { FOCUS_LABELS } from '../lib/templates'
+import { requestPlan } from '../lib/planner'
 import { calcTargets, isValidTarget } from '../lib/calc'
 import { Button, Card, Empty, Field, Icon, Notice, Screen, Spinner, Stat } from '../ui'
-import type { PhysiqueAngle, PhysiqueAnalysis, PhysiqueCheckin, TrainingFocus } from '../lib/types'
+import type { PhysiqueAngle, PhysiqueAnalysis, PhysiqueCheckin, TrainingFocus, WorkoutPlan } from '../lib/types'
 
 const ANGLES: { key: PhysiqueAngle; label: string; required?: boolean }[] = [
   { key: 'front', label: 'Front', required: true },
@@ -324,12 +325,25 @@ function Result({ analysis, aiUsed, err, goal, priorities, days, checkinId, onDo
 
   const proposedFocus = coerceFocus(analysis.training.focus, goal)
   const proposedDays = analysis.training.days_per_week || days
-  const plan = useMemo(() => generatePlan({
-    focus: proposedFocus,
-    daysPerWeek: proposedDays,
-    emphasis: [...analysis.training.emphasis, priorities],
-    name: `${FOCUS_LABELS[proposedFocus]} · ${proposedDays} days`,
-  }), [proposedFocus, proposedDays, analysis.training.emphasis, priorities])
+  const [plan, setPlan] = useState<WorkoutPlan | null>(null)
+  const [planNote, setPlanNote] = useState<string | null>(null)
+  const [planRationale, setPlanRationale] = useState<string | null>(null)
+
+  // The physique analysis feeds straight into plan generation: its priorities become the brief.
+  useEffect(() => {
+    let live = true
+    void requestPlan({
+      focus: proposedFocus,
+      daysPerWeek: proposedDays,
+      preferences: priorities,
+      priorities: analysis.training.emphasis,
+      name: `${FOCUS_LABELS[proposedFocus]} · ${proposedDays} days`,
+    }).then(r => {
+      if (!live) return
+      setPlan(r.plan); setPlanNote(r.fallbackReason ?? null); setPlanRationale(r.rationale ?? null)
+    })
+    return () => { live = false }
+  }, [proposedFocus, proposedDays, priorities, analysis.training.emphasis])
 
   const nutrition = useMemo(() => {
     if (!s.goal || !s.profile) return null
@@ -357,25 +371,39 @@ function Result({ analysis, aiUsed, err, goal, priorities, days, checkinId, onDo
 
       <Card className="mt-3">
         <div className="eyebrow">Recommended training</div>
-        <div className="mt-1 text-[16px] font-extrabold">{plan.name}</div>
-        <p className="mt-1 text-[12px]" style={{ color: 'var(--text-mute)' }}>{analysis.training.rationale}</p>
-        <div className="mt-2 grid gap-1.5">
-          {plan.days.map(d => (
-            <div key={d.id} className="raised p-2.5">
-              <div className="text-[13px] font-bold">{d.name}</div>
-              <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>
-                {d.exercises.length} exercises · {d.exercises.reduce((a, e) => a + e.sets, 0)} sets
-              </div>
+        {!plan ? <Spinner label="Building your plan" /> : (
+          <>
+            <div className="mt-1 text-[16px] font-extrabold">{plan.name}</div>
+            <p className="mt-1 text-[12px]" style={{ color: 'var(--text-mute)' }}>
+              {planRationale ?? analysis.training.rationale}
+            </p>
+            {planNote && <div className="mt-2"><Notice tone="warn">{planNote}</Notice></div>}
+            <div className="mt-2 grid gap-1.5">
+              {plan.days.map(d => (
+                <details key={d.id} className="raised p-2.5">
+                  <summary className="cursor-pointer text-[13px] font-bold">{d.name}</summary>
+                  <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>
+                    {d.exercises.length} exercises · {d.exercises.reduce((a, e) => a + e.sets, 0)} sets
+                  </div>
+                  <ul className="mt-1 grid gap-0.5">
+                    {d.exercises.map(e => (
+                      <li key={e.id} className="text-[11px]" style={{ color: 'var(--text-dim)' }}>
+                        {e.name} — {e.sets} × {e.reps}{e.rest_sec ? ` · ${e.rest_sec}s rest` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="mt-3">
-          <Button disabled={applied.includes('plan')} onClick={async () => {
-            for (const p of s.plans.filter(p => p.active)) await s.save('workout_plans', { ...p, active: false } as never)
-            await s.save('workout_plans', { ...plan, active: true, source: aiUsed ? 'ai' : 'template' } as never)
-            setApplied(a => [...a, 'plan'])
-          }}>{applied.includes('plan') ? 'Plan activated' : 'Review & activate this plan'}</Button>
-        </div>
+            <div className="mt-3">
+              <Button disabled={applied.includes('plan')} onClick={async () => {
+                for (const p of s.plans.filter(p => p.active)) await s.save('workout_plans', { ...p, active: false } as never)
+                await s.save('workout_plans', { ...plan, active: true } as never)
+                setApplied(a => [...a, 'plan'])
+              }}>{applied.includes('plan') ? 'Plan activated' : 'Review & activate this plan'}</Button>
+            </div>
+          </>
+        )}
         <p className="mt-2 text-[11px]" style={{ color: 'var(--text-mute)' }}>
           Your existing workout history is kept — activating a plan never deletes past sessions.
         </p>

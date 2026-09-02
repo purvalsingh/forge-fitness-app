@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
 import { scaleFood, round1 } from '../lib/calc'
 import { ai, AIUnavailable, type ParsedFood } from '../lib/ai'
 import { Button, Card, Field, Notice, Sheet, Spinner, Tabs } from '../ui'
+import { loadCatalog, searchFoods, type CatalogFood } from '../lib/catalog'
 import type { Food, FoodLog, Unit } from '../lib/types'
 
 const UNITS: Unit[] = ['g', 'ml', 'serving', 'piece', 'slice', 'cup', 'tbsp', 'tsp', 'scoop']
@@ -35,38 +37,60 @@ export function AddFoodSheet({ open, onClose, date, mealTypeId }: {
 function SearchTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: string; onDone: () => void }) {
   const s = useStore()
   const [q, setQ] = useState('')
-  const [picked, setPicked] = useState<Food | null>(null)
+  const [picked, setPicked] = useState<CatalogFood | Food | null>(null)
   const [qty, setQty] = useState('100')
+  const [catalog, setCatalog] = useState<CatalogFood[] | null>(null)
+  const [catalogError, setCatalogError] = useState(false)
+
+  useEffect(() => {
+    loadCatalog().then(setCatalog).catch(() => setCatalogError(true))
+  }, [])
 
   const results = useMemo(() => {
-    const needle = q.trim().toLowerCase()
-    const list = needle ? s.foods.filter(f => f.name.toLowerCase().includes(needle)) : s.foods
-    return list.slice(0, 40)
-  }, [q, s.foods])
+    const mine = s.foods.filter(f => !q.trim() || f.name.toLowerCase().includes(q.trim().toLowerCase()))
+    const fromCatalog = catalog ? searchFoods(catalog, q, 60) : []
+    const seen = new Set(mine.map(f => f.name.toLowerCase()))
+    return [...mine, ...fromCatalog.filter(f => !seen.has(f.name.toLowerCase()))].slice(0, 60)
+  }, [q, s.foods, catalog])
 
   if (picked) {
+    const serving = 'serving_g' in picked ? picked.serving_g : undefined
     const n = scaleFood(picked, Number(qty) || 0)
     return (
       <div className="grid gap-3">
         <div>
           <div className="text-[16px] font-extrabold">{picked.name}</div>
           <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>
-            per {picked.base} {picked.unit} · {picked.calories} kcal
+            {picked.calories} kcal per {picked.base} {picked.unit === '100g' ? 'g' : picked.unit === '100ml' ? 'ml' : picked.unit}
+            {'src' in picked && picked.src === 'composed' ? ' · estimate, computed from ingredients' : ''}
           </div>
         </div>
-        <Field label={`Quantity (${picked.unit === '100g' ? 'g' : picked.unit === '100ml' ? 'ml' : picked.unit})`}>
+        <Field label={`Quantity (${unitLabel(picked.unit)})`}>
           <input type="number" inputMode="decimal" min={0} value={qty} onChange={e => setQty(e.target.value)} />
         </Field>
+        <div className="flex flex-wrap gap-2">
+          {(serving ? [serving, serving / 2, 100] : [50, 100, 150, 200, 250]).map(v => (
+            <button key={v} onClick={() => setQty(String(Math.round(v)))}
+              className="min-h-[38px] rounded-xl border px-3 text-[12px] font-bold" style={{ borderColor: 'var(--line)' }}>
+              {serving && v === serving ? '1 serving' : serving && v === serving / 2 ? '½ serving' : `${Math.round(v)} g`}
+            </button>
+          ))}
+        </div>
         <MacroRow n={n} />
         <Button onClick={async () => {
           const q2 = Number(qty)
           if (!Number.isFinite(q2) || q2 <= 0) return
-          const log: FoodLog = {
+          // A catalog food used for the first time is copied into the user's own foods,
+          // so recipes and history can reference it later.
+          if (!s.foods.some(f => f.id === picked.id)) {
+            const { ...food } = picked as Food
+            await s.save('foods', { ...food, custom: false } as never)
+          }
+          await s.save('food_logs', {
             id: uid(), date, meal_type_id: mealTypeId, food_id: picked.id, name: picked.name,
             qty: q2, unit: normUnit(picked.unit), source: 'search',
             calories: n.calories, protein_g: n.protein_g, carbs_g: n.carbs_g, fat_g: n.fat_g,
-          }
-          await s.save('food_logs', log as never)
+          } as never)
           onDone()
         }}>Add to meal</Button>
         <Button variant="ghost" onClick={() => setPicked(null)}>Back to search</Button>
@@ -76,18 +100,25 @@ function SearchTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: str
 
   return (
     <div className="grid gap-3">
-      <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search foods" aria-label="Search foods" />
+      <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search 13,000+ foods and dishes" aria-label="Search foods" />
+      {!catalog && !catalogError && <Spinner label="Loading food database" />}
+      {catalogError && <Notice tone="warn">Could not load the full food database. Your own foods are still searchable.</Notice>}
       <div className="grid max-h-[46vh] gap-2 overflow-y-auto">
-        {results.length === 0 && <div className="text-[13px]" style={{ color: 'var(--text-mute)' }}>No matches. Create it under “Custom”.</div>}
+        {catalog && results.length === 0 && (
+          <div className="text-[13px]" style={{ color: 'var(--text-mute)' }}>No matches. Create it under “Custom”.</div>
+        )}
         {results.map(f => (
-          <button key={f.id} onClick={() => { setPicked(f); setQty(String(f.base)) }} className="raised flex items-center justify-between p-3 text-left">
-            <div>
-              <div className="text-[14px] font-bold">{f.name}</div>
-              <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>
-                {f.calories} kcal / {f.base} {f.unit} · P{f.protein_g} C{f.carbs_g} F{f.fat_g}
-              </div>
-            </div>
-            <span className="text-[11px]" style={{ color: 'var(--accent)' }}>{f.custom ? 'Custom' : f.category}</span>
+          <button key={f.id} onClick={() => { setPicked(f); setQty(String(('serving_g' in f && f.serving_g) || f.base)) }}
+            className="raised flex items-center justify-between gap-2 p-3 text-left">
+            <span className="min-w-0">
+              <span className="block truncate text-[14px] font-bold">{f.name}</span>
+              <span className="block text-[11px]" style={{ color: 'var(--text-mute)' }}>
+                {f.calories} kcal / {f.base}{unitLabel(f.unit)} · P{f.protein_g} C{f.carbs_g} F{f.fat_g}
+              </span>
+            </span>
+            <span className="shrink-0 text-[11px]" style={{ color: 'var(--accent)' }}>
+              {f.custom ? 'Mine' : f.category === 'Dish' ? 'Dish' : f.category}
+            </span>
           </button>
         ))}
       </div>
@@ -95,12 +126,42 @@ function SearchTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: str
   )
 }
 
+function unitLabel(u: Unit) { return u === '100g' ? 'g' : u === '100ml' ? 'ml' : ` ${u}` }
+
 function RecipeTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: string; onDone: () => void }) {
   const s = useStore()
+  const nav = useNavigate()
   const [busy, setBusy] = useState<string | null>(null)
+  const logged = s.foodLogs.filter(l => l.date === date && l.meal_type_id === mealTypeId)
   return (
     <div className="grid max-h-[60vh] gap-2 overflow-y-auto">
-      {s.recipes.length === 0 && <div className="text-[13px]" style={{ color: 'var(--text-mute)' }}>No saved recipes yet.</div>}
+      <div className="grid gap-2">
+        <Button variant="quiet" onClick={() => nav('/more/recipes?new=1')}>+ New quick meal</Button>
+        {logged.length > 0 && (
+          <Button variant="ghost" onClick={async () => {
+            // Turn what is already on this meal into a reusable quick meal.
+            const ingredients: { food_id: string; qty: number }[] = []
+            for (const l of logged) {
+              let foodId = l.food_id
+              if (!foodId || !s.foods.some(f => f.id === foodId)) {
+                foodId = uid()
+                const factor = l.qty || 1
+                await s.save('foods', {
+                  id: foodId, name: l.name, unit: l.unit, base: l.qty,
+                  calories: l.calories, protein_g: l.protein_g, carbs_g: l.carbs_g, fat_g: l.fat_g,
+                  custom: true, category: 'Custom',
+                } as never)
+                void factor
+              }
+              ingredients.push({ food_id: foodId, qty: l.qty })
+            }
+            const mealName = s.mealTypes.find(m => m.id === mealTypeId)?.name ?? 'Meal'
+            await s.save('recipes', { id: uid(), name: `${mealName} — ${date}`, ingredients } as never)
+            onDone()
+          }}>Save this meal as a quick meal</Button>
+        )}
+      </div>
+      {s.recipes.length === 0 && <div className="text-[13px]" style={{ color: 'var(--text-mute)' }}>No saved quick meals yet — create one above.</div>}
       {s.recipes.map(r => {
         const parts = r.ingredients.map(i => {
           const f = s.foods.find(x => x.id === i.food_id)

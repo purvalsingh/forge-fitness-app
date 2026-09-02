@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useStore, useToday } from '../store'
 import { uid } from '../lib/db'
 import { round1, scaleFood } from '../lib/calc'
-import { Button, Card, Empty, Field, Icon, Screen, Sheet } from '../ui'
+import { Button, Card, Empty, Field, Icon, Screen, Sheet, Spinner } from '../ui'
+import { loadCatalog, searchFoods, type CatalogFood } from '../lib/catalog'
 import { normUnit } from './AddFood'
 import type { Recipe } from '../lib/types'
 
@@ -11,7 +12,9 @@ export default function Recipes() {
   const s = useStore()
   const nav = useNavigate()
   const date = useToday()
-  const [edit, setEdit] = useState<Recipe | null>(null)
+  const [params, setParams] = useSearchParams()
+  const [edit, setEdit] = useState<Recipe | null>(
+    () => (params.get('new') ? { id: uid(), name: '', ingredients: [] } : null))
   const [addTo, setAddTo] = useState<Recipe | null>(null)
 
   function totalsOf(r: Recipe) {
@@ -71,7 +74,7 @@ export default function Recipes() {
         })}
       </div>
 
-      {edit && <RecipeSheet recipe={edit} onClose={() => setEdit(null)} />}
+      {edit && <RecipeSheet recipe={edit} onClose={() => { setEdit(null); if (params.get('new')) setParams({}, { replace: true }) }} />}
       {addTo && (
         <Sheet open onClose={() => setAddTo(null)} title={`Add “${addTo.name}” to`}>
           <div className="grid gap-2">
@@ -100,8 +103,20 @@ export default function Recipes() {
 function RecipeSheet({ recipe, onClose }: { recipe: Recipe; onClose: () => void }) {
   const s = useStore()
   const [r, setR] = useState(recipe)
-  const [pick, setPick] = useState('')
+  const [q, setQ] = useState('')
+  const [catalog, setCatalog] = useState<CatalogFood[] | null>(null)
   const exists = s.recipes.some(x => x.id === recipe.id)
+
+  useEffect(() => { loadCatalog().then(setCatalog).catch(() => setCatalog([])) }, [])
+
+  const options = useMemo(() => {
+    if (!q.trim()) return []
+    const needle = q.trim().toLowerCase()
+    const mine = s.foods.filter(f => f.name.toLowerCase().includes(needle)).slice(0, 8)
+    const seen = new Set(mine.map(f => f.name.toLowerCase()))
+    const rest = catalog ? searchFoods(catalog, q, 20).filter(f => !seen.has(f.name.toLowerCase())) : []
+    return [...mine, ...rest].slice(0, 20)
+  }, [q, s.foods, catalog])
 
   return (
     <Sheet open onClose={onClose} title={exists ? 'Edit recipe' : 'New recipe'}>
@@ -128,17 +143,22 @@ function RecipeSheet({ recipe, onClose }: { recipe: Recipe; onClose: () => void 
               </div>
             )
           })}
-          <div className="flex gap-2">
-            <select value={pick} onChange={e => setPick(e.target.value)} aria-label="Pick a food">
-              <option value="">Add ingredient…</option>
-              {[...s.foods].sort((a, b) => a.name.localeCompare(b.name)).map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
-            </select>
-            <Button className="w-auto px-4" variant="quiet" onClick={() => {
-              if (!pick) return
-              const f = s.foods.find(x => x.id === pick)!
-              setR(v => ({ ...v, ingredients: [...v.ingredients, { food_id: f.id, qty: f.base }] }))
-              setPick('')
-            }}>Add</Button>
+          <div className="grid gap-2">
+            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search a food to add" aria-label="Search a food to add" />
+            {q.trim() && !catalog && <Spinner label="Loading food database" />}
+            {options.map(f => (
+              <button key={f.id} className="raised p-2.5 text-left" onClick={async () => {
+                // An ingredient must exist in the user's foods for the recipe to resolve later.
+                if (!s.foods.some(x => x.id === f.id)) await s.save('foods', { ...f, custom: false } as never)
+                setR(v => ({ ...v, ingredients: [...v.ingredients, { food_id: f.id, qty: ('serving_g' in f && typeof f.serving_g === 'number' ? f.serving_g : f.base) }] }))
+                setQ('')
+              }}>
+                <div className="text-[13px] font-bold">{f.name}</div>
+                <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>
+                  {f.calories} kcal / {f.base}{f.unit === '100g' ? 'g' : f.unit === '100ml' ? 'ml' : ' ' + f.unit}
+                </div>
+              </button>
+            ))}
           </div>
         </div>
 
