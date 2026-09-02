@@ -85,9 +85,12 @@ async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, ret
       body: JSON.stringify({ task, payload }),
     })
   } catch {
+    // A cold serverless function can time out the very first call of the day; one more try, then give up.
+    if (retry) return call(task, payload, schema, false)
     throw new AIUnavailable('Could not reach the AI service. Check your connection.')
   }
   if (res.status === 503) throw new AIUnavailable()
+  if ((res.status === 502 || res.status === 504) && retry) return call(task, payload, schema, false)
   if (!res.ok) throw new AIUnavailable(`AI request failed (${res.status})`)
 
   let json = await res.json().catch(() => null)
