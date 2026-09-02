@@ -53,9 +53,13 @@ html[data-theme="light"] {
 * { -webkit-tap-highlight-color: transparent; }
 
 html, body, #root { height: 100%; }
+html { overflow-x: hidden; }
+#root { width: 100%; }
 
 body {
   margin: 0;
+  width: 100%;
+  overflow-x: hidden;
   background: var(--bg);
   background-image: var(--bg-grad);
   background-attachment: fixed;

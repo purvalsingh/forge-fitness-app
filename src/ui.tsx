@@ -1,10 +1,10 @@
-import { useEffect, useId, useRef, type ReactNode, type CSSProperties } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode, type CSSProperties } from 'react'
 
 export function Screen({ title, sub, right, back, children }: {
   title?: string; sub?: string; right?: ReactNode; back?: () => void; children: ReactNode
 }) {
   return (
-    <div className="mx-auto w-full max-w-[520px] px-4 pt-3 safe-bottom">
+    <div className="mx-auto w-full max-w-[520px] min-w-0 overflow-x-hidden px-4 pt-3 safe-bottom">
       {(title || back || right) && (
         <header className="flex items-center gap-3 py-3">
           {back && (
@@ -81,17 +81,28 @@ export function Tabs<T extends string>({ value, onChange, options }: {
 }
 
 /** Arc gauge used for the daily score on Today. */
-export function ScoreArc({ value, size = 168, label, caption }: {
+export function ScoreArc({ value, size, label, caption }: {
   value: number; size?: number; label?: string; caption?: string
 }) {
-  const r = size / 2 - 12
+  const box = useRef<HTMLDivElement>(null)
+  const [w, setW] = useState(size ?? 168)
+  useEffect(() => {
+    if (size) return
+    const el = box.current
+    if (!el) return
+    const ro = new ResizeObserver(([e]) => setW(Math.max(120, Math.min(168, e.contentRect.width - 24))))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [size])
+  const px = size ?? w
+  const r = px / 2 - 12
   const c = Math.PI * r
   const pct = Math.max(0, Math.min(1, value))
   return (
-    <div className="relative grid place-items-center" style={{ width: size, height: size / 2 + 26 }}>
-      <svg width={size} height={size / 2 + 8} viewBox={`0 0 ${size} ${size / 2 + 8}`} aria-hidden>
-        <path d={arcPath(size, r)} fill="none" strokeWidth="12" strokeLinecap="round" stroke="var(--glass-border)" />
-        <path d={arcPath(size, r)} fill="none" strokeWidth="12" strokeLinecap="round"
+    <div ref={box} className="relative grid w-full place-items-center" style={{ height: px / 2 + 26 }}>
+      <svg width={px} height={px / 2 + 8} viewBox={`0 0 ${px} ${px / 2 + 8}`} aria-hidden>
+        <path d={arcPath(px, r)} fill="none" strokeWidth="12" strokeLinecap="round" stroke="var(--glass-border)" />
+        <path d={arcPath(px, r)} fill="none" strokeWidth="12" strokeLinecap="round"
           stroke="var(--accent)" strokeDasharray={`${c * pct} ${c}`} style={{ transition: 'stroke-dasharray .5s ease' }} />
       </svg>
       <div className="absolute bottom-0 text-center">
