@@ -47,7 +47,7 @@ const StoreCtx = createContext<Ctx | null>(null)
 
 function applyTheme(t: 'dark' | 'light') {
   document.documentElement.dataset.theme = t
-  document.querySelector('meta[name=theme-color]')?.setAttribute('content', t === 'dark' ? '#1A0A0F' : '#F5F0EA')
+  document.querySelector('meta[name=theme-color]')?.setAttribute('content', t === 'dark' ? '#0C0709' : '#F3EDE6')
   localStorage.setItem('forge:theme', t)
 }
 

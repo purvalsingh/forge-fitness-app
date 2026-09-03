@@ -20,3 +20,10 @@ coverage
 .netlify
 supabase/.temp
 deno.lock
+android/android.keystore
+android/keystore-password.txt
+android/app-release*.apk
+android/app-release*.aab
+android/app/
+android/.gradle/
+android/build/
