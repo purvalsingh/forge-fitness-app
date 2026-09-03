@@ -27,3 +27,4 @@ android/app-release*.aab
 android/app/
 android/.gradle/
 android/build/
+.wrangler/
