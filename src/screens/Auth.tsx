@@ -37,6 +37,31 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ tone: 'info' | 'error'; text: string } | null>(null)
+  const [blocked, setBlocked] = useState(false)
+  const [diagnosis, setDiagnosis] = useState<string | null>(null)
+
+  /** "Failed to fetch" means the request never left the device — nothing to do with the password. */
+  const isNetworkError = (e: unknown) =>
+    e instanceof TypeError || /failed to fetch|network|load failed/i.test(e instanceof Error ? e.message : String(e))
+
+  async function runConnectionCheck() {
+    setDiagnosis('Checking…')
+    const url = import.meta.env.VITE_SUPABASE_URL?.trim()
+    if (!url) { setDiagnosis('No server is configured in this build.'); return }
+    try {
+      const res = await fetch(`${url}/auth/v1/health`, {
+        headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '' },
+      })
+      setDiagnosis(res.ok
+        ? 'The server is reachable from this browser. Try again — if it still fails, the address or password is the problem, not the connection.'
+        : `The server answered with ${res.status}. That is a configuration problem, not your connection.`)
+    } catch {
+      setDiagnosis(
+        'This browser could not reach the server at all. That is almost always a shield, ad-blocker or VPN ' +
+        'blocking the request, or a network that filters it. Lower Brave Shields for this site (tap the lion icon), ' +
+        'disable blockers here, or switch between Wi-Fi and mobile data, then retry.')
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -57,7 +82,12 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
         setMsg({ tone: 'info', text: 'Password reset email sent.' })
       }
     } catch (err) {
-      setMsg({ tone: 'error', text: err instanceof Error ? err.message : 'Something went wrong. Try again.' })
+      if (isNetworkError(err)) {
+        setBlocked(true)
+        setMsg({ tone: 'error', text: 'Could not reach the server. Your details were never sent — something on this device or network blocked the request.' })
+      } else {
+        setMsg({ tone: 'error', text: err instanceof Error ? err.message : 'Something went wrong. Try again.' })
+      }
     } finally { setBusy(false) }
   }
 
@@ -81,6 +111,12 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
             </Field>
           )}
           {msg && <Notice tone={msg.tone}>{msg.text}</Notice>}
+          {blocked && (
+            <>
+              <Button variant="ghost" onClick={runConnectionCheck}>Run connection check</Button>
+              {diagnosis && <Notice tone="warn">{diagnosis}</Notice>}
+            </>
+          )}
           <Button type="submit" disabled={busy}>
             {busy ? 'Working…' : mode === 'signup' ? 'Create account' : mode === 'reset' ? 'Send reset link' : 'Sign in'}
           </Button>
