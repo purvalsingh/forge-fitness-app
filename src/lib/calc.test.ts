@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import {
   bmr, tdee, calcTargets, isValidTarget, scaleFood, sumTotals, totalsByMeal,
   dayAdherence, streak, bestStreak, addDays, daysBack, sessionVolume, sessionSets, trend,
@@ -7,7 +7,8 @@ import { ParsedFood, PhysiqueAnalysisSchema } from './ai'
 import { generatePlan, emphasisGroups } from './templates'
 import { localRoadmap, coerceFocus, reconcile } from './physique'
 import { SEED_SETTINGS } from './seed'
-import { searchFoods } from './catalog'
+import { searchFoods, toFoodRow } from './catalog'
+import { candidates, isUnreachable, markBad, rememberGood, resetFailoverState } from './endpoints'
 import type { Food, FoodLog, Settings, WorkoutSession } from './types'
 
 const settings: Settings = SEED_SETTINGS
@@ -285,5 +286,65 @@ describe('food catalog search', () => {
   })
   it('returns nothing for gibberish', () => {
     expect(searchFoods(catalog, 'zzzzqqq')).toHaveLength(0)
+  })
+})
+
+describe('endpoint failover', () => {
+  const PRIMARY = 'https://primary.example/api/ai'
+  const BACKUP = 'https://backup.example/api/ai'
+
+  beforeEach(() => {
+    localStorage.clear()
+    resetFailoverState()
+  })
+
+  it('tries the primary first', () => {
+    expect(candidates(PRIMARY, [BACKUP])[0]).toBe(PRIMARY)
+  })
+
+  it('skips a host that just failed, and comes back to it later', () => {
+    markBad(PRIMARY)
+    expect(candidates(PRIMARY, [BACKUP])).toEqual([BACKUP])
+  })
+
+  it('prefers the last host that worked on the next visit', () => {
+    rememberGood(PRIMARY, BACKUP)
+    expect(candidates(PRIMARY, [BACKUP])[0]).toBe(BACKUP)
+  })
+
+  it('still offers every host when they are all cooling down', () => {
+    markBad(PRIMARY); markBad(BACKUP)
+    expect(candidates(PRIMARY, [BACKUP])).toHaveLength(2)
+  })
+
+  it('treats only unreachable hosts as failover-worthy', () => {
+    expect(isUnreachable(new TypeError('Failed to fetch'))).toBe(true)
+    expect(isUnreachable(new Error('Invalid login credentials'))).toBe(false)
+  })
+})
+
+describe('saving a catalog food', () => {
+  const dish = {
+    id: 'dish-vada-pav', name: 'Vada Pav', category: 'Dish', cuisine: 'Indian',
+    unit: '100g' as const, base: 100, calories: 273, protein_g: 6, carbs_g: 38, fat_g: 10,
+    serving_g: 150, src: 'composed' as const,
+  }
+
+  it('keeps only columns the foods table has', () => {
+    const row = toFoodRow({ ...dish, score: 999 } as never)
+    expect(row).not.toHaveProperty('score')
+    expect(row).not.toHaveProperty('src')
+    expect(row.source).toBe('composed')
+    expect(row.cuisine).toBe('Indian')
+    expect(row.serving_g).toBe(150)
+  })
+
+  it('carries the nutrition across unchanged', () => {
+    const row = toFoodRow(dish)
+    expect(row).toMatchObject({ calories: 273, protein_g: 6, carbs_g: 38, fat_g: 10, base: 100, unit: '100g' })
+  })
+
+  it('marks a catalog food as not user-created', () => {
+    expect(toFoodRow(dish).custom).toBe(false)
   })
 })

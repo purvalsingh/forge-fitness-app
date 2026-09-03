@@ -97,7 +97,16 @@ rejected, then falls through to the next. If all are unavailable the app shows
 
 The repo is host-agnostic and ships config for the two easiest free options.
 
-**Live site**: https://forge-fitness-app-248.netlify.app (project
+**Live sites**: https://purvalsingh.github.io/forge-fitness-app/ (static, GitHub Pages) and
+https://forge-fitness-app-248.netlify.app (static + the API).
+
+The Pages build talks to the Netlify functions for AI and the Supabase proxy, so the two hosts
+back each other up: if one stops serving, the other keeps the app usable. Publish a new Pages
+build with:
+
+```bash
+npm run pages
+``` (project
 `forge-fitness-app-248`). Redeploy from this machine any time with `npm run deploy`.
 
 **Netlify** (`netlify.toml` included): New site from Git → pick the repo → build `npm run build`,

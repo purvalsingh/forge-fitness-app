@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  // GitHub Pages serves a project site from a sub-path; other hosts pass '/'.
+  base: process.env.PUBLIC_BASE ?? '/',
   plugins: [
     react(),
     tailwindcss(),
@@ -28,6 +30,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        globIgnores: ['**/FORGE.apk', '**/food-catalog.json'],
+        maximumFileSizeToCacheInBytes: 3_000_000,
         navigateFallback: '/index.html',
         runtimeCaching: [
           {
@@ -45,5 +49,5 @@ export default defineConfig({
       },
     }),
   ],
-  test: { environment: 'node', include: ['src/**/*.test.ts'] },
+  test: { environment: 'happy-dom', include: ['src/**/*.test.ts'] },
 } as any)

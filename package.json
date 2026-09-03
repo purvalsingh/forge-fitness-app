@@ -11,7 +11,8 @@
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "npm run build && netlify deploy --prod --dir dist"
+    "deploy": "npm run build && netlify deploy --prod --dir dist",
+    "pages": "PUBLIC_BASE=/forge-fitness-app/ VITE_SUPABASE_URL=https://forge-fitness-app-248.netlify.app/sb VITE_AI_FUNCTION_URL=https://forge-fitness-app-248.netlify.app/api/ai vite build && node scripts/publish-pages.mjs"
   },
   "dependencies": {
     "@netlify/blobs": "^11.0.3",
@@ -31,6 +32,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
+    "happy-dom": "^20.13.2",
     "oxlint": "^1.79.0",
     "pg": "^8.23.0",
     "puppeteer-core": "^25.9.0",

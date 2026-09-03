@@ -19,7 +19,7 @@ export function catalogLoaded() { return cache !== null }
 export async function loadCatalog(): Promise<CatalogFood[]> {
   if (cache) return cache
   if (inflight) return inflight
-  inflight = fetch('/food-catalog.json')
+  inflight = fetch(`${import.meta.env.BASE_URL}food-catalog.json`)
     .then(r => { if (!r.ok) throw new Error(`catalog ${r.status}`); return r.json() })
     .then((data: { foods: CatalogFood[] }) => {
       cache = data.foods.map(f => ({ ...f, unit: '100g' as const, base: 100 }))
@@ -63,6 +63,34 @@ const ALIASES: Record<string, string> = {
 }
 
 export interface SearchResult extends CatalogFood { score: number }
+
+/**
+ * Reduce anything food-shaped to the columns the `foods` table actually has.
+ * Catalog entries carry search-only extras (`score`, and previously `src`), and sending an
+ * unknown column makes PostgREST reject the whole write.
+ */
+export function toFoodRow(f: CatalogFood | Food): Food & { cuisine?: string; serving_g?: number; source?: string } {
+  const c = f as Partial<CatalogFood>
+  return {
+    id: f.id,
+    name: f.name,
+    brand: f.brand,
+    category: f.category,
+    unit: f.unit,
+    base: f.base,
+    calories: f.calories,
+    protein_g: f.protein_g,
+    carbs_g: f.carbs_g,
+    fat_g: f.fat_g,
+    fiber_g: f.fiber_g,
+    sugar_g: f.sugar_g,
+    sodium_mg: f.sodium_mg,
+    custom: f.custom ?? false,
+    cuisine: c.cuisine,
+    serving_g: c.serving_g,
+    source: c.src,
+  }
+}
 
 /**
  * Rank by how early and how completely the query matches: exact name, then prefix,

@@ -8,6 +8,48 @@ import { adherenceFor } from '../lib/derive'
 import { daysBack, sumTotals } from '../lib/calc'
 import { Button, Card, DraftInput, Field, Notice, Screen, Spinner } from '../ui'
 
+/** Shows which backend host answered last, so a silent failover is visible rather than mysterious. */
+function ConnectionStatus() {
+  const [state, setState] = useState<{ label: string; detail: string } | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  async function probe() {
+    setBusy(true)
+    const results: string[] = []
+    for (const [name, url] of [
+      ['Data', `${import.meta.env.VITE_SUPABASE_URL ?? ''}/auth/v1/settings`],
+      ['AI', import.meta.env.VITE_AI_FUNCTION_URL ?? '/api/ai'],
+    ] as const) {
+      if (!url) { results.push(`${name}: not configured`); continue }
+      try {
+        const res = await fetch(url, {
+          method: name === 'AI' ? 'POST' : 'GET',
+          headers: name === 'AI'
+            ? { 'content-type': 'application/json' }
+            : { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '' },
+          body: name === 'AI' ? JSON.stringify({ task: 'ping' }) : undefined,
+        })
+        // Any HTTP answer means the host is alive; only a thrown error means unreachable.
+        results.push(`${name}: reachable (${res.status})`)
+      } catch {
+        results.push(`${name}: unreachable`)
+      }
+    }
+    setState({ label: results.join(' · '), detail: new Date().toLocaleTimeString() })
+    setBusy(false)
+  }
+
+  return (
+    <div className="grid gap-2">
+      <div className="text-[12px]" style={{ color: 'var(--text-dim)' }}>
+        {state ? state.label : 'FORGE tries this site first and moves to a backup host if one stops answering.'}
+      </div>
+      {state && <div className="eyebrow">Checked {state.detail}</div>}
+      <Button variant="quiet" disabled={busy} onClick={probe}>{busy ? 'Checking…' : 'Check backends'}</Button>
+    </div>
+  )
+}
+
 export default function SettingsScreen() {
   const s = useStore()
   const nav = useNavigate()
@@ -162,6 +204,31 @@ export default function SettingsScreen() {
               download('forge-workout-history.csv', toCSV(s.sessions as never), 'text/csv')
             }}>Export workout history (CSV)</Button>
           </div>
+        </Card>
+
+        <Card>
+          <div className="eyebrow mb-2">Install</div>
+          <p className="mt-1 text-[12px]" style={{ color: 'var(--text-mute)' }}>
+            Install FORGE as a real Android app, or add it to your home screen from the browser menu.
+            Both run the same build; the app version has no browser chrome.
+          </p>
+          <div className="mt-3 grid gap-2">
+            <a href="/FORGE.apk" download
+              className="grid min-h-[48px] place-items-center rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em]"
+              style={{ background: 'var(--accent-strong)', color: 'var(--color-ivory)', borderColor: 'transparent' }}>
+              Download Android app
+            </a>
+            <a href="/install"
+              className="grid min-h-[48px] place-items-center rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em]"
+              style={{ borderColor: 'var(--line)' }}>
+              Install instructions
+            </a>
+          </div>
+        </Card>
+
+        <Card>
+          <div className="eyebrow mb-2">Connection</div>
+          <ConnectionStatus />
         </Card>
 
         <Card>

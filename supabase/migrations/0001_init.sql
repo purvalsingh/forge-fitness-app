@@ -80,6 +80,9 @@ create table if not exists foods (
   fat_g numeric not null default 0,
   fiber_g numeric, sugar_g numeric, sodium_mg numeric,
   custom boolean not null default false,
+  cuisine text,
+  serving_g numeric,
+  source text,
   primary key (user_id, id)
 );
 

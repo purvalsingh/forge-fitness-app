@@ -5,7 +5,7 @@ import { uid } from '../lib/db'
 import { scaleFood, round1 } from '../lib/calc'
 import { ai, AIUnavailable, type ParsedFood } from '../lib/ai'
 import { Button, Card, Field, Notice, Sheet, Spinner, Tabs } from '../ui'
-import { loadCatalog, searchFoods, type CatalogFood } from '../lib/catalog'
+import { loadCatalog, searchFoods, toFoodRow, type CatalogFood } from '../lib/catalog'
 import type { Food, FoodLog, Unit } from '../lib/types'
 
 const UNITS: Unit[] = ['g', 'ml', 'serving', 'piece', 'slice', 'cup', 'tbsp', 'tsp', 'scoop']
@@ -83,8 +83,7 @@ function SearchTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: str
           // A catalog food used for the first time is copied into the user's own foods,
           // so recipes and history can reference it later.
           if (!s.foods.some(f => f.id === picked.id)) {
-            const { ...food } = picked as Food
-            await s.save('foods', { ...food, custom: false } as never)
+            await s.save('foods', toFoodRow(picked) as never)
           }
           await s.save('food_logs', {
             id: uid(), date, meal_type_id: mealTypeId, food_id: picked.id, name: picked.name,

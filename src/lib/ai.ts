@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { supabase } from './supabase'
+import { AI_FALLBACKS, candidates, isUnreachable, markBad, rememberGood } from './endpoints'
 
 /**
  * Client-side AI facade. It never touches a Gemini key — it calls the `ai` Edge Function,
@@ -59,8 +60,8 @@ const POLL_INTERVAL_MS = 2500
 const POLL_TIMEOUT_MS = 180_000
 
 /** Long tasks answer 202 + job_id; poll the result endpoint until it resolves or we give up. */
-async function pollJob(jobId: string): Promise<unknown> {
-  const resultUrl = FN_URL.replace(/\/ai$/, '/ai-result')
+async function pollJob(jobId: string, base = FN_URL): Promise<unknown> {
+  const resultUrl = base.replace(/\/ai$/, '/ai-result')
   const deadline = Date.now() + POLL_TIMEOUT_MS
   while (Date.now() < deadline) {
     await new Promise(r => setTimeout(r, POLL_INTERVAL_MS))
@@ -75,15 +76,34 @@ async function pollJob(jobId: string): Promise<unknown> {
   throw new AIUnavailable('The AI is taking longer than expected. Try again in a moment.')
 }
 
+/** Post the task to the first AI host that answers, remembering which one worked. */
+async function postTask(task: string, payload: unknown): Promise<{ res: Response; base: string }> {
+  const bases = candidates(FN_URL, AI_FALLBACKS)
+  let lastError: unknown = null
+  for (const base of bases) {
+    try {
+      const res = await fetch(base, {
+        method: 'POST',
+        headers: await authHeaders(),
+        body: JSON.stringify({ task, payload }),
+      })
+      rememberGood(FN_URL, base)
+      return { res, base }
+    } catch (e) {
+      if (!isUnreachable(e)) throw e
+      markBad(base)
+      lastError = e
+    }
+  }
+  throw lastError ?? new TypeError('No AI endpoint configured')
+}
+
 async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, retry = true): Promise<T> {
   if (!FN_URL) throw new AIUnavailable('AI is not configured')
   let res: Response
+  let base = FN_URL
   try {
-    res = await fetch(FN_URL, {
-      method: 'POST',
-      headers: await authHeaders(),
-      body: JSON.stringify({ task, payload }),
-    })
+    ({ res, base } = await postTask(task, payload))
   } catch {
     // A cold serverless function can time out the very first call of the day; one more try, then give up.
     if (retry) return call(task, payload, schema, false)
@@ -95,7 +115,8 @@ async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, ret
 
   let json = await res.json().catch(() => null)
   if (res.status === 202 && json && typeof (json as { job_id?: string }).job_id === 'string') {
-    json = await pollJob((json as { job_id: string }).job_id)
+    // Poll the same host that accepted the job — another host knows nothing about it.
+    json = await pollJob((json as { job_id: string }).job_id, base)
   }
   const parsed = schema.safeParse(json)
   if (parsed.success) return parsed.data

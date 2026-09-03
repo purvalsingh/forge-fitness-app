@@ -4,7 +4,7 @@ import { useStore, useToday } from '../store'
 import { uid } from '../lib/db'
 import { round1, scaleFood } from '../lib/calc'
 import { Button, Card, Empty, Field, Icon, Screen, Sheet, Spinner } from '../ui'
-import { loadCatalog, searchFoods, type CatalogFood } from '../lib/catalog'
+import { loadCatalog, searchFoods, toFoodRow, type CatalogFood } from '../lib/catalog'
 import { normUnit } from './AddFood'
 import type { Recipe } from '../lib/types'
 
@@ -149,7 +149,7 @@ function RecipeSheet({ recipe, onClose }: { recipe: Recipe; onClose: () => void 
             {options.map(f => (
               <button key={f.id} className="raised p-2.5 text-left" onClick={async () => {
                 // An ingredient must exist in the user's foods for the recipe to resolve later.
-                if (!s.foods.some(x => x.id === f.id)) await s.save('foods', { ...f, custom: false } as never)
+                if (!s.foods.some(x => x.id === f.id)) await s.save('foods', toFoodRow(f) as never)
                 setR(v => ({ ...v, ingredients: [...v.ingredients, { food_id: f.id, qty: ('serving_g' in f && typeof f.serving_g === 'number' ? f.serving_g : f.base) }] }))
                 setQ('')
               }}>
