@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0C0709" />
+<title>Install FORGE</title>
+<link rel="icon" href="/favicon.svg" />
+<style>
+  @font-face { font-family:"Playfair var"; src:url("/fonts/playfair.woff2") format("woff2"); font-weight:400 900; font-display:swap }
+  @font-face { font-family:"Archivo var"; src:url("/fonts/archivo-latin.woff2") format("woff2"); font-weight:400 900; font-display:swap }
+  :root { --noir:#0C0709; --paper:#F7F2EC; --paper2:#EFE7DA; --ink:#241016; --dim:#6B4B53; --accent:#7A2638; --line:rgba(247,242,236,.12) }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent }
+  body { margin:0; min-height:100vh; background:var(--noir);
+         background-image:radial-gradient(130% 90% at 50% -15%, #3A121D 0%, #1A0A11 42%, #0C0709 100%);
+         color:var(--paper); font-family:"Archivo var",system-ui,sans-serif; padding:28px 18px 48px }
+  main { max-width:520px; margin:0 auto }
+  .eyebrow { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#8E6B76; font-weight:700 }
+  h1 { font-family:"Playfair var",serif; font-size:clamp(32px,10vw,44px); margin:.2em 0 .1em; letter-spacing:-.01em }
+  .lede { color:#C9A9B2; font-size:14px; line-height:1.5; margin-bottom:22px }
+  .paper { background:linear-gradient(168deg,var(--paper),var(--paper2)); color:var(--ink);
+           border-radius:20px; padding:20px; box-shadow:0 20px 44px -26px rgba(0,0,0,.7) }
+  .paper h2 { font-family:"Playfair var",serif; font-size:22px; margin:0 0 6px }
+  .paper p { font-size:13px; color:var(--dim); margin:0 0 16px; line-height:1.5 }
+  a.btn { display:grid; place-items:center; min-height:52px; border-radius:12px; text-decoration:none;
+          font-size:12px; font-weight:700; letter-spacing:.16em; text-transform:uppercase }
+  a.primary { background:var(--ink); color:var(--paper) }
+  a.ghost { border:1px solid var(--line); color:var(--paper); margin-top:10px }
+  ol { padding-left:18px; margin:18px 0 0; color:#C9A9B2; font-size:13px; line-height:1.7 }
+  ol b { color:var(--paper) }
+  .note { margin-top:22px; font-size:12px; color:#8E6B76; line-height:1.6 }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Personal fitness operating system</div>
+  <h1>Install FORGE</h1>
+  <p class="lede">Two ways to put it on your phone. Both run the same build and share the same account.</p>
+
+  <div class="paper">
+    <h2>Android app</h2>
+    <p>A signed APK, 0.9 MB. Runs without any browser chrome and appears in your app drawer.</p>
+    <a class="btn primary" href="/FORGE.apk" download>Download APK</a>
+  </div>
+
+  <ol>
+    <li>Tap <b>Download APK</b>. Your browser will warn that APKs can be harmful — that warning appears for every file it did not get from the Play Store.</li>
+    <li>Open the downloaded file. Android asks to <b>allow installs from this source</b>; grant it once.</li>
+    <li>Install, then open <b>FORGE</b> from your app drawer.</li>
+  </ol>
+
+  <div class="paper" style="margin-top:22px">
+    <h2>Or add to home screen</h2>
+    <p>No install prompt, no APK. In Chrome or Brave: menu → <b>Add to Home screen</b>. It opens standalone, exactly like the app.</p>
+    <a class="btn primary" href="/">Open FORGE</a>
+  </div>
+
+  <p class="note">
+    Updates to the web app reach both versions automatically — the app is a shell around the same site.
+    Only a change of address needs a fresh APK.
+  </p>
+</main>
+</body>
+</html>

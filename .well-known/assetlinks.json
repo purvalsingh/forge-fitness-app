@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.forge.fitness",
+      "sha256_cert_fingerprints": [
+        "83:F2:51:37:D0:6D:71:3B:E5:47:40:E5:51:90:23:00:2B:9B:5D:08:EC:A0:B0:B4:35:0C:74:32:9C:6A:00:80"
+      ]
+    }
+  }
+]
