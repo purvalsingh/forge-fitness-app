@@ -58,16 +58,34 @@ async function authHeaders(): Promise<Record<string, string>> {
 
 const POLL_INTERVAL_MS = 2500
 const POLL_TIMEOUT_MS = 180_000
+const POLL_MAX_CONSECUTIVE_FAILURES = 4
 
-/** Long tasks answer 202 + job_id; poll the result endpoint until it resolves or we give up. */
+/**
+ * Long tasks answer 202 + job_id; poll the result endpoint until it resolves.
+ *
+ * The poll deliberately sends NO custom headers. Adding `apikey` or `content-type` to a GET makes
+ * it a preflighted cross-origin request, and a result endpoint on another host that does not
+ * answer OPTIONS then fails every poll — which looked exactly like a job that never finished.
+ * The job id is unguessable and grants nothing beyond that one result.
+ */
 async function pollJob(jobId: string, base = FN_URL): Promise<unknown> {
   const resultUrl = base.replace(/\/ai$/, '/ai-result')
   const deadline = Date.now() + POLL_TIMEOUT_MS
+  let consecutiveFailures = 0
+
   while (Date.now() < deadline) {
     await new Promise(r => setTimeout(r, POLL_INTERVAL_MS))
     let res: Response
-    try { res = await fetch(`${resultUrl}?job=${encodeURIComponent(jobId)}`, { headers: await authHeaders() }) }
-    catch { continue }
+    try {
+      res = await fetch(`${resultUrl}?job=${encodeURIComponent(jobId)}`)
+      consecutiveFailures = 0
+    } catch {
+      // Never fail silently forever: a poll that cannot reach the host is a real failure.
+      if (++consecutiveFailures >= POLL_MAX_CONSECUTIVE_FAILURES) {
+        throw new AIUnavailable('Lost contact with the AI service while it was working.')
+      }
+      continue
+    }
     if (res.status === 202) continue
     if (res.status === 503) throw new AIUnavailable()
     if (!res.ok) throw new AIUnavailable(`AI request failed (${res.status})`)
