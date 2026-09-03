@@ -97,6 +97,10 @@ rejected, then falls through to the next. If all are unavailable the app shows
 
 The repo is host-agnostic and ships config for the two easiest free options.
 
+**The AI runs on Supabase Edge Functions** (`supabase/functions/ai`), which allow 150 seconds per
+request — so every task, including plan generation and photo analysis, runs synchronously with no
+background job or polling. `npm run deploy:edge` bundles it into the single file the deploy takes.
+
 **Live sites**: https://purvalsingh.github.io/forge-fitness-app/ (static, GitHub Pages) and
 https://forge-fitness-app-248.netlify.app (static + the API).
 

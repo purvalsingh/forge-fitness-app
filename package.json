@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "deploy": "npm run build && netlify deploy --prod --dir dist",
-    "pages": "PUBLIC_BASE=/forge-fitness-app/ VITE_SUPABASE_URL=https://forge-fitness-app-248.netlify.app/sb VITE_AI_FUNCTION_URL=https://forge-fitness-app-248.netlify.app/api/ai vite build && node scripts/publish-pages.mjs"
+    "pages": "PUBLIC_BASE=/forge-fitness-app/ VITE_SUPABASE_URL=https://forge-fitness-app-248.netlify.app/sb VITE_SUPABASE_FALLBACKS=https://jdogjpskctrpjtuygmdx.supabase.co VITE_AI_FUNCTION_URL=https://jdogjpskctrpjtuygmdx.supabase.co/functions/v1/ai VITE_AI_FALLBACKS=https://forge-fitness-app-248.netlify.app/sb/functions/v1/ai vite build && node scripts/publish-pages.mjs",
+    "deploy:edge": "node scripts/bundle-edge-fn.mjs > /tmp/ai-edge.ts && echo \"deploy /tmp/ai-edge.ts via the Supabase dashboard or CLI\""
   },
   "dependencies": {
     "@netlify/blobs": "^11.0.3",
