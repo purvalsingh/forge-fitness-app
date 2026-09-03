@@ -69,9 +69,11 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
     setBusy(true); setMsg(null)
     try {
       if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({ email, password })
+        const { data, error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
-        setMsg({ tone: 'info', text: 'Account created. Check your email if confirmation is required, then sign in.' })
+        // With confirmations off the user is already signed in; otherwise they must confirm first.
+        if (data.session) return
+        setMsg({ tone: 'info', text: 'Account created. Sign in with those details.' })
         setMode('signin')
       } else if (mode === 'signin') {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
