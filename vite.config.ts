@@ -37,7 +37,7 @@ export default defineConfig({
             options: { cacheName: 'food-catalog', expiration: { maxEntries: 2, maxAgeSeconds: 60 * 60 * 24 * 90 } },
           },
           {
-            urlPattern: ({ url }) => url.pathname.startsWith('/rest/v1'),
+            urlPattern: ({ url }) => url.pathname.includes('/rest/v1'),
             handler: 'NetworkFirst',
             options: { cacheName: 'supabase-api', networkTimeoutSeconds: 5 },
           },

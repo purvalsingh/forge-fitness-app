@@ -36,7 +36,7 @@ Copy `.env.example` → `.env.local`. Only two values belong in the browser:
 
 | Variable | Where to get it | Required? |
 |---|---|---|
-| `VITE_SUPABASE_URL` | Supabase → Project Settings → API | for sync/auth |
+| `VITE_SUPABASE_URL` | Supabase → Project Settings → API, or the `/sb` proxy path on your own domain | for sync/auth |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | same page — the **publishable / anon** key | for sync/auth |
 | `VITE_AI_FUNCTION_URL` | only to override the default `${VITE_SUPABASE_URL}/functions/v1/ai` | no |
 
@@ -107,6 +107,13 @@ get preview deploys.
 **Vercel** (`vercel.json` included): Import the repo, framework "Vite", add the env vars, deploy.
 
 Both serve the SPA fallback needed for client-side routing.
+
+**Supabase is proxied through this domain.** `netlify.toml` forwards `/sb/*` to the Supabase
+project, and `VITE_SUPABASE_URL` points at `https://<your-site>/sb` rather than
+`https://<ref>.supabase.co`. Some mobile networks, DNS resolvers and browser shields block
+`*.supabase.co`, which the browser reports only as `Failed to fetch`; same-origin requests avoid
+that entirely (and skip the CORS preflight). If you fork this, update the target host in
+`netlify.toml` to your own project ref.
 
 Two settings live behind the Netlify UI and only need one click each, under
 [Project configuration](https://app.netlify.com/projects/forge-fitness-app-248/configuration/general):

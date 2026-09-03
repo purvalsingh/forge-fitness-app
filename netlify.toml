@@ -6,6 +6,15 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Supabase is proxied through this domain. Some networks and browser shields block
+# *.supabase.co outright, which surfaces in the app as "Failed to fetch"; going through
+# the site's own origin removes that failure mode (and the CORS round trip with it).
+[[redirects]]
+  from = "/sb/*"
+  to = "https://jdogjpskctrpjtuygmdx.supabase.co/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
