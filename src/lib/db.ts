@@ -42,7 +42,7 @@ export async function put<T extends Row>(t: Table, row: T): Promise<T> {
     return row
   }
   const { data: auth } = await supabase.auth.getUser()
-  const payload = { ...row, user_id: auth.user?.id }
+  const payload = clean({ ...row, user_id: auth.user?.id } as Row)
   const { data, error } = await supabase.from(t).upsert(payload).select().single()
   if (error) throw new Error(error.message)
   return data as T
@@ -58,9 +58,17 @@ export async function putMany<T extends Row>(t: Table, rows: T[]): Promise<void>
     return
   }
   const { data: auth } = await supabase.auth.getUser()
-  const payload = rows.map(r => ({ ...r, user_id: auth.user?.id }))
-  const { error } = await supabase.from(t).upsert(payload)
-  if (error) throw new Error(error.message)
+  const payload = rows.map(r => clean({ ...r, user_id: auth.user?.id } as Row))
+  // Rows with different key sets cannot share one PostgREST call: it pads the gaps with NULL.
+  const groups = new Map<string, Row[]>()
+  for (const r of payload) {
+    const key = Object.keys(r).sort().join(',')
+    groups.set(key, [...(groups.get(key) ?? []), r])
+  }
+  for (const group of groups.values()) {
+    const { error } = await supabase.from(t).upsert(group)
+    if (error) throw new Error(error.message)
+  }
 }
 
 export async function remove(t: Table, id: string): Promise<void> {
@@ -70,6 +78,16 @@ export async function remove(t: Table, id: string): Promise<void> {
   }
   const { error } = await supabase.from(t).delete().eq('id', id)
   if (error) throw new Error(error.message)
+}
+
+/**
+ * Strip null/undefined before writing.
+ * PostgREST pads a batch to a uniform column set, so one row missing an optional field makes it
+ * send NULL for every other row — which trips NOT NULL columns that have a perfectly good default.
+ * Dropping empty values lets the database defaults do their job.
+ */
+function clean<T extends Row>(row: T): T {
+  return Object.fromEntries(Object.entries(row).filter(([, v]) => v !== null && v !== undefined)) as T
 }
 
 export function uid(): string {

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
-import { Button, Card, Field, Icon, Notice, Screen, Sheet, Spinner, Tabs } from '../ui'
+import { Button, Card, DraftInput, Field, Icon, Notice, Screen, Sheet, Spinner, Tabs } from '../ui'
 import { requestPlan } from '../lib/planner'
 import { ai } from '../lib/ai'
 import { nameOf } from './Workout'
@@ -55,7 +55,7 @@ export default function PlanBuilder() {
 
       <Card>
         <Field label="Plan name">
-          <input value={plan.name} onChange={e => savePlan({ ...plan, name: e.target.value })} />
+          <DraftInput value={plan.name} ariaLabel="Plan name" onCommit={v => savePlan({ ...plan, name: v })} />
         </Field>
         <div className="mt-2 grid grid-cols-2 gap-2">
           <Button variant="quiet" onClick={() => savePlan({ ...plan, active: true })}>
@@ -93,8 +93,12 @@ export default function PlanBuilder() {
 
       <Card className="mt-3">
         <div className="grid grid-cols-2 gap-2">
-          <Field label="Day name"><input value={day.name} onChange={e => patchDay({ name: e.target.value })} /></Field>
-          <Field label="Focus"><input value={day.focus} onChange={e => patchDay({ focus: e.target.value })} /></Field>
+          <Field label="Day name">
+            <DraftInput value={day.name} ariaLabel="Day name" onCommit={v => patchDay({ name: v })} />
+          </Field>
+          <Field label="Focus">
+            <DraftInput value={day.focus} ariaLabel="Day focus" onCommit={v => patchDay({ focus: v })} />
+          </Field>
         </div>
       </Card>
 
@@ -118,32 +122,32 @@ export default function PlanBuilder() {
             </div>
             <div className="mt-2 grid grid-cols-3 gap-2">
               <Field label="Sets">
-                <input type="number" min={1} max={12} value={ex.sets}
-                  onChange={e => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, sets: Number(e.target.value) } : x) })} />
+                <DraftInput type="number" min={1} max={12} value={ex.sets} ariaLabel="Sets"
+                  onCommit={v => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, sets: Number(v) || 1 } : x) })} />
               </Field>
               <Field label="Reps">
-                <input value={ex.reps}
-                  onChange={e => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, reps: e.target.value } : x) })} />
+                <DraftInput value={ex.reps} ariaLabel="Reps"
+                  onCommit={v => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, reps: v } : x) })} />
               </Field>
               <Field label="Target">
-                <input value={ex.target}
-                  onChange={e => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, target: e.target.value } : x) })} />
+                <DraftInput value={ex.target} ariaLabel="Target"
+                  onCommit={v => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, target: v } : x) })} />
               </Field>
             </div>
             <div className="mt-2 grid grid-cols-2 gap-2">
               <Field label="Rest (sec)">
-                <input type="number" min={0} max={600} value={ex.rest_sec ?? ''}
-                  onChange={e => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, rest_sec: Number(e.target.value) } : x) })} />
+                <DraftInput type="number" min={0} max={600} value={ex.rest_sec ?? ''} ariaLabel="Rest seconds"
+                  onCommit={v => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, rest_sec: Number(v) || undefined } : x) })} />
               </Field>
               <Field label="Tempo">
-                <input value={ex.tempo ?? ''} placeholder="3-0-1"
-                  onChange={e => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, tempo: e.target.value } : x) })} />
+                <DraftInput value={ex.tempo ?? ''} placeholder="3-0-1" ariaLabel="Tempo"
+                  onCommit={v => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, tempo: v } : x) })} />
               </Field>
             </div>
             <div className="mt-2">
               <Field label="Notes">
-                <input value={ex.note ?? ''}
-                  onChange={e => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, note: e.target.value } : x) })} />
+                <DraftInput value={ex.note ?? ''} ariaLabel="Exercise note"
+                  onCommit={v => patchDay({ exercises: day.exercises.map(x => x.id === ex.id ? { ...x, note: v } : x) })} />
               </Field>
             </div>
           </Card>

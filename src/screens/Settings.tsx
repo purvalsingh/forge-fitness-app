@@ -6,7 +6,7 @@ import { supabase, supabaseConfigured } from '../lib/supabase'
 import { ai, AIUnavailable } from '../lib/ai'
 import { adherenceFor } from '../lib/derive'
 import { daysBack, sumTotals } from '../lib/calc'
-import { Button, Card, Field, Notice, Screen, Spinner } from '../ui'
+import { Button, Card, DraftInput, Field, Notice, Screen, Spinner } from '../ui'
 
 export default function SettingsScreen() {
   const s = useStore()
@@ -28,8 +28,8 @@ export default function SettingsScreen() {
         <Card>
           <div className="eyebrow mb-2">Profile</div>
           <Field label="Display name">
-            <input value={s.profile?.display_name ?? ''}
-              onChange={e => s.profile && s.save('profiles', { ...s.profile, display_name: e.target.value } as never)} />
+            <DraftInput value={s.profile?.display_name ?? ''} ariaLabel="Display name"
+              onCommit={v => s.profile && s.save('profiles', { ...s.profile, display_name: v } as never)} />
           </Field>
         </Card>
 
@@ -44,8 +44,8 @@ export default function SettingsScreen() {
         <Card>
           <div className="eyebrow mb-2">Steps & adherence</div>
           <Field label="Daily step goal">
-            <input type="number" min={0} max={100000} value={s.settings.step_goal}
-              onChange={e => s.save('settings', { ...s.settings, step_goal: Number(e.target.value) } as never)} />
+            <DraftInput type="number" min={0} max={100000} value={s.settings.step_goal} ariaLabel="Daily step goal"
+              onCommit={v => s.save('settings', { ...s.settings, step_goal: Number(v) || 0 } as never)} />
           </Field>
           <div className="mt-2">
             <Field label="Rest days" hint="Rest days never count as a failed workout.">
@@ -68,8 +68,9 @@ export default function SettingsScreen() {
           </div>
           <div className="mt-2">
             <Field label="Diet tolerance (%)" hint="How close to your calorie and protein targets still counts as complete.">
-              <input type="number" min={1} max={50} value={Math.round(s.settings.diet_tolerance * 100)}
-                onChange={e => s.save('settings', { ...s.settings, diet_tolerance: Number(e.target.value) / 100 } as never)} />
+              <DraftInput type="number" min={1} max={50} value={Math.round(s.settings.diet_tolerance * 100)}
+                ariaLabel="Diet tolerance percent"
+                onCommit={v => s.save('settings', { ...s.settings, diet_tolerance: Math.min(50, Math.max(1, Number(v) || 10)) / 100 } as never)} />
             </Field>
           </div>
         </Card>
@@ -79,8 +80,10 @@ export default function SettingsScreen() {
           <div className="grid gap-2">
             {s.mealTypes.map(m => (
               <div key={m.id} className="raised grid grid-cols-[1fr_110px] gap-2 p-2">
-                <input aria-label="Meal name" value={m.name} onChange={e => s.save('meal_types', { ...m, name: e.target.value } as never)} />
-                <input aria-label="Meal time" type="time" value={m.time} onChange={e => s.save('meal_types', { ...m, time: e.target.value } as never)} />
+                <DraftInput ariaLabel="Meal name" value={m.name}
+                  onCommit={v => s.save('meal_types', { ...m, name: v } as never)} />
+                <DraftInput ariaLabel="Meal time" type="time" value={m.time}
+                  onCommit={v => s.save('meal_types', { ...m, time: v } as never)} />
               </div>
             ))}
           </div>

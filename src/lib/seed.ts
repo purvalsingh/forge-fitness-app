@@ -76,7 +76,7 @@ export const SEED_RECIPES: Recipe[] = [
     ],
   },
   {
-    id: id('recipe-eggs-toast'), name: '4 Eggs + Toast',
+    id: id('recipe-eggs-toast'), name: '4 Eggs + Toast', favorite: false,
     ingredients: [
       { food_id: foodId('Whole Egg'), qty: 4 },
       { food_id: foodId('Brown Bread'), qty: 2 },

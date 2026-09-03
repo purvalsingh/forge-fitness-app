@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
-import { Bar, Button, Card, Field, Notice, Screen, Stat } from '../ui'
+import { Bar, Button, Card, DraftInput, Field, Notice, Screen, Stat } from '../ui'
 import type { ActivityLevel, Goal, GoalMode } from '../lib/types'
 
 const MODES: { value: GoalMode; title: string; body: string }[] = [
@@ -75,12 +75,12 @@ export default function Goals() {
           {s.profile && (
             <div className="mt-2 grid grid-cols-3 gap-2">
               <Field label="Height (cm)">
-                <input type="number" value={s.profile.height_cm}
-                  onChange={e => s.save('profiles', { ...s.profile!, height_cm: Number(e.target.value) } as never)} />
+                <DraftInput type="number" value={s.profile.height_cm} ariaLabel="Height in cm"
+                  onCommit={v => s.save('profiles', { ...s.profile!, height_cm: Number(v) || s.profile!.height_cm } as never)} />
               </Field>
               <Field label="Age">
-                <input type="number" value={s.profile.age}
-                  onChange={e => s.save('profiles', { ...s.profile!, age: Number(e.target.value) } as never)} />
+                <DraftInput type="number" value={s.profile.age} ariaLabel="Age"
+                  onCommit={v => s.save('profiles', { ...s.profile!, age: Number(v) || s.profile!.age } as never)} />
               </Field>
               <Field label="Sex">
                 <select value={s.profile.sex}

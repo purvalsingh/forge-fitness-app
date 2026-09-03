@@ -4,9 +4,10 @@
 import { buildRequest, extractJson } from '../../supabase/functions/_shared/prompts.ts'
 import { callGemini, keys } from '../lib/gemini.mts'
 
-// Vision analysis over several photos routinely outruns a synchronous function's timeout,
-// so it is handed to the background function and the client polls /api/ai-result.
-const BACKGROUND_TASKS = new Set(['physique_analysis'])
+// These outrun a synchronous function's timeout (vision over several photos; a whole training
+// plan is ~35 exercises of generation), so they run in the background function and the client
+// polls /api/ai-result for the result.
+const BACKGROUND_TASKS = new Set(['physique_analysis', 'generate_workout_plan'])
 
 export default async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })

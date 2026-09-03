@@ -55,6 +55,39 @@ export function Button({ children, onClick, variant = 'primary', className = '',
   )
 }
 
+/**
+ * A text field that keeps its own value while you type and only writes on blur or Enter.
+ * Saving per keystroke means a round trip and a store reload between letters, which
+ * throws away what you just typed.
+ */
+export function DraftInput({ value, onCommit, type = 'text', ariaLabel, placeholder, min, max, step }: {
+  value: string | number
+  onCommit: (v: string) => void
+  type?: 'text' | 'number' | 'time'
+  ariaLabel?: string
+  placeholder?: string
+  min?: number; max?: number; step?: number
+}) {
+  const [draft, setDraft] = useState(String(value ?? ''))
+  const [editing, setEditing] = useState(false)
+  useEffect(() => { if (!editing) setDraft(String(value ?? '')) }, [value, editing])
+
+  const commit = () => {
+    setEditing(false)
+    if (draft !== String(value ?? '')) onCommit(draft)
+  }
+  return (
+    <input
+      type={type} value={draft} aria-label={ariaLabel} placeholder={placeholder}
+      min={min} max={max} step={step}
+      onFocus={() => setEditing(true)}
+      onChange={e => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+    />
+  )
+}
+
 export function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
     <label className="block">
