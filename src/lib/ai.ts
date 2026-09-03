@@ -87,7 +87,10 @@ async function pollJob(jobId: string, base = FN_URL): Promise<unknown> {
       continue
     }
     if (res.status === 202) continue
-    if (res.status === 503) throw new AIUnavailable()
+    if (res.status === 429) {
+    throw new AIUnavailable('The AI has used up today\'s free quota. It resets after midnight US Pacific time — everything else keeps working.')
+  }
+  if (res.status === 503) throw new AIUnavailable()
     if (!res.ok) throw new AIUnavailable(`AI request failed (${res.status})`)
     return res.json().catch(() => null)
   }
@@ -126,6 +129,9 @@ async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, ret
     // A cold serverless function can time out the very first call of the day; one more try, then give up.
     if (retry) return call(task, payload, schema, false)
     throw new AIUnavailable('Could not reach the AI service. Check your connection.')
+  }
+  if (res.status === 429) {
+    throw new AIUnavailable('The AI has used up today\'s free quota. It resets after midnight US Pacific time — everything else keeps working.')
   }
   if (res.status === 503) throw new AIUnavailable()
   if ((res.status === 502 || res.status === 504) && retry) return call(task, payload, schema, false)

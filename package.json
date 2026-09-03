@@ -11,8 +11,8 @@
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "npm run build && netlify deploy --prod --dir dist",
-    "pages": "PUBLIC_BASE=/forge-fitness-app/ VITE_SUPABASE_URL=https://forge-fitness-app-248.netlify.app/sb VITE_SUPABASE_FALLBACKS=https://jdogjpskctrpjtuygmdx.supabase.co VITE_AI_FUNCTION_URL=https://jdogjpskctrpjtuygmdx.supabase.co/functions/v1/ai VITE_AI_FALLBACKS=https://forge-fitness-app-248.netlify.app/sb/functions/v1/ai vite build && node scripts/publish-pages.mjs",
+    "deploy": "PUBLIC_BASE=/ VITE_SUPABASE_URL=https://forge-6k1.pages.dev/sb VITE_SUPABASE_FALLBACKS=https://jdogjpskctrpjtuygmdx.supabase.co VITE_AI_FUNCTION_URL=https://forge-6k1.pages.dev/api/ai VITE_AI_FALLBACKS=https://forge-6k1.pages.dev/sb/functions/v1/ai,https://jdogjpskctrpjtuygmdx.supabase.co/functions/v1/ai vite build && wrangler pages deploy dist --project-name forge --branch main --commit-dirty=true",
+    "pages": "PUBLIC_BASE=/forge-fitness-app/ VITE_SUPABASE_URL=https://forge-6k1.pages.dev/sb VITE_SUPABASE_FALLBACKS=https://jdogjpskctrpjtuygmdx.supabase.co VITE_AI_FUNCTION_URL=https://forge-6k1.pages.dev/api/ai VITE_AI_FALLBACKS=https://forge-6k1.pages.dev/sb/functions/v1/ai,https://jdogjpskctrpjtuygmdx.supabase.co/functions/v1/ai vite build && node scripts/publish-pages.mjs",
     "deploy:edge": "node scripts/bundle-edge-fn.mjs > /tmp/ai-edge.ts && echo \"deploy /tmp/ai-edge.ts via the Supabase dashboard or CLI\""
   },
   "dependencies": {

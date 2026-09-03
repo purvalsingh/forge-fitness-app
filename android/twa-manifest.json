@@ -1,6 +1,6 @@
 {
   "packageId": "app.forge.fitness",
-  "host": "forge-fitness-app-248.netlify.app",
+  "host": "forge-6k1.pages.dev",
   "name": "FORGE",
   "launcherName": "FORGE",
   "display": "standalone",
@@ -13,18 +13,18 @@
   "backgroundColor": "#0C0709",
   "enableNotifications": false,
   "startUrl": "/",
-  "iconUrl": "https://forge-fitness-app-248.netlify.app/icon-512.png",
-  "maskableIconUrl": "https://forge-fitness-app-248.netlify.app/icon-512-maskable.png",
+  "iconUrl": "https://forge-6k1.pages.dev/icon-512.png",
+  "maskableIconUrl": "https://forge-6k1.pages.dev/icon-512-maskable.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
     "alias": "forge"
   },
-  "appVersionName": "1.0.0",
-  "appVersionCode": 2,
+  "appVersionName": "1.1.0",
+  "appVersionCode": 3,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://forge-fitness-app-248.netlify.app/manifest.webmanifest",
+  "webManifestUrl": "https://forge-6k1.pages.dev/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -33,12 +33,12 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://forge-fitness-app-248.netlify.app/",
+  "fullScopeUrl": "https://forge-6k1.pages.dev/",
   "minSdkVersion": 23,
   "orientation": "portrait",
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
   "displayOverride": [],
-  "appVersion": "1.0.0"
+  "appVersion": "1.1.0"
 }

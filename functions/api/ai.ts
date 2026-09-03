@@ -18,17 +18,42 @@ interface Env {
 }
 
 const COOLDOWN_MS = 60_000
-/** Cooldowns live per isolate: good enough to stop hammering a rate-limited key. */
+/** A key that stalls should not hold up the whole request when two others are ready. */
+const PER_KEY_TIMEOUT_MS = 30_000
+/**
+ * Cooldowns live per isolate, keyed by model AND key: a key that exhausted its quota on one
+ * model usually still has quota on another, so parking it globally would waste the ladder.
+ */
 const cooldowns = new Map<string, number>()
+const slot = (model: string, key: string) => `${model}::${key}`
+
+class QuotaExhausted extends Error {
+  constructor(readonly attempts: string[]) { super('quota exhausted') }
+}
 
 async function callGemini(env: Env, body: unknown): Promise<unknown | null> {
-  const model = env.GEMINI_MODEL ?? 'gemini-3.6-flash'
+  // Each model carries its own free-tier quota, so an exhausted one is not the end of the road.
+  const models = (env.GEMINI_MODELS ?? 'gemini-3.6-flash,gemini-flash-latest,gemini-flash-lite-latest')
+    .split(',').map(m => m.trim()).filter(Boolean)
+  let sawQuotaError = false
+  const attempts: string[] = []
+  for (const model of models) {
+    const started = Date.now()
+    const result = await tryModel(env, model, body, () => { sawQuotaError = true })
+    attempts.push(`${model}:${result !== null ? 'ok' : 'miss'}:${Date.now() - started}ms`)
+    if (result !== null) return result
+  }
+  if (sawQuotaError) throw new QuotaExhausted(attempts)
+  return null
+}
+
+async function tryModel(env: Env, model: string, body: unknown, onQuotaError: () => void): Promise<unknown | null> {
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
   const now = Date.now()
   const keys = [env.GEMINI_API_KEY_1, env.GEMINI_API_KEY_2, env.GEMINI_API_KEY_3]
     .map(k => k?.trim())
     .filter((k): k is string => Boolean(k))
-    .filter(k => (cooldowns.get(k) ?? 0) <= now)
+    .filter(k => (cooldowns.get(slot(model, k)) ?? 0) <= now)
 
   if (keys.length === 0) return null
 
@@ -40,13 +65,15 @@ async function callGemini(env: Env, body: unknown): Promise<unknown | null> {
         // The key goes in a header, never the URL: query strings leak into logs and proxies.
         headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(PER_KEY_TIMEOUT_MS),
       })
     } catch {
-      cooldowns.set(key, Date.now() + COOLDOWN_MS)
+      cooldowns.set(slot(model, key), Date.now() + COOLDOWN_MS)
       continue
     }
     if (res.status === 429 || res.status === 403 || res.status >= 500) {
-      cooldowns.set(key, Date.now() + COOLDOWN_MS)
+      if (res.status === 429) onQuotaError()
+      cooldowns.set(slot(model, key), Date.now() + COOLDOWN_MS)
       continue
     }
     if (!res.ok) return null
@@ -76,7 +103,13 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   const geminiRequest = buildRequest(body.task, body.payload)
   if (!geminiRequest) return json({ error: 'unknown_task' }, 400)
 
-  const result = await callGemini(env, geminiRequest)
+  let result: unknown
+  try {
+    result = await callGemini(env, geminiRequest)
+  } catch (e) {
+    if (e instanceof QuotaExhausted) return json({ error: 'quota_exhausted', attempts: e.attempts }, 429)
+    return json({ error: 'ai_unavailable' }, 503)
+  }
   if (result === null) return json({ error: 'ai_unavailable' }, 503)
   return json(result, 200)
 }

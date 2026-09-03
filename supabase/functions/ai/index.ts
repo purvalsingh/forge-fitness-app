@@ -3,10 +3,13 @@
 // Secrets: supabase secrets set GEMINI_API_KEY_1=... GEMINI_API_KEY_2=... GEMINI_API_KEY_3=...
 // deno-lint-ignore-file no-explicit-any
 
-const MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.6-flash'
+const MODELS = (Deno.env.get('GEMINI_MODELS') ?? 'gemini-3.6-flash,gemini-flash-latest,gemini-flash-lite-latest').split(',').map(m => m.trim()).filter(Boolean)
 // The key travels in a header, never in the URL — query strings leak into logs and proxies.
 const ENDPOINT = (model: string) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
+
+/** Raised when every model and key reports an exhausted free-tier quota. */
+class QuotaExhausted extends Error {}
 
 import { buildRequest, extractJson } from '../_shared/prompts.ts'
 
@@ -16,34 +19,53 @@ const CORS = {
   'access-control-allow-methods': 'POST, OPTIONS',
 }
 
-interface KeyState { key: string; cooldownUntil: number }
-const keys: KeyState[] = [1, 2, 3]
+const keys: string[] = [1, 2, 3]
   .map(n => Deno.env.get(`GEMINI_API_KEY_${n}`)?.trim())
   .filter((k): k is string => Boolean(k))
-  .map(key => ({ key, cooldownUntil: 0 }))
+
+/**
+ * Cooldowns are keyed by model AND key: a key that exhausted its quota on one model usually
+ * still has quota on another, so parking it globally would waste the model ladder.
+ */
+const cooldowns = new Map<string, number>()
+const slot = (model: string, key: string) => `${model}::${key}`
 
 const COOLDOWN_MS = 60_000
+/** A key that stalls should not hold up the whole request when two others are ready. */
+const PER_KEY_TIMEOUT_MS = 30_000
 
 async function callGemini(body: unknown): Promise<any> {
+  let sawQuotaError = false
+  for (const model of MODELS) {
+    const result = await tryModel(model, body, () => { sawQuotaError = true })
+    if (result !== null) return result
+  }
+  if (sawQuotaError) throw new QuotaExhausted()
+  return null
+}
+
+async function tryModel(model: string, body: unknown, onQuotaError: () => void): Promise<any> {
   const now = Date.now()
-  const available = keys.filter(k => k.cooldownUntil <= now)
+  const available = keys.filter(k => (cooldowns.get(slot(model, k)) ?? 0) <= now)
   if (available.length === 0) return null
 
-  for (const state of available) {
+  for (const key of available) {
     let res: Response
     try {
-      res = await fetch(ENDPOINT(MODEL), {
+      res = await fetch(ENDPOINT(model), {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'x-goog-api-key': state.key },
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(PER_KEY_TIMEOUT_MS),
       })
     } catch {
-      state.cooldownUntil = Date.now() + COOLDOWN_MS
+      cooldowns.set(slot(model, key), Date.now() + COOLDOWN_MS)
       continue
     }
     if (res.status === 429 || res.status === 403 || res.status >= 500) {
       // Rate limited / exhausted / upstream trouble: park this key, try the next one. No retry storms.
-      state.cooldownUntil = Date.now() + COOLDOWN_MS
+      if (res.status === 429) onQuotaError()
+      cooldowns.set(slot(model, key), Date.now() + COOLDOWN_MS)
       continue
     }
     if (!res.ok) return null
@@ -65,7 +87,13 @@ Deno.serve(async (req) => {
   const request = buildRequest(task, body?.payload)
   if (!request) return json({ error: 'unknown_task' }, 400)
 
-  const result = await callGemini(request)
+  let result: unknown
+  try {
+    result = await callGemini(request)
+  } catch (e) {
+    if (e instanceof QuotaExhausted) return json({ error: 'quota_exhausted' }, 429)
+    return json({ error: 'ai_unavailable' }, 503)
+  }
   if (result === null) return json({ error: 'ai_unavailable' }, 503)
   return json(result, 200)
 })

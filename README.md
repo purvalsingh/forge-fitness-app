@@ -101,7 +101,13 @@ The repo is host-agnostic and ships config for the two easiest free options.
 request — so every task, including plan generation and photo analysis, runs synchronously with no
 background job or polling. `npm run deploy:edge` bundles it into the single file the deploy takes.
 
-**Live sites**: https://purvalsingh.github.io/forge-fitness-app/ (static, GitHub Pages) and
+**Primary: https://forge-6k1.pages.dev** — Cloudflare Pages serves the app, the `/sb` Supabase
+proxy and the `/api/ai` endpoint from one origin. `npm run deploy` publishes it.
+
+**Backup: https://purvalsingh.github.io/forge-fitness-app/** — the same build on GitHub Pages,
+calling the Cloudflare backends. `npm run pages` publishes it.
+
+**Older**: https://purvalsingh.github.io/forge-fitness-app/ (static, GitHub Pages) and
 https://forge-fitness-app-248.netlify.app (static + the API).
 
 The Pages build talks to the Netlify functions for AI and the Supabase proxy, so the two hosts
