@@ -12,6 +12,14 @@ for (const f of fs.readdirSync('site')) if (f !== 'index.html') fs.cpSync(`site/
 fs.cpSync('public/fonts', `${dist}/fonts`, { recursive: true })
 cp('public/favicon.svg', `${dist}/favicon.svg`)
 
+// Remote (git-triggered) Vercel builds have no release/ folder (it is gitignored), so pull the
+// signed APK from the latest GitHub release instead of shipping a page with a dead download link.
+if (!fs.existsSync('release/forge.apk')) {
+  const res = await fetch('https://github.com/purvalsingh/forge-fitness-app/releases/latest/download/forge.apk')
+  if (res.ok) { fs.mkdirSync('release', { recursive: true }); fs.writeFileSync('release/forge.apk', Buffer.from(await res.arrayBuffer())) }
+  else console.warn(`assemble: GitHub release APK fetch failed (${res.status})`)
+}
+
 let size = '—', sha = 'not built yet'
 if (fs.existsSync('release/forge.apk')) {
   cp('release/forge.apk', `${dist}/download/forge.apk`)
