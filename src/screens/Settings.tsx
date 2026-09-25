@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { exportAll, toCSV, uid } from '../lib/db'
 import { supabase, supabaseConfigured } from '../lib/supabase'
-import { ai, AIUnavailable } from '../lib/ai'
+import { ai, AIUnavailable, API_BASE } from '../lib/ai'
+import { isNative } from '../lib/native'
 import { adherenceFor } from '../lib/derive'
 import { daysBack, sumTotals } from '../lib/calc'
 import { Button, Card, DraftInput, Field, Notice, Screen, Spinner } from '../ui'
@@ -18,16 +19,12 @@ function ConnectionStatus() {
     const results: string[] = []
     for (const [name, url] of [
       ['Data', `${import.meta.env.VITE_SUPABASE_URL ?? ''}/auth/v1/settings`],
-      ['AI', import.meta.env.VITE_AI_FUNCTION_URL ?? '/api/ai'],
+      ['AI', `${API_BASE}/api/keys`],
     ] as const) {
       if (!url) { results.push(`${name}: not configured`); continue }
       try {
         const res = await fetch(url, {
-          method: name === 'AI' ? 'POST' : 'GET',
-          headers: name === 'AI'
-            ? { 'content-type': 'application/json' }
-            : { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '' },
-          body: name === 'AI' ? JSON.stringify({ task: 'ping' }) : undefined,
+          headers: name === 'AI' ? {} : { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '' },
         })
         // Any HTTP answer means the host is alive; only a thrown error means unreachable.
         results.push(`${name}: reachable (${res.status})`)
@@ -101,7 +98,7 @@ export default function SettingsScreen() {
                     } as never)}
                       className="min-h-[38px] rounded-xl border px-3 text-[12px] font-bold"
                       style={on
-                        ? { background: 'var(--accent-strong)', color: '#F6E6EA', borderColor: 'transparent' }
+                        ? { background: 'var(--accent-strong)', color: 'var(--accent-ink)', borderColor: 'transparent' }
                         : { borderColor: 'var(--line)' }}>{d}</button>
                   )
                 })}
@@ -114,6 +111,58 @@ export default function SettingsScreen() {
                 ariaLabel="Diet tolerance percent"
                 onCommit={v => s.save('settings', { ...s.settings, diet_tolerance: Math.min(50, Math.max(1, Number(v) || 10)) / 100 } as never)} />
             </Field>
+          </div>
+        </Card>
+
+        <Card>
+          <div className="eyebrow mb-2">Day & training</div>
+          <div className="grid gap-3">
+            <Field label="My day ends at" hint="Anything logged before this hour counts toward the previous day — for late gym sessions and midnight snacks.">
+              <select value={s.settings.day_start_hour ?? 4} onChange={e => s.save('settings', { ...s.settings, day_start_hour: Number(e.target.value) } as never)}>
+                {[0, 1, 2, 3, 4, 5, 6].map(h => <option key={h} value={h}>{h === 0 ? 'Midnight (12:00 AM)' : `${h}:00 AM`}</option>)}
+              </select>
+            </Field>
+            <div className="grid grid-cols-2 gap-2">
+              <Field label="Units">
+                <select value={s.settings.units ?? 'kg'} onChange={e => s.save('settings', { ...s.settings, units: e.target.value } as never)}>
+                  <option value="kg">kg</option><option value="lb">lb</option>
+                </select>
+              </Field>
+              <Field label="Week starts">
+                <select value={s.settings.week_start ?? 1} onChange={e => s.save('settings', { ...s.settings, week_start: Number(e.target.value) } as never)}>
+                  <option value={1}>Monday</option><option value={0}>Sunday</option>
+                </select>
+              </Field>
+              <Field label="Default rest (s)">
+                <DraftInput type="number" min={0} max={900} value={s.settings.default_rest_sec ?? 120} ariaLabel="Default rest seconds"
+                  onCommit={v => s.save('settings', { ...s.settings, default_rest_sec: Math.min(900, Math.max(0, Number(v) || 0)) } as never)} />
+              </Field>
+              <Field label="Bar weight (kg)">
+                <DraftInput type="number" min={0} max={50} value={s.settings.bar_weight_kg ?? 20} ariaLabel="Bar weight"
+                  onCommit={v => s.save('settings', { ...s.settings, bar_weight_kg: Math.min(50, Math.max(0, Number(v) || 20)) } as never)} />
+              </Field>
+              <Field label="Effort per set">
+                <select value={s.settings.effort_scale ?? 'off'} onChange={e => s.save('settings', { ...s.settings, effort_scale: e.target.value } as never)}>
+                  <option value="off">Off</option><option value="rir">RIR (reps in reserve)</option><option value="rpe">RPE (6–10)</option>
+                </select>
+              </Field>
+              <Field label="Water goal (ml)">
+                <DraftInput type="number" min={0} max={10000} value={s.settings.water_goal_ml ?? 2500} ariaLabel="Water goal"
+                  onCommit={v => s.save('settings', { ...s.settings, water_goal_ml: Math.min(10000, Math.max(0, Number(v) || 0)) } as never)} />
+              </Field>
+              <Field label="Fasting window (h)" hint="0 hides the fasting card.">
+                <DraftInput type="number" min={0} max={72} value={s.settings.fasting_hours ?? 16} ariaLabel="Fasting hours"
+                  onCommit={v => s.save('settings', { ...s.settings, fasting_hours: Math.min(72, Math.max(0, Number(v) || 0)) } as never)} />
+              </Field>
+            </div>
+            <label className="flex items-center gap-2 text-[13px]">
+              <input type="checkbox" checked={s.settings.keep_awake !== false} onChange={e => s.save('settings', { ...s.settings, keep_awake: e.target.checked } as never)} />
+              Keep the screen awake during workouts
+            </label>
+            <label className="flex items-center gap-2 text-[13px]">
+              <input type="checkbox" checked={Boolean(s.settings.timer_flash)} onChange={e => s.save('settings', { ...s.settings, timer_flash: e.target.checked } as never)} />
+              Flash the screen when rest ends (loud gyms)
+            </label>
           </div>
         </Card>
 
@@ -143,8 +192,10 @@ export default function SettingsScreen() {
 
         <Card>
           <div className="eyebrow mb-2">AI assistant</div>
-          {!ai.configured
-            ? <Notice tone="warn">No AI endpoint configured. Add Gemini keys to the Edge Function and set VITE_SUPABASE_URL to enable AI features. Everything else keeps working.</Notice>
+          <Button variant="ghost" onClick={() => nav('/more/keys')}>Manage my Gemini keys</Button>
+          <div className="h-2" />
+          {!supabaseConfigured
+            ? <Notice tone="warn">AI needs an account — sign in to use your own Gemini keys.</Notice>
             : busy ? <Spinner label="Generating insights" /> : (
               <Button variant="quiet" onClick={async () => {
                 setBusy(true); setErr(null)
@@ -213,12 +264,12 @@ export default function SettingsScreen() {
             Both run the same build; the app version has no browser chrome.
           </p>
           <div className="mt-3 grid gap-2">
-            <a href="/FORGE.apk" download
+            {!isNative && <a href="https://forgefit-india.vercel.app/#download"
               className="grid min-h-[48px] place-items-center rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em]"
-              style={{ background: 'var(--accent-strong)', color: 'var(--color-ivory)', borderColor: 'transparent' }}>
-              Download Android app
-            </a>
-            <a href="/install"
+              style={{ background: 'var(--accent-strong)', color: 'var(--accent-ink)', borderColor: 'transparent' }}>
+              Download the Android / iPhone app
+            </a>}
+            <a href="https://forgefit-india.vercel.app/#install"
               className="grid min-h-[48px] place-items-center rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em]"
               style={{ borderColor: 'var(--line)' }}>
               Install instructions

@@ -1,19 +1,31 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseConfigured } from '../lib/supabase'
 import { setLocalMode } from '../lib/db'
-import { Button, Card, Field, Notice, Spinner } from '../ui'
+import { aiKeys, AIUnavailable } from '../lib/ai'
+import { isNative } from '../lib/native'
+import { Button, Field, Icon, Notice, Spinner } from '../ui'
+
+/** Where email links (confirm / reset) land. The native app has no URL of its own, so it uses the site. */
+const SITE_APP = isNative ? 'https://forgefit-india.vercel.app/app/' : `${location.origin}${import.meta.env.BASE_URL}`
 
 type Mode = 'signin' | 'signup' | 'reset'
 
+/** Keys typed at sign-up while the account still awaited email confirmation. Memory only — never persisted. */
+let pendingKeys: string[] | null = null
+
+const KEY_RE = /^AIza[0-9A-Za-z_-]{35}$/
+
 /**
- * Auth gate. With Supabase configured it enforces a real session.
- * Without it (or in explicit demo mode) the app runs fully against local storage —
- * a separate code path, never a way to bypass a configured backend.
+ * Auth gate. With Supabase configured it enforces a real session AND at least two Gemini keys on
+ * the account (the AI runs on the user's own quota). Without Supabase — or in explicit offline
+ * demo mode — the app runs against local storage with AI switched off.
  */
 export function AuthGate({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<unknown>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [checking, setChecking] = useState(supabaseConfigured)
-  const [demo, setDemo] = useState(() => localStorage.getItem('forge:demo') === '1')
+  const [keys, setKeys] = useState<'unknown' | 'missing' | 'ok'>('unknown')
+  const [demo, setDemo] = useState(() => { try { return localStorage.getItem('forge:demo') === '1' } catch { return false } })
 
   useEffect(() => {
     if (!supabase) return
@@ -22,118 +34,261 @@ export function AuthGate({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe()
   }, [])
 
+  useEffect(() => {
+    if (!session) { setKeys('unknown'); return }
+    let alive = true
+    ;(async () => {
+      if (pendingKeys) {
+        try { await aiKeys.save(pendingKeys); pendingKeys = null; if (alive) setKeys('ok'); return } catch { /* fall through to the gate */ }
+      }
+      try {
+        const k = await aiKeys.get()
+        if (alive) setKeys(k.count >= 2 ? 'ok' : 'missing')
+      } catch {
+        // API unreachable (offline, cold start): let them in — AI features explain themselves.
+        if (alive) setKeys('ok')
+      }
+    })()
+    return () => { alive = false }
+  }, [session])
+
   const local = !supabaseConfigured || demo
   setLocalMode(local)
 
   if (local) return <>{children}</>
   if (checking) return <Spinner label="Checking session" />
-  if (!session) return <AuthScreen onDemo={() => { localStorage.setItem('forge:demo', '1'); setDemo(true) }} />
+  if (!session) return <AuthScreen onDemo={() => { try { localStorage.setItem('forge:demo', '1') } catch { /* private mode */ } setDemo(true) }} />
+  if (keys === 'unknown') return <Spinner label="Loading your account" />
+  if (keys === 'missing') return <Shell><KeySetup required onSaved={() => setKeys('ok')} /></Shell>
   return <>{children}</>
+}
+
+function Shell({ children }: { children: ReactNode }) {
+  return (
+    <div className="page mx-auto grid min-h-full w-full max-w-[460px] content-center gap-5 px-5 py-10"
+      style={{ paddingTop: 'calc(40px + env(safe-area-inset-top))' }}>
+      <div>
+        <div className="flex items-center gap-2" style={{ color: 'var(--accent)' }}><Icon name="flame" size={26} /><span className="eyebrow" style={{ color: 'var(--accent)' }}>Train · Eat · Track</span></div>
+        <h1 className="title mt-1 text-[48px] leading-none">FORGE</h1>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function passwordProblem(p: string): string | null {
+  if (p.length < 10) return 'Use at least 10 characters.'
+  if (!/[a-z]/i.test(p) || !/\d/.test(p)) return 'Mix letters and numbers.'
+  if (/^(.)\1+$/.test(p) || /password|qwerty|123456/i.test(p)) return 'That password is too easy to guess.'
+  return null
 }
 
 function AuthScreen({ onDemo }: { onDemo: () => void }) {
   const [mode, setMode] = useState<Mode>('signin')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [keys, setKeys] = useState<string[]>(['', ''])
+  const [consent, setConsent] = useState(false)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ tone: 'info' | 'error'; text: string } | null>(null)
-  const [blocked, setBlocked] = useState(false)
-  const [diagnosis, setDiagnosis] = useState<string | null>(null)
+  const [failures, setFailures] = useState(0)
 
-  /** "Failed to fetch" means the request never left the device — nothing to do with the password. */
   const isNetworkError = (e: unknown) =>
     e instanceof TypeError || /failed to fetch|network|load failed/i.test(e instanceof Error ? e.message : String(e))
 
-  async function runConnectionCheck() {
-    setDiagnosis('Checking…')
-    const url = import.meta.env.VITE_SUPABASE_URL?.trim()
-    if (!url) { setDiagnosis('No server is configured in this build.'); return }
-    try {
-      const res = await fetch(`${url}/auth/v1/health`, {
-        headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '' },
-      })
-      setDiagnosis(res.ok
-        ? 'The server is reachable from this browser. Try again — if it still fails, the address or password is the problem, not the connection.'
-        : `The server answered with ${res.status}. That is a configuration problem, not your connection.`)
-    } catch {
-      setDiagnosis(
-        'This browser could not reach the server at all. That is almost always a shield, ad-blocker or VPN ' +
-        'blocking the request, or a network that filters it. Lower Brave Shields for this site (tap the lion icon), ' +
-        'disable blockers here, or switch between Wi-Fi and mobile data, then retry.')
-    }
+  function validateSignup(): string | null {
+    if (name.trim().length < 2) return 'Enter your name.'
+    const pw = passwordProblem(password)
+    if (pw) return pw
+    if (password !== confirm) return 'Passwords don\'t match.'
+    const filled = keys.map(k => k.trim()).filter(Boolean)
+    if (filled.length < 2) return 'Add at least 2 Gemini API keys (up to 5).'
+    if (new Set(filled).size !== filled.length) return 'Each Gemini key must be different.'
+    const bad = filled.findIndex(k => !KEY_RE.test(k))
+    if (bad >= 0) return `Key ${bad + 1} doesn't look like a Gemini API key (it starts with "AIza").`
+    if (!consent) return 'Please accept how your keys are stored.'
+    return null
   }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (!supabase) return
-    setBusy(true); setMsg(null)
+    if (!supabase || busy) return
+    // Client-side backoff on repeated failures (Supabase also rate-limits server-side).
+    if (failures >= 5) { setMsg({ tone: 'error', text: 'Too many attempts. Wait a minute and try again.' }); return }
+    setMsg(null)
+    if (mode === 'signup') {
+      const problem = validateSignup()
+      if (problem) { setMsg({ tone: 'error', text: problem }); return }
+    }
+    setBusy(true)
     try {
       if (mode === 'signup') {
-        const { data, error } = await supabase.auth.signUp({ email, password })
+        const filled = keys.map(k => k.trim()).filter(Boolean)
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim(), password,
+          options: { data: { display_name: name.trim().slice(0, 60) }, emailRedirectTo: SITE_APP },
+        })
         if (error) throw error
-        // With confirmations off the user is already signed in; otherwise they must confirm first.
-        if (data.session) return
-        setMsg({ tone: 'info', text: 'Account created. Sign in with those details.' })
+        pendingKeys = filled
+        if (data.session) return // AuthGate saves the keys and lets them in
+        setMsg({ tone: 'info', text: 'Check your inbox to confirm your email, then sign in here. Your keys are saved on first sign-in.' })
         setMode('signin')
       } else if (mode === 'signin') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
         if (error) throw error
       } else {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin })
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: SITE_APP })
         if (error) throw error
-        setMsg({ tone: 'info', text: 'Password reset email sent.' })
+        setMsg({ tone: 'info', text: 'If that email has an account, a reset link is on its way.' })
       }
+      setFailures(0)
     } catch (err) {
+      setFailures(f => f + 1)
+      setTimeout(() => setFailures(f => Math.max(0, f - 1)), 60_000)
       if (isNetworkError(err)) {
-        setBlocked(true)
-        setMsg({ tone: 'error', text: 'Could not reach the server. Your details were never sent — something on this device or network blocked the request.' })
+        setMsg({ tone: 'error', text: 'Could not reach the server. Nothing was sent — check your connection, VPN or ad-blocker and retry.' })
       } else {
-        setMsg({ tone: 'error', text: err instanceof Error ? err.message : 'Something went wrong. Try again.' })
+        // Never reveal whether an email exists.
+        const m = err instanceof Error ? err.message : ''
+        setMsg({ tone: 'error', text: /invalid login/i.test(m) ? 'Email or password is incorrect.' : m || 'Something went wrong. Try again.' })
       }
     } finally { setBusy(false) }
   }
 
   return (
-    <div className="mx-auto grid min-h-full w-full max-w-[440px] content-center gap-4 px-5 py-10">
-      <div>
-        <div className="eyebrow">Personal fitness operating system</div>
-        <h1 className="text-[40px] font-black tracking-tight">FORGE</h1>
-      </div>
-      <Card glass>
-        <form onSubmit={submit} className="grid gap-3">
+    <Shell>
+      <div className="card glow p-5">
+        <div className="mb-4 flex gap-2">
+          <button className="chip press" aria-pressed={mode === 'signin'} onClick={() => { setMode('signin'); setMsg(null) }}>Sign in</button>
+          <button className="chip press" aria-pressed={mode === 'signup'} onClick={() => { setMode('signup'); setMsg(null) }}>Create account</button>
+        </div>
+        <form onSubmit={submit} className="grid gap-3" noValidate>
+          {mode === 'signup' && (
+            <Field label="Your name">
+              <input autoComplete="name" required maxLength={60} value={name} onChange={e => setName(e.target.value)} placeholder="Aarav Sharma" />
+            </Field>
+          )}
           <Field label="Email">
-            <input type="email" autoComplete="email" required value={email}
+            <input type="email" autoComplete="email" inputMode="email" required maxLength={254} value={email}
               onChange={e => setEmail(e.target.value)} placeholder="you@example.com" />
           </Field>
           {mode !== 'reset' && (
-            <Field label="Password" hint={mode === 'signup' ? 'At least 8 characters.' : undefined}>
-              <input type="password" required minLength={8} value={password}
+            <Field label="Password" hint={mode === 'signup' ? 'At least 10 characters, letters and numbers.' : undefined}>
+              <input type="password" required minLength={mode === 'signup' ? 10 : 6} maxLength={128} value={password}
                 autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
+                onChange={e => setPassword(e.target.value)} placeholder="••••••••••" />
             </Field>
           )}
-          {msg && <Notice tone={msg.tone}>{msg.text}</Notice>}
-          {blocked && (
+          {mode === 'signup' && (
             <>
-              <Button variant="ghost" onClick={runConnectionCheck}>Run connection check</Button>
-              {diagnosis && <Notice tone="warn">{diagnosis}</Notice>}
+              <Field label="Confirm password">
+                <input type="password" required maxLength={128} value={confirm} autoComplete="new-password"
+                  onChange={e => setConfirm(e.target.value)} placeholder="••••••••••" />
+              </Field>
+              <KeyInputs keys={keys} setKeys={setKeys} />
+              <label className="flex items-start gap-2 text-[12px]" style={{ color: 'var(--text-dim)' }}>
+                <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} />
+                <span>My keys are encrypted (AES-256) on the FORGE server, used only for my own AI requests and never shown again. I can delete them any time in Settings.</span>
+              </label>
             </>
           )}
+          {msg && <Notice tone={msg.tone}>{msg.text}</Notice>}
           <Button type="submit" disabled={busy}>
             {busy ? 'Working…' : mode === 'signup' ? 'Create account' : mode === 'reset' ? 'Send reset link' : 'Sign in'}
           </Button>
         </form>
-        <div className="mt-3 flex justify-between text-[12px]" style={{ color: 'var(--text-mute)' }}>
-          <button onClick={() => setMode(mode === 'signup' ? 'signin' : 'signup')}>
-            {mode === 'signup' ? 'Have an account?' : 'Create an account'}
-          </button>
-          <button onClick={() => setMode('reset')}>Forgot password</button>
+        {mode !== 'signup' && (
+          <div className="mt-3 text-right text-[12px]" style={{ color: 'var(--text-mute)' }}>
+            <button onClick={() => setMode(mode === 'reset' ? 'signin' : 'reset')}>{mode === 'reset' ? 'Back to sign in' : 'Forgot password?'}</button>
+          </div>
+        )}
+      </div>
+      <button className="text-[12px] underline" style={{ color: 'var(--text-mute)' }} onClick={onDemo}>
+        Try it offline without an account (no AI, data stays on this device)
+      </button>
+    </Shell>
+  )
+}
+
+function KeyInputs({ keys, setKeys }: { keys: string[]; setKeys: (k: string[]) => void }) {
+  const [show, setShow] = useState(false)
+  return (
+    <div className="grid gap-2">
+      <div className="flex items-end justify-between">
+        <div>
+          <div className="eyebrow">Gemini API keys · {keys.length} of 5</div>
+          <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>
+            Minimum 2. Free at <a className="underline" href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer noopener" style={{ color: 'var(--accent)' }}>aistudio.google.com/apikey</a> — use different Google projects for more free quota.
+          </div>
         </div>
-      </Card>
-      <Button variant="ghost" onClick={onDemo}>Use offline demo mode</Button>
-      <p className="text-center text-[11px]" style={{ color: 'var(--text-mute)' }}>
-        Demo mode keeps everything on this device only.
-      </p>
+        <button type="button" className="text-[11px] underline" style={{ color: 'var(--text-mute)' }} onClick={() => setShow(v => !v)}>{show ? 'Hide' : 'Show'}</button>
+      </div>
+      {keys.map((k, i) => (
+        <div key={i} className="flex gap-2">
+          <input type={show ? 'text' : 'password'} autoComplete="off" spellCheck={false} maxLength={60}
+            value={k} placeholder={`Key ${i + 1}: AIza…`} aria-label={`Gemini key ${i + 1}`}
+            onChange={e => setKeys(keys.map((x, j) => (j === i ? e.target.value.trim() : x)))}
+            style={{ borderColor: k && !KEY_RE.test(k) ? 'var(--danger)' : undefined }} />
+          {keys.length > 2 && (
+            <button type="button" aria-label={`Remove key ${i + 1}`} className="press px-2" style={{ color: 'var(--danger)' }}
+              onClick={() => setKeys(keys.filter((_, j) => j !== i))}><Icon name="trash" size={18} /></button>
+          )}
+        </div>
+      ))}
+      {keys.length < 5 && (
+        <button type="button" className="chip press w-fit" onClick={() => setKeys([...keys, ''])}>+ Add another key</button>
+      )}
+    </div>
+  )
+}
+
+/** Add / replace the account's Gemini keys. `required` = shown as a gate after sign-in. */
+export function KeySetup({ required, onSaved }: { required?: boolean; onSaved?: () => void }) {
+  const [keys, setKeys] = useState<string[]>(['', ''])
+  const [status, setStatus] = useState<{ count: number; hints: string[] } | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ tone: 'info' | 'error'; text: string } | null>(null)
+
+  useEffect(() => { if (!required) aiKeys.get().then(setStatus).catch(() => {}) }, [required])
+
+  async function save() {
+    const filled = keys.map(k => k.trim()).filter(Boolean)
+    if (filled.length < 2) { setMsg({ tone: 'error', text: 'Add at least 2 keys.' }); return }
+    if (filled.some(k => !KEY_RE.test(k))) { setMsg({ tone: 'error', text: 'Every key starts with "AIza" and is 39 characters.' }); return }
+    setBusy(true); setMsg(null)
+    try {
+      const r = await aiKeys.save(filled)
+      setStatus(r); setKeys(['', ''])
+      setMsg({ tone: 'info', text: `Saved ${r.count} keys. Google confirmed they work.` })
+      onSaved?.()
+    } catch (e) {
+      setMsg({ tone: 'error', text: e instanceof AIUnavailable ? e.message : 'Could not save keys.' })
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <div className="card grid gap-3 p-5">
+      <div>
+        <div className="title text-[22px]">{required ? 'One last step' : 'AI keys'}</div>
+        <div className="mt-1 text-[13px]" style={{ color: 'var(--text-dim)' }}>
+          FORGE's AI (food camera, meal parsing, coach, plans) runs on your own free Gemini keys, so it stays free and
+          nobody else's usage slows you down.
+        </div>
+      </div>
+      {status && status.count > 0 && (
+        <Notice>Active: {status.count} keys ({status.hints.join(', ')}). Saving new keys replaces them.</Notice>
+      )}
+      <KeyInputs keys={keys} setKeys={setKeys} />
+      {msg && <Notice tone={msg.tone}>{msg.text}</Notice>}
+      <Button disabled={busy} onClick={save}>{busy ? 'Checking keys with Google…' : 'Save keys'}</Button>
+      {!required && status && status.count > 0 && (
+        <Button variant="danger" onClick={async () => { await aiKeys.remove(); setStatus({ count: 0, hints: [] }) }}>Delete my keys</Button>
+      )}
+      {required && (
+        <button className="text-[12px] underline" style={{ color: 'var(--text-mute)' }} onClick={() => supabase?.auth.signOut()}>Sign out</button>
+      )}
     </div>
   )
 }

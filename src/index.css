@@ -1,121 +1,111 @@
 @import "tailwindcss";
 
-/* Self-hosted typography: an editorial serif for titles, a grotesk for everything functional.
-   No CDN, works offline. Playfair Display + Archivo + Inter, all OFL. */
-@font-face {
-  font-family: "Playfair var";
-  src: url("/fonts/playfair.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Archivo var";
-  src: url("/fonts/archivo-latin.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Inter var";
-  src: url("/fonts/inter-latin.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
+/* Self-hosted typography (works offline inside the APK): Bricolage Grotesque for display numbers
+   and titles, Inter for UI text, JetBrains Mono for small labels and units. All OFL. */
+@font-face { font-family: "Bricolage"; src: url("/fonts/bricolage.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: "Inter var"; src: url("/fonts/inter-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "JB Mono"; src: url("/fonts/jetbrains-mono.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
 
 @theme {
-  --font-sans: "Archivo var", "Inter var", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: "Playfair var", ui-serif, Georgia, serif;
+  --font-sans: "Inter var", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Bricolage", "Inter var", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JB Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --color-noir: #0C0709;
-  --color-oxblood: #5A1825;
-  --color-wine: #7A2638;
-  --color-blush: #A95D70;
-  --color-ivory: #F7F2EC;
-  --color-cream: #EFE7DA;
-  --color-sage: #8FA68B;
-  --color-amber: #C8963E;
+  --color-noir: #0E0D0C;
+  --color-ember: #FF6B2C;
+  --color-lime: #C8F560;
+  --color-sky: #7AA7FF;
+  --color-ivory: #F5F1EC;
+  --color-sage: #C8F560;
+  --color-amber: #F5B940;
 }
 
+/* FORGE Ember (Stitch design system "FORGE Ember"): hot metal in a dark forge. Ember is the one
+   accent; lime only means "done / target hit"; blue only means protein. */
 :root {
   color-scheme: dark;
+  --noir: #0E0D0C;
+  --bg: #0E0D0C;
+  --bg-grad: radial-gradient(120% 60% at 50% -10%, rgba(255,107,44,0.10) 0%, rgba(14,13,12,0) 55%), #0E0D0C;
 
-  /* Ground */
-  --noir: #0C0709;
-  --bg: #0C0709;
-  --bg-grad: radial-gradient(130% 90% at 50% -15%, #3A121D 0%, #1A0A11 42%, #0C0709 100%);
+  --surface-solid: #171514;
+  --surface-raised: #221F1D;
+  --surface-high: #2C2825;
+  --line: rgba(255, 255, 255, 0.07);
 
-  /* Dark surfaces, three levels */
-  --surface-solid: #1C0D13;
-  --surface-raised: #2A121B;
-  --surface-high: #381824;
-  --line: rgba(247, 242, 236, 0.10);
+  /* "Paper" = the hero card that carries a screen's headline numbers: charcoal with an ember glow. */
+  --paper: #1C1917;
+  --paper-2: #151312;
+  --paper-ink: #F5F1EC;
+  --paper-ink-dim: #A39B94;
+  --paper-line: rgba(255, 107, 44, 0.22);
 
-  /* Paper: ivory panels that carry the important numbers */
-  --paper: #F7F2EC;
-  --paper-2: #EFE7DA;
-  --paper-ink: #241016;
-  --paper-ink-dim: #6B4B53;
-  --paper-line: rgba(36, 16, 22, 0.14);
+  --glass: rgba(23, 21, 20, 0.82);
+  --glass-2: rgba(34, 31, 29, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --sheet: #171514;
+  --scrim: rgba(0, 0, 0, 0.66);
 
-  /* Glass, three weights — all frosted, never transparent enough to read through */
-  --glass: rgba(58, 20, 31, 0.78);
-  --glass-2: rgba(74, 26, 39, 0.72);
-  --glass-border: rgba(247, 242, 236, 0.13);
-  --sheet: #1F0E15;
-  --scrim: rgba(6, 3, 4, 0.74);
+  --text: #F5F1EC;
+  --text-dim: #B4ABA3;
+  --text-mute: #7D746C;
 
-  /* Type */
-  --text: #F7F2EC;
-  --text-dim: #C9A9B2;
-  --text-mute: #8E6B76;
+  --accent: #FF6B2C;
+  --accent-strong: #FF6B2C;
+  --accent-deep: #C4461A;
+  --accent-ink: #1A0A03;
+  --sage: #C8F560;
+  --lime: #C8F560;
+  --protein: #7AA7FF;
+  --carbs: #F5B940;
+  --fat: #FF7A8A;
+  --amber: #F5B940;
+  --danger: #FF6B6B;
 
-  /* Accents */
-  --accent: #A95D70;
-  --accent-strong: #7A2638;
-  --accent-deep: #5A1825;
-  --sage: #8FA68B;
-  --amber: #C8963E;
-
-  --shadow: 0 22px 48px -28px rgba(0, 0, 0, 0.95);
-  --shadow-paper: 0 20px 44px -26px rgba(0, 0, 0, 0.7);
+  --shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.95);
+  --shadow-paper: 0 0 0 1px rgba(255,107,44,0.10), 0 30px 60px -30px rgba(255, 107, 44, 0.35);
 }
 
 html[data-theme="light"] {
   color-scheme: light;
-  --bg: #F3EDE6;
-  --bg-grad: radial-gradient(130% 90% at 50% -15%, #F8E9EA 0%, #F3EDE6 50%, #EDE3DC 100%);
+  --bg: #F6F2EE;
+  --bg-grad: radial-gradient(120% 60% at 50% -10%, rgba(255,107,44,0.10) 0%, rgba(246,242,238,0) 55%), #F6F2EE;
 
   --surface-solid: #FFFFFF;
-  --surface-raised: #FBF5F1;
-  --surface-high: #F6EDE8;
-  --line: rgba(36, 16, 22, 0.12);
+  --surface-raised: #F3EEE9;
+  --surface-high: #EAE3DC;
+  --line: rgba(20, 14, 10, 0.09);
 
-  --paper: #241016;
-  --paper-2: #2E1620;
-  --paper-ink: #F7F2EC;
-  --paper-ink-dim: #C9A9B2;
-  --paper-line: rgba(247, 242, 236, 0.16);
+  --paper: #FFFFFF;
+  --paper-2: #FFF6F0;
+  --paper-ink: #1A1410;
+  --paper-ink-dim: #7A6E66;
+  --paper-line: rgba(228, 83, 26, 0.22);
 
-  --glass: rgba(255, 253, 252, 0.94);
-  --glass-2: rgba(250, 244, 242, 0.94);
-  --glass-border: rgba(36, 16, 22, 0.12);
-  --sheet: #FFFBF8;
-  --scrim: rgba(48, 18, 26, 0.42);
+  --glass: rgba(255, 255, 255, 0.9);
+  --glass-2: rgba(246, 242, 238, 0.92);
+  --glass-border: rgba(20, 14, 10, 0.08);
+  --sheet: #FFFFFF;
+  --scrim: rgba(26, 20, 16, 0.4);
 
-  --text: #241016;
-  --text-dim: #6B4B53;
-  --text-mute: #96757F;
+  --text: #1A1410;
+  --text-dim: #5E534B;
+  --text-mute: #948880;
 
-  --accent: #7A2638;
-  --accent-strong: #5A1825;
-  --accent-deep: #3F0F1B;
-  --sage: #5F7A5C;
-  --amber: #9C6F1E;
+  --accent: #E4531A;
+  --accent-strong: #E4531A;
+  --accent-deep: #B63E10;
+  --accent-ink: #FFFFFF;
+  --sage: #5E8A12;
+  --lime: #5E8A12;
+  --protein: #3E6FD8;
+  --carbs: #B7800F;
+  --fat: #D9475A;
+  --amber: #B7800F;
+  --danger: #D23B3B;
 
-  --shadow: 0 16px 36px -24px rgba(90, 24, 37, 0.4);
-  --shadow-paper: 0 18px 40px -26px rgba(90, 24, 37, 0.35);
+  --shadow: 0 16px 36px -24px rgba(60, 30, 10, 0.25);
+  --shadow-paper: 0 0 0 1px rgba(228,83,26,0.10), 0 24px 48px -30px rgba(228, 83, 26, 0.35);
 }
 
 * { -webkit-tap-highlight-color: transparent; }
@@ -142,7 +132,7 @@ body {
 .title {
   font-family: var(--font-serif);
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
   line-height: 1.05;
 }
 .title-xl { font-size: clamp(30px, 9vw, 40px); }
@@ -150,15 +140,16 @@ body {
 
 /* Big numbers read as data, not prose. */
 .figure {
-  font-family: var(--font-sans);
-  font-weight: 800;
+  font-family: var(--font-serif);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
 }
 
 .eyebrow {
-  font-size: 10px;
-  letter-spacing: 0.2em;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-mute);
   font-weight: 700;
@@ -196,8 +187,8 @@ input[type="checkbox"] {
 input[type="checkbox"]::after {
   content: "";
   width: 11px; height: 6px;
-  border-left: 2px solid var(--paper);
-  border-bottom: 2px solid var(--paper);
+  border-left: 2px solid var(--accent-ink);
+  border-bottom: 2px solid var(--accent-ink);
   transform: rotate(-45deg) translate(1px, -1px) scale(0.6);
   opacity: 0; transition: opacity .12s ease, transform .12s ease;
 }
@@ -209,7 +200,7 @@ input[type="checkbox"]:checked::after { opacity: 1; transform: rotate(-45deg) tr
 .card {
   background: var(--surface-solid);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 20px;
 }
 .raised {
   background: var(--surface-raised);
@@ -242,7 +233,7 @@ input[type="checkbox"]:checked::after { opacity: 1; transform: rotate(-45deg) tr
 }
 .paper .eyebrow { color: var(--paper-ink-dim); }
 .paper-inset {
-  background: rgba(36, 16, 22, 0.05);
+  background: var(--surface-raised);
   border: 1px solid var(--paper-line);
   border-radius: 12px;
 }
@@ -260,3 +251,40 @@ input[type="checkbox"]:checked::after { opacity: 1; transform: rotate(-45deg) tr
 
 .hairline { border-bottom: 1px solid var(--line); }
 .paper .hairline { border-bottom: 1px solid var(--paper-line); }
+
+/* --- Motion --------------------------------------------------------------
+   Only transform/opacity animate (compositor-only, no layout) so scrolling and sheets stay at
+   display refresh rate on low-end Android WebViews. */
+@keyframes sheet-in { from { transform: translate3d(0, 100%, 0); } to { transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rise-in { from { opacity: 0; transform: translate3d(0, 10px, 0); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(.9); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes ember-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,44,.45); } 50% { box-shadow: 0 0 0 10px rgba(255,107,44,0); } }
+
+.anim-sheet { animation: sheet-in .32s cubic-bezier(.2,.9,.25,1) both; will-change: transform; }
+.anim-fade { animation: fade-in .2s ease both; }
+.page { animation: rise-in .28s cubic-bezier(.2,.9,.25,1) both; }
+.pop { animation: pop .35s cubic-bezier(.2,.9,.25,1); }
+.pulse { animation: ember-pulse 2s ease-in-out infinite; }
+.press { transition: transform .12s ease; }
+.press:active { transform: scale(.97); }
+
+/* Long lists skip rendering off-screen rows entirely. */
+.cv { content-visibility: auto; contain-intrinsic-size: auto 64px; }
+
+.mono { font-family: var(--font-mono); font-feature-settings: "zero" 1; }
+.glow { box-shadow: var(--shadow-paper); }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px;
+  padding: 0 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface-raised); font-size: 12px; font-weight: 600; color: var(--text-dim);
+}
+.chip[aria-pressed="true"], .chip.on { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+
+html { touch-action: manipulation; }
+button { cursor: pointer; user-select: none; -webkit-user-select: none; }
+
+/* Grid children default to min-width:auto, so one horizontally scrolling chip row would widen the
+   whole column (and the sheet). Let them shrink. */
+.grid > * { min-width: 0; }
+.sheet-surface { overflow-x: hidden; }

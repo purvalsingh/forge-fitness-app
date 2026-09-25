@@ -4,7 +4,7 @@
  * scaled to a plated serving. Portions vary, so the app labels these as estimates.
  */
 
-const C = {
+export const C = {
   rice: g => ({ match: '^Rice, white, medium-grain, cooked, unenriched', g }),
   basmati: g => ({ match: '^Rice, white, long-grain, regular, enriched, cooked$', g }),
   riceFlour: g => ({ match: '^Rice flour, white, unenriched', g }),

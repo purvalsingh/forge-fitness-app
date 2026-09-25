@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useStore, useToday } from '../store'
+import { useStore, useActiveDate } from '../store'
 import { sumTotals, totalsByMeal, round1 } from '../lib/calc'
 import { Bar, Button, Card, Icon, Screen, Stat } from '../ui'
 import { AddFoodSheet } from './AddFood'
 
 export default function Diet() {
   const s = useStore()
-  const date = useToday()
+  const { date } = useActiveDate()
   const nav = useNavigate()
   const [add, setAdd] = useState<string | null>(null)
 

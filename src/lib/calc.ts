@@ -209,7 +209,16 @@ export function bestStreak(dates: ISODate[], ok: (d: ISODate) => boolean): numbe
 export function toISO(d: Date): ISODate {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
-export function today(): ISODate { return toISO(new Date()) }
+/**
+ * The "logical" day. A day ends at `dayStartHour` (default 4 AM), not at midnight: a workout or a
+ * meal at 00:30 belongs to the evening before, which is how people actually live.
+ */
+let dayStartHour = 4
+export function setDayStartHour(h: number) { dayStartHour = clamp(Math.round(h), 0, 12) }
+export function getDayStartHour() { return dayStartHour }
+export function today(now = new Date()): ISODate {
+  return toISO(new Date(now.getTime() - dayStartHour * 3_600_000))
+}
 export function addDays(date: ISODate, n: number): ISODate {
   const d = new Date(date + 'T00:00:00'); d.setDate(d.getDate() + n); return toISO(d)
 }

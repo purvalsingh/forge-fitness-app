@@ -63,6 +63,10 @@ export interface Food {
   sodium_mg?: number
   custom?: boolean
   category?: string
+  serving_g?: number
+  serving_label?: string
+  state?: string
+  cuisine?: string
 }
 
 export interface RecipeIngredient {
@@ -90,14 +94,35 @@ export interface FoodLog {
   carbs_g: number
   fat_g: number
   note?: string
-  source: 'manual' | 'search' | 'recipe' | 'ai_text' | 'ai_photo'
+  source: 'manual' | 'search' | 'recipe' | 'ai_text' | 'ai_photo' | 'barcode' | 'copy'
+  serving_label?: string
 }
 
+export type Equipment =
+  | 'barbell' | 'dumbbell' | 'machine' | 'cable' | 'bodyweight' | 'kettlebell' | 'band'
+  | 'ez bar' | 'smith machine' | 'trap bar' | 'other'
+
+/** Library exercise (bundled) or one the user created. */
 export interface Exercise {
   id: ID
   name: string
-  muscle?: string
+  muscle?: string          // primary target, e.g. "chest"
+  secondary?: string[]
+  body_part?: string       // e.g. "upper arms"
+  equipment?: Equipment | string
+  instructions?: string[]
+  /** How a set is logged. */
+  kind?: 'weight_reps' | 'bodyweight_reps' | 'timed' | 'cardio'
+  per_side?: boolean
+  custom?: boolean
+  favorite?: boolean
+  rest_sec?: number
+  bar_kg?: number
 }
+
+export type ProgressionRule = 'none' | 'linear' | 'double' | 'reps' | 'time'
+
+export interface WaterLog { id: ID; date: ISODate; ml: number; at?: string }
 
 export interface WorkoutExercise {
   id: ID
@@ -111,6 +136,11 @@ export interface WorkoutExercise {
   rest_sec?: number
   tempo?: string
   note?: string
+  /** Exercises sharing a superset id are performed back-to-back with one rest per round. */
+  superset?: string
+  progression?: ProgressionRule
+  /** Warm-up rows planned ahead of the working sets. */
+  warmups?: number
 }
 
 export interface WorkoutDay {
@@ -135,6 +165,9 @@ export interface WorkoutPlan {
   days_per_week?: number
   source?: 'template' | 'custom' | 'ai'
   updated_at?: string
+  /** Deload plans never become the baseline the next regular session progresses from. */
+  deload?: boolean
+  progression?: ProgressionRule
 }
 
 export interface WorkoutSet {
@@ -142,6 +175,14 @@ export interface WorkoutSet {
   weight_kg: number | null
   reps: number | null
   done: boolean
+  warmup?: boolean
+  /** Reps in reserve (0–5) or RPE (6–10), in the scale the set was logged with. */
+  effort?: number
+  effort_scale?: 'rir' | 'rpe'
+  duration_sec?: number
+  distance_km?: number
+  kind?: 'normal' | 'drop' | 'rest_pause'
+  pr?: boolean
 }
 
 export interface SessionExercise {
@@ -151,6 +192,10 @@ export interface SessionExercise {
   target: string
   note?: string
   sets: WorkoutSet[]
+  superset?: string
+  rest_sec?: number
+  kind?: Exercise['kind']
+  muscle?: string
 }
 
 export interface WorkoutSession {
@@ -162,6 +207,12 @@ export interface WorkoutSession {
   started_at: string
   finished_at?: string
   exercises: SessionExercise[]
+  /** Added after the fact (e.g. trained without the phone). Never claims PRs against later workouts. */
+  backfilled?: boolean
+  freestyle?: boolean
+  bodyweight_kg?: number
+  deload?: boolean
+  note?: string
 }
 
 export interface WeightLog { id: ID; date: ISODate; weight_kg: number }
@@ -172,6 +223,18 @@ export interface Settings {
   rest_days: number[] // 0=Sun
   adherence_weights: { diet: number; workout: number; steps: number }
   diet_tolerance: number // fraction, e.g. 0.10 => within 10% of calorie target
+  /** Hour (0–12) at which a new logical day starts. 4 => 00:00–03:59 counts as the day before. */
+  day_start_hour?: number
+  water_goal_ml?: number
+  week_start?: 0 | 1
+  units?: 'kg' | 'lb'
+  bar_weight_kg?: number
+  default_rest_sec?: number
+  effort_scale?: 'off' | 'rir' | 'rpe'
+  keep_awake?: boolean
+  timer_flash?: boolean
+  fasting_hours?: number
+  fasting_started_at?: string | null
 }
 export interface AIInsight {
   id: ID

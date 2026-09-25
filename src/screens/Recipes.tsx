@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useStore, useToday } from '../store'
+import { useStore, useActiveDate } from '../store'
 import { uid } from '../lib/db'
 import { round1, scaleFood } from '../lib/calc'
 import { Button, Card, Empty, Field, Icon, Screen, Sheet, Spinner } from '../ui'
@@ -11,7 +11,7 @@ import type { Recipe } from '../lib/types'
 export default function Recipes() {
   const s = useStore()
   const nav = useNavigate()
-  const date = useToday()
+  const { date } = useActiveDate()
   const [params, setParams] = useSearchParams()
   const [edit, setEdit] = useState<Recipe | null>(
     () => (params.get('new') ? { id: uid(), name: '', ingredients: [] } : null))

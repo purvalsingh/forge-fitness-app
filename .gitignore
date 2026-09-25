@@ -5,6 +5,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+!.env.production
+!.env.native
 .DS_Store
 *.log
 .vscode/*
@@ -28,3 +30,13 @@ android/app/
 android/.gradle/
 android/build/
 .wrangler/
+
+dist-native
+android/app/build
+android/.gradle
+ios/App/Pods
+ios/App/build
+.vercel
+release/
+.env*
+data/indb/

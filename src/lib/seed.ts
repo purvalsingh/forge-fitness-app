@@ -15,6 +15,16 @@ export const SEED_SETTINGS: Settings = {
   rest_days: [0, 6],
   adherence_weights: { diet: 0.4, workout: 0.4, steps: 0.2 },
   diet_tolerance: 0.1,
+  day_start_hour: 4,
+  water_goal_ml: 2500,
+  week_start: 1,
+  units: 'kg',
+  bar_weight_kg: 20,
+  default_rest_sec: 120,
+  effort_scale: 'off',
+  keep_awake: true,
+  timer_flash: false,
+  fasting_hours: 16,
 }
 
 const f = (

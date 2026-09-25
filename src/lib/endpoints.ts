@@ -54,9 +54,10 @@ export function isUnreachable(e: unknown): boolean {
   return e instanceof TypeError || /failed to fetch|networkerror|load failed|connection/i.test(String(e))
 }
 
-export const SUPABASE_PRIMARY = (import.meta.env.VITE_SUPABASE_URL ?? '').trim().replace(/\/$/, '')
+/** A relative URL ("/sb") means the same-origin proxy of whichever host served the app. */
+const rawPrimary = (import.meta.env.VITE_SUPABASE_URL ?? '').trim().replace(/\/$/, '')
+export const SUPABASE_PRIMARY = rawPrimary.startsWith('/') && typeof location !== 'undefined' ? location.origin + rawPrimary : rawPrimary
 export const SUPABASE_FALLBACKS = parseList(import.meta.env.VITE_SUPABASE_FALLBACKS)
-export const AI_FALLBACKS = parseList(import.meta.env.VITE_AI_FALLBACKS)
 
 /**
  * A `fetch` that walks the candidate list. Only unreachable hosts trigger a move — an HTTP error

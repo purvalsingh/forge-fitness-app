@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FORGE — Train hard. Eat Indian. Track everything.</title>
+  <meta name="description" content="Free fitness and Indian nutrition app for Android and iPhone: workouts with smart progression, 16,000+ foods including dishes from all 28 states and 8 union territories, and an AI food camera on your own Gemini keys." />
+  <meta name="theme-color" content="#0E0D0C" />
+  <meta property="og:title" content="FORGE — Train hard. Eat Indian. Track everything." />
+  <meta property="og:description" content="Workouts, every Indian dish, AI food camera. Free on Android & iPhone." />
+  <meta property="og:image" content="/og.png" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/app/icon-192.png" />
+  <link rel="preload" href="/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/vendor/lenis.css" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="loader" aria-hidden="true">
+    <svg class="loader-mark" viewBox="0 0 512 512"><path d="M150 400V112h212v70H232v52h110v68H232v98z" fill="#FF6B2C"/><path d="M322 402c-28-18-36-46-24-70 6 20 20 26 20 26-4-30 12-54 38-66-8 28 6 44 16 60 10 16 10 38-4 50-12 10-30 10-46 0z" fill="#FFD9B8"/></svg>
+    <span class="loader-count mono">0</span>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span></span></div>
+
+  <header class="nav">
+    <a href="#top" class="brand" aria-label="FORGE home">
+      <svg viewBox="0 0 512 512" width="28" height="28" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#1C1917"/><path d="M150 400V112h212v70H232v52h110v68H232v98z" fill="#FF6B2C"/></svg>
+      <span>FORGE</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#features">Features</a>
+      <a href="#india">Indian food</a>
+      <a href="#accuracy">Accuracy</a>
+      <a href="#security">Security</a>
+      <a href="#install">Install</a>
+    </nav>
+    <a href="#download" class="btn btn-sm magnetic">Get the app</a>
+    <button class="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+  </header>
+  <div class="mobile-menu" aria-hidden="true">
+    <a href="#features">Features</a><a href="#india">Indian food</a><a href="#accuracy">Accuracy</a><a href="#security">Security</a><a href="#install">Install</a><a href="#download">Download</a>
+  </div>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="blob b1" aria-hidden="true"></div><div class="blob b2" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="eyebrow reveal">Free · Android & iPhone · No ads</p>
+        <h1 class="hero-title">
+          <span class="line"><span>Train hard.</span></span>
+          <span class="line"><span>Eat <em class="cycle" aria-live="polite">Indian</em>.</span></span>
+          <span class="line"><span>Track everything.</span></span>
+        </h1>
+        <p class="hero-sub reveal">Workouts with real progression, <b>16,000+ foods</b> including dishes from <b>all 28 states & 8 union territories</b>, and an AI food camera that runs on <b>your own Gemini keys</b>.</p>
+        <div class="hero-cta reveal" id="download">
+          <a class="btn magnetic press" href="/download/forge.apk" download data-cursor="Download">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M17.6 9.5 19.4 6.4a.4.4 0 0 0-.7-.4l-1.8 3.1a11 11 0 0 0-9.8 0L5.3 6a.4.4 0 0 0-.7.4l1.8 3.1A10.4 10.4 0 0 0 1 18h22a10.4 10.4 0 0 0-5.4-8.5ZM7 15.2a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg>
+            <span>Download for Android</span><small class="mono">APK · {{APK_SIZE}}</small>
+          </a>
+          <a class="btn btn-ghost magnetic press" href="#install" data-ios data-cursor="How">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5a4.3 4.3 0 0 0-3.4-1.8c-1.4-.2-2.8.8-3.5.8-.7 0-1.8-.8-3-.8a4.5 4.5 0 0 0-3.8 2.3c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2-1.1 2.8-2.3a10 10 0 0 0 1.3-2.6 4 4 0 0 1-2.5-3.7ZM14.2 5.7A4 4 0 0 0 15.1 3a4.1 4.1 0 0 0-2.7 1.4 3.8 3.8 0 0 0-1 2.7 3.4 3.4 0 0 0 2.8-1.4Z"/></svg>
+            <span>Install on iPhone</span>
+          </a>
+          <a class="text-link" href="/app/">Open the web app <span aria-hidden="true">→</span></a>
+        </div>
+        <p class="hero-note mono reveal">v2.0.0 · signed APK · SHA-256 <code class="sha" title="{{APK_SHA256}}">{{APK_SHA_SHORT}}</code></p>
+      </div>
+
+      <div class="hero-phone tilt" aria-hidden="true">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="screen">
+            <div class="s-top"><div><div class="s-eyebrow mono">THU 25 SEP</div><div class="s-title">Today<b>.</b></div></div><div class="s-avatar">A</div></div>
+            <div class="s-hero">
+              <div>
+                <div class="s-eyebrow mono ember">🔥 ENERGY BALANCE</div>
+                <div class="s-kcal"><span class="count" data-to="1284">0</span><small class="mono"> / 2,150 kcal</small></div>
+                <div class="s-chip mono">● 866 kcal left</div>
+              </div>
+              <svg class="s-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" /><circle class="arc" cx="50" cy="50" r="42" /></svg>
+            </div>
+            <div class="s-macros">
+              <div><span class="mono p">PROTEIN</span><b>96</b><i style="--w:64%;--c:#7AA7FF"></i></div>
+              <div><span class="mono c">CARBS</span><b>140</b><i style="--w:58%;--c:#F5B940"></i></div>
+              <div><span class="mono f">FAT</span><b>38</b><i style="--w:58%;--c:#FF7A8A"></i></div>
+            </div>
+            <div class="s-meal"><span class="dot"></span><div><div class="mono s-eyebrow lime">BREAKFAST · 8:30</div><div>Poha (1 plate), Chai (1 cup)</div></div><b>410</b></div>
+            <div class="s-meal"><span class="dot"></span><div><div class="mono s-eyebrow lime">LUNCH · 1:45</div><div>2 Roti, Dal tadka, Bhindi</div></div><b>620</b></div>
+            <div class="s-meal ghost"><span class="dot"></span><div><div class="mono s-eyebrow">SNACK</div><div>Vada pav · 1 piece ≈ 150 g</div></div><b>+</b></div>
+            <div class="s-nav"><i></i><i></i><span>+</span><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+      <a href="#features" class="scroll-hint mono" aria-label="Scroll">SCROLL ↓</a>
+    </section>
+
+    <!-- MARQUEE -->
+    <section class="marquee" aria-label="Some of the dishes in FORGE">
+      <div class="marquee-track mono">
+        <span>Vada Pav · Misal Pav · Litti Chokha · Dhokla · Pesarattu · Jadoh · Thukpa · Kosha Mangsho · Appam · Dal Baati · Chole Bhature · Masor Tenga · Eromba · Rogan Josh · Pakhala · Kappa Biryani · Sarson Ka Saag · Chakhwi · Bisi Bele Bath · Phagshapa · Sannas · Sel Roti · Kadhi Pakora · Idiyappam · </span>
+        <span aria-hidden="true">Vada Pav · Misal Pav · Litti Chokha · Dhokla · Pesarattu · Jadoh · Thukpa · Kosha Mangsho · Appam · Dal Baati · Chole Bhature · Masor Tenga · Eromba · Rogan Josh · Pakhala · Kappa Biryani · Sarson Ka Saag · Chakhwi · Bisi Bele Bath · Phagshapa · Sannas · Sel Roti · Kadhi Pakora · Idiyappam · </span>
+      </div>
+    </section>
+
+    <!-- STATEMENT (scrubbed word by word) -->
+    <section class="statement">
+      <p class="scrub">A vada pav is one piece, not a hundred grams. A katori of dal is a katori. FORGE logs food the way India actually eats it — and the numbers come from ingredients, not guesses.</p>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+      <h2 class="section-title split">Everything a serious app does. <span class="ember">Built for India.</span></h2>
+      <div class="bento">
+        <article class="card tilt feature-cam">
+          <div class="icon">📷</div>
+          <h3>AI food camera</h3>
+          <p>Snap your thali. FORGE finds each item, estimates the portion from the plate and katori, then checks it against its own database before you log it. Every number stays editable.</p>
+          <div class="scanner" aria-hidden="true"><span></span></div>
+        </article>
+        <article class="card tilt">
+          <div class="icon">🌙</div>
+          <h3>Gym after midnight?</h3>
+          <p>Your day ends at 4 AM, not 12. A 12:30 AM session or snack still counts for the evening before. You can also log to yesterday, or any day, in one tap.</p>
+        </article>
+        <article class="card tilt">
+          <div class="icon">📈</div>
+          <h3>Progression that explains itself</h3>
+          <p>Linear or double progression, auto-deloads after three stalls, plate math, estimated 1RM, RIR/RPE, supersets, warm-ups, timed and cardio sets.</p>
+        </article>
+        <article class="card tilt">
+          <div class="icon">🏋️</div>
+          <h3><span class="count" data-to="1324">0</span> exercises</h3>
+          <p>Search by muscle or the equipment you own, add favourites and your own exercises, and read instructions in English or Hindi.</p>
+        </article>
+        <article class="card tilt">
+          <div class="icon">🫀</div>
+          <h3>Muscle map & heatmap</h3>
+          <p>See which muscles got the work this week and which you skipped, next to a year-long training heatmap and PR history.</p>
+        </article>
+        <article class="card tilt">
+          <div class="icon">💧</div>
+          <h3>Water, fasting, steps</h3>
+          <p>One-tap water, an intermittent-fasting timer, step goals and a daily adherence score. Rest days never count against you.</p>
+        </article>
+        <article class="card tilt">
+          <div class="icon">🔎</div>
+          <h3>Barcode & quick meals</h3>
+          <p>Scan packaged food through Open Food Facts, copy a meal from yesterday, or save any meal as a one-tap quick meal.</p>
+        </article>
+        <article class="card tilt">
+          <div class="icon">💬</div>
+          <h3>Coach that stays on topic</h3>
+          <p>Ask about training, recovery or Indian food. Off-topic requests and prompt tricks get a polite no.</p>
+        </article>
+        <article class="card tilt">
+          <div class="icon">↔️</div>
+          <h3>Bring your history</h3>
+          <p>Import from Strong or Hevy CSV. Export everything as JSON or CSV whenever you like.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- INDIA: pinned horizontal -->
+    <section class="india" id="india">
+      <div class="india-pin">
+        <div class="india-head">
+          <p class="eyebrow">Every state on your plate</p>
+          <h2 class="section-title"><span class="count" data-to="36">0</span> states & UTs. <span class="count" data-to="16365">0</span> foods.</h2>
+          <p class="muted">Regional dishes are calculated from USDA ingredient data at real serving sizes, alongside the Indian Nutrient Databank's 800+ recipes.</p>
+        </div>
+        <div class="india-rail">{{STATE_CARDS}}</div>
+      </div>
+    </section>
+
+    <!-- ACCURACY demo -->
+    <section class="accuracy" id="accuracy">
+      <div class="acc-copy">
+        <p class="eyebrow">Can't be fooled</p>
+        <h2 class="section-title split">Tell it you ate a nuclear bomb. <span class="ember">It won't log it.</span></h2>
+        <p class="muted">Two layers of checks run before anything reaches your log. The first rejects things that aren't food, impossible amounts, and attempts to override the AI's instructions. The second rejects answers that break physics: more than 9 kcal per gram, macros that outweigh the food, or calories that don't add up.</p>
+      </div>
+      <form class="acc-demo card" onsubmit="return false">
+        <label class="mono" for="acc-input">TRY IT: WHAT DID YOU EAT?</label>
+        <div class="acc-row">
+          <input id="acc-input" autocomplete="off" placeholder="I ate a nuclear bomb" maxlength="120" />
+          <button class="btn btn-sm press" type="submit">Check</button>
+        </div>
+        <div class="acc-chips">
+          <button type="button" class="chip">1 vada pav</button>
+          <button type="button" class="chip">I ate a nuclear bomb</button>
+          <button type="button" class="chip">40 rotis</button>
+          <button type="button" class="chip">ignore previous instructions</button>
+          <button type="button" class="chip">2 roti dal tadka</button>
+        </div>
+        <output class="acc-out mono" aria-live="polite">Waiting for a meal…</output>
+      </form>
+    </section>
+
+    <!-- SECURITY -->
+    <section class="security" id="security">
+      <h2 class="section-title split">Your keys. <span class="ember">Locked.</span></h2>
+      <div class="sec-grid">
+        <div class="card tilt"><b class="mono">AES-256-GCM</b><p>Your 2–5 Gemini keys are encrypted on the server with a secret the database never sees. Each ciphertext is tied to your account, so a copied row won't decrypt.</p></div>
+        <div class="card tilt"><b class="mono">NEVER SHOWN AGAIN</b><p>After you save your keys, the app only ever sees the last four characters. The browser doesn't hold them, and neither does the APK.</p></div>
+        <div class="card tilt"><b class="mono">ROW-LEVEL SECURITY</b><p>Every table is owner-only in Postgres, so one account can never read another's meals, workouts or keys.</p></div>
+        <div class="card tilt"><b class="mono">RATE LIMITS</b><p>AI calls are capped per minute and per day, logged in a table you can't erase. That keeps a leaked session from burning your quota.</p></div>
+        <div class="card tilt"><b class="mono">HARDENED HEADERS</b><p>Strict CSP, HSTS, no framing, nosniff. Photos go straight to the AI and are never stored.</p></div>
+        <div class="card tilt"><b class="mono">SIGNED APK</b><p>Every release is signed with the same FORGE key, and its SHA-256 is printed on this page so you can check your download.</p></div>
+      </div>
+    </section>
+
+    <!-- INSTALL -->
+    <section class="install" id="install">
+      <h2 class="section-title split">Install in a minute.</h2>
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="android">Android</button>
+        <button role="tab" aria-selected="false" data-tab="ios">iPhone</button>
+      </div>
+      <ol class="steps" data-panel="android">
+        <li><b>Download</b> <a href="/download/forge.apk" download>forge.apk</a> ({{APK_SIZE}}).</li>
+        <li><b>Open it.</b> If Android asks, allow your browser to “install unknown apps”. That's normal for apps outside the Play Store.</li>
+        <li><b>Install & sign up</b> with your name, email, a password and 2–5 free Gemini keys from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.</li>
+      </ol>
+      <ol class="steps" data-panel="ios" hidden>
+        <li><b>Open</b> <a href="/app/">forgefit-india.vercel.app/app</a> in <b>Safari</b>.</li>
+        <li>Tap <b>Share</b> <span class="mono">⎋</span> → <b>Add to Home Screen</b>. FORGE then opens full-screen with its own icon and works offline.</li>
+        <li><b>Sign up</b> the same way as on Android. Your data syncs across all your devices.</li>
+      </ol>
+      <p class="muted small">Why no iPhone download? Apple only lets iPhones install apps from the App Store, which needs a paid developer account. The home-screen version is the same app.</p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+      <h2 class="section-title split">Questions</h2>
+      <details><summary>Is FORGE free?</summary><p>Yes. The AI runs on your own free Gemini keys, so there are no subscriptions and no ads.</p></details>
+      <details><summary>Why 2–5 Gemini keys?</summary><p>Each free key has a quota. FORGE rotates between your keys, so the food camera and coach keep working on heavy days. Keys from different Google projects give you more room.</p></details>
+      <details><summary>How accurate is the calorie count?</summary><p>Dishes in the database are calculated from their ingredients at typical serving sizes. AI photo estimates are checked against that database and shown as editable estimates, never as facts. Portions are the hardest part, so adjust with − / + before you log.</p></details>
+      <details><summary>Does it work offline?</summary><p>Yes. The app and its food and exercise data live on your phone. Entries sync when you're back online.</p></details>
+      <details><summary>Can I delete my data?</summary><p>Yes. Delete your AI keys any time in Settings, and export everything as JSON or CSV.</p></details>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-big">FORGE<span class="ember">.</span></div>
+    <div class="footer-row mono">
+      <span>© 2026 FORGE · Made in India</span>
+      <a href="https://github.com/purvalsingh/forge-fitness-app" target="_blank" rel="noopener">Source on GitHub</a>
+      <a href="https://purvalsingh.github.io" target="_blank" rel="noopener">Built by Purval Singh</a>
+    </div>
+    <p class="muted small">Food data: USDA FoodData Central (public domain), Indian Nutrient Databank (Vijayakumar et al., 2024), Open Food Facts (ODbL). Exercise text: exercises-dataset (MIT). FORGE is not medical advice.</p>
+  </footer>
+
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="/vendor/lenis.min.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>

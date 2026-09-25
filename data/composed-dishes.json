@@ -1,7 +1,7 @@
 {
   "_comment": "Dishes missing from the USDA exports, built from USDA component foods. Each component is a regex matched against a USDA food name plus the grams in one typical serving. Macros are computed from those components, never invented — but portions vary by kitchen, so these are labelled as estimates in the app.",
   "dishes": [
-    { "name": "Vada Pav", "cuisine": "Indian", "serving_g": 150, "components": [
+    { "name": "Vada Pav", "cuisine": "Maharashtrian", "serving_g": 150, "components": [
       { "match": "^Bread, white, commercially prepared", "g": 60 },
       { "match": "^Potatoes, boiled, cooked in skin, flesh, without salt", "g": 55 },
       { "match": "^Chickpea flour \\(besan\\)", "g": 15 },

@@ -7,8 +7,12 @@ import type { Food } from './types'
  */
 export interface CatalogFood extends Food {
   cuisine?: string
+  /** Indian state / union territory the dish is from. */
+  state?: string
   serving_g?: number
-  src: 'sr' | 'fndds' | 'composed' | 'off'
+  /** How the dish is actually eaten: "1 piece", "1 katori", "1 plate". */
+  serving_label?: string
+  src: 'sr' | 'fndds' | 'composed' | 'off' | 'indb'
 }
 
 let cache: CatalogFood[] | null = null
@@ -69,7 +73,7 @@ export interface SearchResult extends CatalogFood { score: number }
  * Catalog entries carry search-only extras (`score`, and previously `src`), and sending an
  * unknown column makes PostgREST reject the whole write.
  */
-export function toFoodRow(f: CatalogFood | Food): Food & { cuisine?: string; serving_g?: number; source?: string } {
+export function toFoodRow(f: CatalogFood | Food): Food & { cuisine?: string; serving_g?: number; serving_label?: string; state?: string; source?: string } {
   const c = f as Partial<CatalogFood>
   return {
     id: f.id,
@@ -88,6 +92,8 @@ export function toFoodRow(f: CatalogFood | Food): Food & { cuisine?: string; ser
     custom: f.custom ?? false,
     cuisine: c.cuisine,
     serving_g: c.serving_g,
+    serving_label: c.serving_label,
+    state: c.state,
     source: c.src,
   }
 }
@@ -117,6 +123,7 @@ export function searchFoods(foods: CatalogFood[], query: string, limit = 60): Ca
     else if (qSquashed.length >= 4 && squash(f.name).includes(qSquashed)) score = 250 - name.length
     if (score === 0) continue
     if (f.src === 'composed') score += 120
+    else if (f.src === 'indb') score += 100
     else if (f.src === 'fndds') score += 60
     else if (f.src === 'off') score += 30
     out.push({ ...f, score })
@@ -125,3 +132,53 @@ export function searchFoods(foods: CatalogFood[], query: string, limit = 60): Ca
 
   return out.sort((a, b) => b.score - a.score).slice(0, limit)
 }
+
+/** All 28 states and 8 union territories, in the order the app lists them. */
+export const REGIONS = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana',
+  'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
+  'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana',
+  'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+  'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi',
+  'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry',
+] as const
+
+export function byRegion(foods: CatalogFood[], region: string) {
+  return foods.filter(f => f.state === region).sort((a, b) => a.name.localeCompare(b.name))
+}
+
+/** Grams in one natural serving, or null when the food is only known per 100 g/ml. */
+export function servingGrams(f: Partial<CatalogFood>): number | null {
+  return f.serving_g && f.serving_g > 0 ? f.serving_g : null
+}
+
+export interface Grounded {
+  name: string; qty: number; unit: string; grams?: number; serving_label?: string
+  calories: number; protein_g: number; carbs_g: number; fat_g: number; confidence?: number
+  /** Set when the numbers were replaced by the FORGE database entry of the same dish. */
+  matched?: { id: string; name: string }
+}
+
+/**
+ * Replace an AI estimate's macros with the database entry for the same dish when there is a
+ * confident name match — the database is computed from ingredients; the model's numbers are a guess.
+ * The AI's portion (grams) is kept, because that is the part only the photo/description knows.
+ */
+export function groundItem<T extends Grounded>(catalog: CatalogFood[], item: T): T {
+  const hits = searchFoods(catalog, item.name, 3) as SearchResult[]
+  const best = hits[0]
+  if (!best || best.score < 600) return item
+  if (!['composed', 'indb', 'fndds'].includes(best.src)) return item
+  const grams = item.grams && item.grams > 0 ? item.grams : servingGrams(best) ? servingGrams(best)! * (item.qty || 1) : null
+  if (!grams) return item
+  const k = grams / 100
+  const kcal = best.calories * k
+  // A wildly different number means the name matched a different preparation — keep the AI's.
+  if (item.calories > 0 && (kcal / item.calories > 2.5 || item.calories / kcal > 2.5)) return item
+  return {
+    ...item, grams: Math.round(grams),
+    calories: Math.round(kcal), protein_g: round1(best.protein_g * k), carbs_g: round1(best.carbs_g * k), fat_g: round1(best.fat_g * k),
+    matched: { id: best.id, name: best.name },
+  }
+}
+const round1 = (n: number) => Math.round(n * 10) / 10

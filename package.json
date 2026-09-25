@@ -1,23 +1,26 @@
 {
   "name": "forge",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "rm -rf dist && tsc -b && vite build && node scripts/assemble.mjs",
+    "build:native": "vite build --mode native && npx cap sync",
+    "apk": "npm run build:native && node scripts/build-apk.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "PUBLIC_BASE=/ VITE_SUPABASE_URL=https://forge-6k1.pages.dev/sb VITE_SUPABASE_FALLBACKS=https://jdogjpskctrpjtuygmdx.supabase.co VITE_AI_FUNCTION_URL=https://forge-6k1.pages.dev/api/ai VITE_AI_FALLBACKS=https://forge-6k1.pages.dev/sb/functions/v1/ai,https://jdogjpskctrpjtuygmdx.supabase.co/functions/v1/ai vite build && wrangler pages deploy dist --project-name forge --branch main --commit-dirty=true",
-    "pages": "PUBLIC_BASE=/forge-fitness-app/ VITE_SUPABASE_URL=https://forge-6k1.pages.dev/sb VITE_SUPABASE_FALLBACKS=https://jdogjpskctrpjtuygmdx.supabase.co VITE_AI_FUNCTION_URL=https://forge-6k1.pages.dev/api/ai VITE_AI_FALLBACKS=https://forge-6k1.pages.dev/sb/functions/v1/ai,https://jdogjpskctrpjtuygmdx.supabase.co/functions/v1/ai vite build && node scripts/publish-pages.mjs",
-    "deploy:edge": "node scripts/bundle-edge-fn.mjs > /tmp/ai-edge.ts && echo \"deploy /tmp/ai-edge.ts via the Supabase dashboard or CLI\""
+    "catalog": "node scripts/rebuild-catalog.mjs",
+    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod --yes"
   },
   "dependencies": {
-    "@netlify/blobs": "^11.0.3",
-    "@netlify/functions": "^6.0.0",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
     "@supabase/supabase-js": "^2.114.0",
     "date-fns": "^4.4.0",
     "react": "^19.2.8",
@@ -27,13 +30,17 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260903.1",
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
+    "gsap": "^3.15.0",
     "happy-dom": "^20.13.2",
+    "lenis": "^1.3.26",
     "oxlint": "^1.79.0",
     "pg": "^8.23.0",
     "puppeteer-core": "^25.9.0",
@@ -42,7 +49,6 @@
     "typescript": "~6.0.2",
     "vite": "^8.2.2",
     "vite-plugin-pwa": "^1.3.0",
-    "vitest": "^4.1.11",
-    "wrangler": "^4.128.0"
+    "vitest": "^4.1.11"
   }
 }

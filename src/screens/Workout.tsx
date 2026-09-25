@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useStore, useToday } from '../store'
+import { useStore, useActiveDate } from '../store'
 import { sessionSets, sessionVolume } from '../lib/calc'
 import { Bar, Button, Card, Empty, Icon, Screen, Stat, Tabs } from '../ui'
 
 export default function Workout() {
   const s = useStore()
-  const date = useToday()
+  const { date } = useActiveDate()
   const nav = useNavigate()
   const plan = s.plans.find(p => p.active) ?? s.plans[0]
   const [dayId, setDayId] = useState(() => plan?.days[0]?.id ?? '')
 
   if (!plan) return (
-    <Screen title="Workout">
-      <Empty title="No workout plan" body="Create a plan to start training."
-        action={<div className="mt-2 w-full"><Button onClick={() => nav('/more/plan')}>Open plan builder</Button></div>} />
+    <Screen title="Train">
+      <Empty title="No workout plan" body="Create a plan, or train freestyle and pick exercises as you go."
+        action={<div className="mt-2 grid w-full gap-2"><Button onClick={() => nav('/more/plan')}>Open plan builder</Button><Button variant="quiet" onClick={() => nav('/workout/session/freestyle')}>Freestyle session</Button></div>} />
     </Screen>
   )
 
@@ -25,10 +25,16 @@ export default function Workout() {
   const recent = s.sessions.filter(x => x.finished_at).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5)
 
   return (
-    <Screen title="Workout" sub="Today's training"
+    <Screen title="Train" sub="Today's training"
       right={<button aria-label="Plan builder" onClick={() => nav('/more/plan')}
-        className="grid h-10 w-10 place-items-center rounded-full border" style={{ borderColor: 'var(--line)' }}>
+        className="press grid h-10 w-10 place-items-center rounded-full border" style={{ borderColor: 'var(--line)' }}>
         <Icon name="gear" size={18} /></button>}>
+      <div className="no-scrollbar -mx-1 mb-3 flex gap-2 overflow-x-auto px-1">
+        <button className="chip press shrink-0" onClick={() => nav('/workout/session/freestyle')}><Icon name="bolt" size={14} /> Freestyle</button>
+        <button className="chip press shrink-0" onClick={() => nav('/history')}><Icon name="calendar" size={14} /> History & muscle map</button>
+        <button className="chip press shrink-0" onClick={() => nav('/exercises')}><Icon name="search" size={14} /> 1,324 exercises</button>
+        <button className="chip press shrink-0" onClick={() => nav('/more/plan')}><Icon name="workout" size={14} /> Plans</button>
+      </div>
 
       <Card paper>
         <div className="eyebrow">{plan.name}</div>

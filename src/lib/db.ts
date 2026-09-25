@@ -10,7 +10,7 @@ import { supabase, supabaseConfigured } from './supabase'
 export type Table =
   | 'profiles' | 'settings' | 'goals' | 'nutrition_targets' | 'meal_types'
   | 'foods' | 'recipes' | 'food_logs' | 'workout_plans' | 'workout_sessions'
-  | 'weight_logs' | 'step_logs' | 'ai_insights' | 'physique_checkins'
+  | 'weight_logs' | 'step_logs' | 'ai_insights' | 'physique_checkins' | 'water_logs' | 'exercises'
 
 export type Row = { id: string }
 
@@ -86,8 +86,10 @@ export async function remove(t: Table, id: string): Promise<void> {
  * send NULL for every other row — which trips NOT NULL columns that have a perfectly good default.
  * Dropping empty values lets the database defaults do their job.
  */
+/** Nullable columns where an explicit null means "clear it" and must reach the database. */
+const CLEARABLE = new Set(['fasting_started_at'])
 function clean<T extends Row>(row: T): T {
-  return Object.fromEntries(Object.entries(row).filter(([, v]) => v !== null && v !== undefined)) as T
+  return Object.fromEntries(Object.entries(row).filter(([k, v]) => v !== undefined && (v !== null || CLEARABLE.has(k)))) as T
 }
 
 export function uid(): string {
@@ -96,7 +98,7 @@ export function uid(): string {
 
 export async function exportAll(): Promise<Record<string, unknown>> {
   const tables: Table[] = ['profiles', 'settings', 'goals', 'nutrition_targets', 'meal_types',
-    'foods', 'recipes', 'food_logs', 'workout_plans', 'workout_sessions', 'weight_logs', 'step_logs', 'ai_insights', 'physique_checkins']
+    'foods', 'recipes', 'food_logs', 'workout_plans', 'workout_sessions', 'weight_logs', 'step_logs', 'ai_insights', 'physique_checkins', 'water_logs', 'exercises']
   const out: Record<string, unknown> = { exported_at: new Date().toISOString(), version: 1 }
   for (const t of tables) out[t] = await list(t)
   return out

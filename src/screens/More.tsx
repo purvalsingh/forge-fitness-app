@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { supabaseConfigured } from '../lib/supabase'
-import { ai } from '../lib/ai'
 import { Card, Icon, Screen } from '../ui'
 
 const GROUPS: { title: string; items: { to: string; label: string; icon: string }[] }[] = [
@@ -12,6 +11,14 @@ const GROUPS: { title: string; items: { to: string; label: string; icon: string 
       { to: '/more/target', label: 'Nutrition target', icon: 'sparkle' },
       { to: '/more/plan', label: 'Workout plans', icon: 'workout' },
       { to: '/physique', label: 'Physique Lab', icon: 'sparkle' },
+      { to: '/coach', label: 'Ask the coach (AI)', icon: 'bolt' },
+    ],
+  },
+  {
+    title: 'Training',
+    items: [
+      { to: '/history', label: 'History, heatmap & muscle map', icon: 'calendar' },
+      { to: '/exercises', label: 'Exercise library', icon: 'search' },
     ],
   },
   {
@@ -25,6 +32,7 @@ const GROUPS: { title: string; items: { to: string; label: string; icon: string 
   {
     title: 'System',
     items: [
+      { to: '/more/keys', label: 'My Gemini AI keys', icon: 'key' },
       { to: '/more/settings', label: 'Settings, theme & export', icon: 'gear' },
     ],
   },
@@ -34,7 +42,7 @@ export default function More() {
   const s = useStore()
   const nav = useNavigate()
   return (
-    <Screen title="More" sub="FORGE">
+    <Screen title="You" sub="FORGE">
       <Card paper>
         <div className="eyebrow">Profile</div>
         <div className="title mt-1 text-[22px]">{s.profile?.display_name || 'Athlete'}</div>
@@ -48,7 +56,7 @@ export default function More() {
           </div>
           <div className="paper-inset p-2.5">
             <div className="eyebrow">AI</div>
-            <div className="font-bold">{ai.configured ? 'Configured' : 'Not configured'}</div>
+            <div className="font-bold">{supabaseConfigured ? 'Your Gemini keys' : 'Off (offline mode)'}</div>
           </div>
         </div>
       </Card>
@@ -58,7 +66,7 @@ export default function More() {
           <div className="eyebrow mb-2">{g.title}</div>
           <div className="grid gap-2">
             {g.items.map(i => (
-              <Link key={i.to} to={i.to} className="card flex items-center gap-3 p-4">
+              <Link key={i.to} to={i.to} className="card press flex items-center gap-3 p-4">
                 <Icon name={i.icon} size={18} />
                 <span className="flex-1 text-[14px] font-bold">{i.label}</span>
                 <span style={{ color: 'var(--text-mute)' }}>›</span>

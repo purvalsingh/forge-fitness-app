@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FORGE Ember - Today</title>
+<!-- Google Fonts: Bricolage Grotesque, Inter, JetBrains Mono, Public Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Public+Sans:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              charcoal: '#0E0D0C',
+              card: '#171514',
+              raised: '#221F1D',
+              border: 'rgba(255, 255, 255, 0.07)',
+              ember: '#FF6B2C',
+              emberGlow: 'rgba(255, 107, 44, 0.25)',
+              lime: '#C8F560',
+              blue: '#7AA7FF'
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.25rem",
+            "2xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "Inter", "sans-serif"],
+            display: ["Bricolage Grotesque", "Public Sans", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #0E0D0C;
+      color: #E6E4E2;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    .font-numeral {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      letter-spacing: -0.04em;
+    }
+
+    .gauge-bg {
+      stroke: #252220;
+    }
+    .gauge-ember {
+      stroke: #FF6B2C;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 10px rgba(255, 107, 44, 0.55));
+    }
+
+    /* Glow utility */
+    .ember-card-glow {
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), 0 0 24px -4px rgba(255, 107, 44, 0.12);
+    }
+    
+    .fab-glow {
+      box-shadow: 0 6px 20px 0 rgba(255, 107, 44, 0.45);
+    }
+
+    /* Hide scrollbars */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#0E0D0C] min-h-screen text-neutral-200 antialiased selection:bg-orange-500/30">
+<!-- Mobile App Wrapper -->
+<div class="relative w-full max-w-md mx-auto min-h-screen flex flex-col pb-28">
+<!-- Top App Bar (Shared Component Anchor) -->
+<header class="sticky top-0 z-40 bg-[#0E0D0C]/90 backdrop-blur-md px-5 pt-3 pb-3 flex justify-between items-center transition-colors">
+<div class="flex flex-col">
+<span class="font-mono text-[10px] uppercase font-bold tracking-wider text-neutral-400">THU 25 SEP</span>
+<div class="flex items-center space-x-1 mt-0.5">
+<h1 class="font-headline font-black text-xl tracking-tight text-neutral-100">Today</h1>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse ml-1.5"></span>
+</div>
+</div>
+<!-- Center Date Switcher Pill -->
+<div class="inline-flex items-center bg-[#1F1C1A] border border-white/10 rounded-full px-2.5 py-1 text-xs font-mono font-medium shadow-sm">
+<button class="text-neutral-400 hover:text-white px-1 active:scale-90 transition-transform">‹</button>
+<span class="px-2 text-neutral-200 font-medium">Today</span>
+<button class="text-neutral-500 hover:text-white px-1 active:scale-90 transition-transform cursor-not-allowed">›</button>
+</div>
+<!-- Profile Avatar -->
+<div class="relative flex items-center justify-center">
+<div class="w-9 h-9 rounded-full ring-2 ring-orange-500/40 p-0.5 bg-neutral-900 overflow-hidden shadow-inner cursor-pointer active:scale-95 transition-transform">
+<img alt="User profile avatar" class="w-full h-full object-cover rounded-full" data-alt="Close up athletic portrait of a focused South Asian man in dramatic moody rim lighting, deep charcoal studio backdrop with subtle warm ember orange atmospheric backlight, hyper-detailed skin texture, fitness visual concept." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWVOdQMbvuOO55wPxPZsaSk_bN2oxY9cIVLyAqSVfyce6GOvr9BsbglAFQ02jLPoJmH2FjAczrByLxQJJJ2Egd_UTFuJmLs9VZO3lTTTl7PTOfpBgV78w1rlxG3PooLch0xmlFQTwTb13qLJmYycDPFXf2GEhyM8Cn4wlDOZYyON6dDt4kN6G9j0U-Ol8YsLmHVr88KYVtpQ50bbj0f0O_SXX9PBAjw_0NUtqybhIS5SmQSdTfLYyZNhBPQf8SWO49qhsjSBmEcAwH"/>
+</div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-orange-500 border-2 border-[#0E0D0C] rounded-full"></span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-4 space-y-4 pt-1 flex-1">
+<!-- Hero Calorie & Macro Card -->
+<section class="relative bg-[#171514] rounded-2xl p-5 border border-white/[0.07] ember-card-glow overflow-hidden">
+<!-- Ambient background radial glare -->
+<div class="absolute -top-16 -right-16 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Upper section: Big Calorie Arc -->
+<div class="flex items-center justify-between">
+<div class="flex-1 pr-2">
+<span class="font-mono text-xs uppercase tracking-wider text-orange-500/90 font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="local_fire_department" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+              ENERGY BALANCE
+            </span>
+<div class="mt-2.5 flex items-baseline gap-1.5">
+<span class="font-display font-extrabold text-4xl text-neutral-50 tracking-tight font-numeral">1,284</span>
+<span class="font-mono text-sm text-neutral-500">/ 2,150</span>
+<span class="text-xs text-neutral-400 font-medium">kcal</span>
+</div>
+<div class="mt-2 inline-flex items-center gap-1.5 bg-[#221F1D] px-2.5 py-1 rounded-lg border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+<span class="font-mono text-xs text-neutral-300 font-medium tracking-tight">
+<span class="text-orange-400 font-semibold">866</span> kcal remaining
+              </span>
+</div>
+</div>
+<!-- Circular SVG Radial Gauge -->
+<div class="relative w-28 h-28 flex items-center justify-center flex-shrink-0">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 100 100">
+<!-- Background circle -->
+<circle class="gauge-bg" cx="50" cy="50" fill="none" r="40" stroke-width="8"></circle>
+<!-- Progress Arc: 1284 / 2150 ~= 60% -> dashoffset 251.2 * 0.40 = ~100 -->
+<circle class="gauge-ember" cx="50" cy="50" fill="none" r="40" stroke-dasharray="251.2" stroke-dashoffset="101" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="font-display font-bold text-lg text-neutral-100 font-numeral leading-none">60%</span>
+<span class="font-mono text-[9px] text-neutral-400 uppercase tracking-widest mt-1">Burned</span>
+</div>
+</div>
+</div>
+<!-- Hairline Divider -->
+<div class="w-full h-px bg-white/[0.06] my-4"></div>
+<!-- Macro Breakdown Gauges -->
+<div class="grid grid-cols-3 gap-2.5">
+<!-- Protein Mini Meter -->
+<div class="bg-[#221F1D] rounded-xl p-3 border border-white/[0.04] flex flex-col">
+<div class="flex items-center justify-between text-[11px] font-mono mb-1">
+<span class="text-[#7AA7FF] font-semibold">PROTEIN</span>
+<span class="text-neutral-400 font-numeral text-xs">64%</span>
+</div>
+<div class="flex items-baseline gap-1 my-1">
+<span class="font-display font-bold text-base text-neutral-100 font-numeral">96</span>
+<span class="font-mono text-[10px] text-neutral-400">/ 150g</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-[#171514] h-1.5 rounded-full overflow-hidden mt-1">
+<div class="bg-[#7AA7FF] h-full rounded-full" style="width: 64%"></div>
+</div>
+</div>
+<!-- Carbs Mini Meter -->
+<div class="bg-[#221F1D] rounded-xl p-3 border border-white/[0.04] flex flex-col">
+<div class="flex items-center justify-between text-[11px] font-mono mb-1">
+<span class="text-amber-400 font-semibold">CARBS</span>
+<span class="text-neutral-400 font-numeral text-xs">58%</span>
+</div>
+<div class="flex items-baseline gap-1 my-1">
+<span class="font-display font-bold text-base text-neutral-100 font-numeral">140</span>
+<span class="font-mono text-[10px] text-neutral-400">/ 240g</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-[#171514] h-1.5 rounded-full overflow-hidden mt-1">
+<div class="bg-amber-400 h-full rounded-full" style="width: 58%"></div>
+</div>
+</div>
+<!-- Fat Mini Meter -->
+<div class="bg-[#221F1D] rounded-xl p-3 border border-white/[0.04] flex flex-col">
+<div class="flex items-center justify-between text-[11px] font-mono mb-1">
+<span class="text-rose-400 font-semibold">FATS</span>
+<span class="text-neutral-400 font-numeral text-xs">58%</span>
+</div>
+<div class="flex items-baseline gap-1 my-1">
+<span class="font-display font-bold text-base text-neutral-100 font-numeral">38</span>
+<span class="font-mono text-[10px] text-neutral-400">/ 65g</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-[#171514] h-1.5 rounded-full overflow-hidden mt-1">
+<div class="bg-rose-400 h-full rounded-full" style="width: 58%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3 Compact Stat Tiles (Bento Row) -->
+<section class="grid grid-cols-3 gap-2.5">
+<!-- Steps Tile -->
+<div class="bg-[#171514] rounded-2xl p-3.5 border border-white/[0.06] flex flex-col justify-between hover:border-white/10 transition-colors">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-orange-400 text-lg" data-icon="directions_walk">directions_walk</span>
+<span class="font-mono text-[10px] text-neutral-400 font-medium">GOAL 10k</span>
+</div>
+<div class="mt-2">
+<div class="font-display font-extrabold text-xl text-neutral-100 font-numeral tracking-tight">7,420</div>
+<span class="font-mono text-[10px] text-neutral-400 block mt-0.5 uppercase tracking-wide">Steps today</span>
+</div>
+</div>
+<!-- Water Tile -->
+<div class="bg-[#171514] rounded-2xl p-3.5 border border-white/[0.06] flex flex-col justify-between hover:border-white/10 transition-colors">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-blue-400 text-lg" data-icon="water_drop" data-weight="fill" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<button class="text-neutral-500 hover:text-white transition-colors active:scale-90 text-sm font-bold">+</button>
+</div>
+<div class="mt-2">
+<div class="flex items-baseline gap-1">
+<span class="font-display font-extrabold text-xl text-neutral-100 font-numeral tracking-tight">5</span>
+<span class="font-mono text-xs text-neutral-400">/ 8</span>
+</div>
+<span class="font-mono text-[10px] text-neutral-400 block mt-0.5 uppercase tracking-wide">Glasses (2L)</span>
+</div>
+</div>
+<!-- Streak Tile -->
+<div class="bg-[#171514] rounded-2xl p-3.5 border border-white/[0.06] flex flex-col justify-between hover:border-white/10 transition-colors">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-orange-500 text-lg animate-pulse" data-icon="bolt" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+</div>
+<div class="mt-2">
+<div class="font-display font-extrabold text-xl text-orange-400 font-numeral tracking-tight">12 <span class="text-xs font-normal text-neutral-300">Days</span></div>
+<span class="font-mono text-[10px] text-neutral-400 block mt-0.5 uppercase tracking-wide">Active Streak</span>
+</div>
+</div>
+</section>
+<!-- Today's Workout Card -->
+<section class="bg-[#171514] rounded-2xl p-4 border border-white/[0.06] relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-mono text-[11px] font-semibold tracking-wider uppercase mb-2">
+<span class="material-symbols-outlined text-xs" data-icon="fitness_center">fitness_center</span>
+              TODAY'S FORGE
+            </div>
+<h2 class="font-headline font-bold text-lg text-neutral-100 leading-snug">Push — Chest &amp; Shoulders</h2>
+<p class="font-mono text-xs text-neutral-400 mt-0.5">6 exercises · 55 min · High Intensity</p>
+</div>
+<!-- Quick Action Play Button -->
+<button class="bg-[#FF6B2C] hover:bg-orange-500 text-neutral-950 font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-orange-600/30 flex items-center gap-1.5 active:scale-95 transition-all flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-base" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="font-mono text-xs uppercase tracking-wider font-extrabold">START</span>
+</button>
+</div>
+<!-- Muscle Target Tags -->
+<div class="mt-3.5 pt-3 border-t border-white/[0.05] flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 bg-[#221F1D] text-neutral-300 text-[11px] font-medium rounded-md border border-white/5">Chest</span>
+<span class="px-2 py-0.5 bg-[#221F1D] text-neutral-300 text-[11px] font-medium rounded-md border border-white/5">Front Delts</span>
+<span class="px-2 py-0.5 bg-[#221F1D] text-neutral-300 text-[11px] font-medium rounded-md border border-white/5">Triceps</span>
+</div>
+<span class="font-mono text-[11px] text-neutral-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="schedule">schedule</span>
+            Recommended 6:30 PM
+          </span>
+</div>
+</section>
+<!-- Meals Timeline Section (Indian Nutrition context) -->
+<section class="space-y-3 pt-2">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<h3 class="font-headline font-bold text-base text-neutral-100">Fuel Log</h3>
+<span class="font-mono text-xs text-neutral-400">· 2/4 logged</span>
+</div>
+<button class="text-orange-500 hover:text-orange-400 text-xs font-mono font-semibold uppercase tracking-wider flex items-center gap-1 active:scale-95 transition-transform">
+            History 
+            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Meal 1: Breakfast (Logged) -->
+<div class="bg-[#171514] rounded-2xl p-3.5 border border-white/[0.06] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl overflow-hidden bg-neutral-800 flex-shrink-0 relative border border-white/10">
+<img alt="Poha plate" class="w-full h-full object-cover" data-alt="Appetizing top-down shot of fresh Indian spiced poha garnished with fresh coriander, roasted peanuts and lemon slice served in a dark ceramic rustic plate on warm slate surface with soft warm ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxw86RI8SRmqv83pO1M1GSN9Is8WdFfNxJcHi_1Pxvs02XDgkuHHJd_ChElZx_89R6GNPrMTniCvPCmMfElOeYqum4THj77YqJND-ihW5roa62afezWbbT7zl8FU1AdVgiGkc56kWJw3frkz5qCkL2TBfzqJCgpzKUhGN29h5v8OK5mgyR8CN293ms-8Rx5moE9lGiYWP1_uxt5vJ2LTUyaUJTxBxJ0GlHXvcu-62e-h6NQqWMfjkibSlUPP5AsLlmoXha-irCrjqd"/>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#C8F560]/10 text-[#C8F560] border border-[#C8F560]/20 uppercase">Breakfast</span>
+<span class="text-xs font-mono text-neutral-400">8:30 AM</span>
+</div>
+<div class="text-sm font-semibold text-neutral-200 mt-1">Poha 1 plate, Chai 1 cup</div>
+<div class="font-mono text-[11px] text-neutral-400 mt-0.5">P: 11g · C: 54g · F: 12g</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-2">
+<div class="font-display font-bold text-base text-neutral-100 font-numeral">410</div>
+<div class="font-mono text-[10px] text-neutral-400 uppercase">kcal</div>
+</div>
+</div>
+<!-- Meal 2: Lunch (Logged) -->
+<div class="bg-[#171514] rounded-2xl p-3.5 border border-white/[0.06] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl overflow-hidden bg-neutral-800 flex-shrink-0 relative border border-white/10">
+<img alt="Roti and Dal lunch" class="w-full h-full object-cover" data-alt="Traditional Indian wholesome thali meal featuring golden dal tadka in a brass bowl, fresh whole wheat rotis, and dry spiced bhindi sabzi, authentic rustic warm atmosphere, dark table setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa77NfG3lJrKIS1MWwcDGytTE-UbVQHRYfriqFSBfE_Qxvw9b9TriE2dTW8E8T6aCLd5OqB_adBvs58dgdLApucKnK5CMm9-xRn3qlnT_e6jiQQ8cGUbsjBfHjjiy9SgcweqkzD8aLldgP2HVay9P-KyABY-xshsPvv8eJ2wQ2nFZKLSb3sByhPVXhBF5gpdm_JzyWdBeqvBQuvHKkhsGItY3oVxmBdnC1axl9oAz5i5yA8HWgitq_apDDFa3P__XZzTPJDPnsVsJT"/>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#C8F560]/10 text-[#C8F560] border border-[#C8F560]/20 uppercase">Lunch</span>
+<span class="text-xs font-mono text-neutral-400">1:45 PM</span>
+</div>
+<div class="text-sm font-semibold text-neutral-200 mt-1">2 Roti, Dal tadka, Bhindi sabzi</div>
+<div class="font-mono text-[11px] text-neutral-400 mt-0.5">P: 24g · C: 72g · F: 16g</div>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-2">
+<div class="font-display font-bold text-base text-neutral-100 font-numeral">620</div>
+<div class="font-mono text-[10px] text-neutral-400 uppercase">kcal</div>
+</div>
+</div>
+<!-- Meal 3: Snacks (Unlogged) -->
+<button class="w-full bg-[#171514]/60 hover:bg-[#171514] rounded-2xl p-3.5 border border-dashed border-white/10 flex items-center justify-between text-left active:scale-[0.99] transition-all group">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-[#221F1D] flex items-center justify-center text-neutral-500 group-hover:text-orange-400 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-neutral-800 text-neutral-400 uppercase">Snacks</span>
+<span class="text-xs font-mono text-neutral-500">Planned ~4:30 PM</span>
+</div>
+<div class="text-xs text-neutral-400 mt-1">Pre-workout fuel or roasted makhana</div>
+</div>
+</div>
+<div class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#221F1D] border border-white/5 font-mono text-xs text-orange-400 font-medium group-hover:border-orange-500/30">
+<span class="text-sm font-bold">+</span>
+<span>Add</span>
+</div>
+</button>
+<!-- Meal 4: Dinner (Unlogged) -->
+<button class="w-full bg-[#171514]/60 hover:bg-[#171514] rounded-2xl p-3.5 border border-dashed border-white/10 flex items-center justify-between text-left active:scale-[0.99] transition-all group">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-[#221F1D] flex items-center justify-center text-neutral-500 group-hover:text-orange-400 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="dinner_dining">dinner_dining</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-neutral-800 text-neutral-400 uppercase">Dinner</span>
+<span class="text-xs font-mono text-neutral-500">Planned ~8:30 PM</span>
+</div>
+<div class="text-xs text-neutral-400 mt-1">Paneer bhurji or Soya chunks recommended</div>
+</div>
+</div>
+<div class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#221F1D] border border-white/5 font-mono text-xs text-orange-400 font-medium group-hover:border-orange-500/30">
+<span class="text-sm font-bold">+</span>
+<span>Add</span>
+</div>
+</button>
+</section>
+<!-- Motivation / Rest Notice Banner -->
+<div class="bg-gradient-to-r from-[#221F1D] to-[#171514] rounded-xl p-3.5 border border-white/[0.05] flex items-center gap-3">
+<span class="material-symbols-outlined text-[#C8F560] text-xl" data-icon="hotel_class">hotel_class</span>
+<div class="text-xs">
+<span class="font-semibold text-neutral-200">Daily Forge Target:</span>
+<span class="text-neutral-400 ml-1">Hit your 150g protein goal to recover for tomorrow's Pull session.</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component Anchor) -->
+<!-- JSON Specs: labels: ["Today", "Food", "Add", "Train", "Progress"], icons: ["bolt", "restaurant", "add", "fitness_center", "trending_up"] -->
+<!-- Active Tab: 'Today' based on Semantic Matching and Screen Context -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 bg-[#141211]/95 backdrop-blur-lg px-4 py-2 border-t border-white/[0.06] shadow-2xl">
+<div class="max-w-md mx-auto flex justify-around items-center relative">
+<!-- Tab 1: Today (ACTIVE) -->
+<a aria-label="Today" class="flex flex-col items-center justify-center text-orange-500 py-1 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="bolt" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-[11px] font-label font-medium tracking-tight mt-0.5">Today</span>
+</a>
+<!-- Tab 2: Food (INACTIVE) -->
+<a aria-label="Food" class="flex flex-col items-center justify-center text-neutral-500 hover:text-orange-400 py-1 transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="restaurant">restaurant</span>
+<span class="text-[11px] font-label font-medium tracking-tight mt-0.5">Food</span>
+</a>
+<!-- Tab 3: Raised Center Add FAB Button -->
+<div class="relative -top-5 flex flex-col items-center">
+<button aria-label="Quick Add" class="w-13 h-13 p-3.5 rounded-full bg-[#FF6B2C] text-neutral-950 fab-glow flex items-center justify-center active:scale-90 transition-transform shadow-lg border-2 border-[#141211]">
+<span class="material-symbols-outlined text-2xl font-bold" data-icon="add">add</span>
+</button>
+<span class="text-[10px] font-label font-semibold text-neutral-400 mt-1">Add</span>
+</div>
+<!-- Tab 4: Train (INACTIVE) -->
+<a aria-label="Train" class="flex flex-col items-center justify-center text-neutral-500 hover:text-orange-400 py-1 transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="fitness_center">fitness_center</span>
+<span class="text-[11px] font-label font-medium tracking-tight mt-0.5">Train</span>
+</a>
+<!-- Tab 5: Progress (INACTIVE) -->
+<a aria-label="Progress" class="flex flex-col items-center justify-center text-neutral-500 hover:text-orange-400 py-1 transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="trending_up">trending_up</span>
+<span class="text-[11px] font-label font-medium tracking-tight mt-0.5">Progress</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

@@ -1,33 +1,42 @@
 import { z } from 'zod'
 import { supabase } from './supabase'
-import { AI_FALLBACKS, candidates, isUnreachable, markBad, rememberGood } from './endpoints'
 
 /**
- * Client-side AI facade. It never touches a Gemini key — it calls the `ai` Edge Function,
- * which holds GEMINI_API_KEY_1..3 server-side. Every response is schema-validated here too,
+ * Client-side AI facade. It never holds a Gemini key: it calls the FORGE API (`/api/ai`), which
+ * decrypts the signed-in user's own keys server-side. Every response is schema-validated here too,
  * so a malformed model answer can never reach the database.
  */
 export class AIUnavailable extends Error {
-  constructor(msg = 'AI service temporarily unavailable') { super(msg); this.name = 'AIUnavailable' }
+  code: string
+  constructor(msg = 'AI service temporarily unavailable', code = 'ai_unavailable') { super(msg); this.name = 'AIUnavailable'; this.code = code }
 }
 
-const FN_URL = import.meta.env.VITE_AI_FUNCTION_URL?.trim()
-  || (import.meta.env.VITE_SUPABASE_URL?.trim() ? `${import.meta.env.VITE_SUPABASE_URL.trim()}/functions/v1/ai` : '')
+/** Base of the FORGE API. Same origin on the web; absolute inside the native app. */
+export const API_BASE = (import.meta.env.VITE_API_BASE?.trim() || '').replace(/\/$/, '')
+const FN_URL = `${API_BASE}/api/ai`
 
-export const aiConfigured = Boolean(FN_URL)
+export const aiConfigured = true
 
 export const ParsedFood = z.object({
   name: z.string().min(1).max(80),
-  qty: z.number().positive().max(10000),
+  qty: z.number().positive().max(50),
   unit: z.string().min(1).max(12),
-  calories: z.number().min(0).max(5000),
+  serving_label: z.string().max(40).optional(),
+  grams: z.number().min(0).max(2500).optional(),
+  calories: z.number().min(0).max(3000),
   protein_g: z.number().min(0).max(400),
   carbs_g: z.number().min(0).max(1000),
   fat_g: z.number().min(0).max(400),
+  fiber_g: z.number().min(0).max(200).optional(),
+  confidence: z.number().min(0).max(1).optional(),
 })
 export type ParsedFood = z.infer<typeof ParsedFood>
 
-const FoodListResponse = z.object({ items: z.array(ParsedFood).max(25) })
+const FoodListResponse = z.object({
+  items: z.array(ParsedFood).max(25),
+  rejected: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
+})
+export type FoodList = z.infer<typeof FoodListResponse>
 
 const TargetAdviceResponse = z.object({
   summary: z.string().min(1).max(600),
@@ -47,105 +56,52 @@ const InsightsResponse = z.object({
   })).max(6),
 })
 
-async function authHeaders(): Promise<Record<string, string>> {
+const CoachResponse = z.object({ reply: z.string().max(2000), on_topic: z.boolean() })
+
+export async function authHeaders(): Promise<Record<string, string>> {
   const { data } = supabase ? await supabase.auth.getSession() : { data: { session: null } }
   return {
     'content-type': 'application/json',
     ...(data.session?.access_token ? { authorization: `Bearer ${data.session.access_token}` } : {}),
-    ...(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } : {}),
   }
-}
-
-const POLL_INTERVAL_MS = 2500
-const POLL_TIMEOUT_MS = 180_000
-const POLL_MAX_CONSECUTIVE_FAILURES = 4
-
-/**
- * Long tasks answer 202 + job_id; poll the result endpoint until it resolves.
- *
- * The poll deliberately sends NO custom headers. Adding `apikey` or `content-type` to a GET makes
- * it a preflighted cross-origin request, and a result endpoint on another host that does not
- * answer OPTIONS then fails every poll — which looked exactly like a job that never finished.
- * The job id is unguessable and grants nothing beyond that one result.
- */
-async function pollJob(jobId: string, base = FN_URL): Promise<unknown> {
-  const resultUrl = base.replace(/\/ai$/, '/ai-result')
-  const deadline = Date.now() + POLL_TIMEOUT_MS
-  let consecutiveFailures = 0
-
-  while (Date.now() < deadline) {
-    await new Promise(r => setTimeout(r, POLL_INTERVAL_MS))
-    let res: Response
-    try {
-      res = await fetch(`${resultUrl}?job=${encodeURIComponent(jobId)}`)
-      consecutiveFailures = 0
-    } catch {
-      // Never fail silently forever: a poll that cannot reach the host is a real failure.
-      if (++consecutiveFailures >= POLL_MAX_CONSECUTIVE_FAILURES) {
-        throw new AIUnavailable('Lost contact with the AI service while it was working.')
-      }
-      continue
-    }
-    if (res.status === 202) continue
-    if (res.status === 429) {
-    throw new AIUnavailable('The AI has used up today\'s free quota. It resets after midnight US Pacific time — everything else keeps working.')
-  }
-  if (res.status === 503) throw new AIUnavailable()
-    if (!res.ok) throw new AIUnavailable(`AI request failed (${res.status})`)
-    return res.json().catch(() => null)
-  }
-  throw new AIUnavailable('The AI is taking longer than expected. Try again in a moment.')
-}
-
-/** Post the task to the first AI host that answers, remembering which one worked. */
-async function postTask(task: string, payload: unknown): Promise<{ res: Response; base: string }> {
-  const bases = candidates(FN_URL, AI_FALLBACKS)
-  let lastError: unknown = null
-  for (const base of bases) {
-    try {
-      const res = await fetch(base, {
-        method: 'POST',
-        headers: await authHeaders(),
-        body: JSON.stringify({ task, payload }),
-      })
-      rememberGood(FN_URL, base)
-      return { res, base }
-    } catch (e) {
-      if (!isUnreachable(e)) throw e
-      markBad(base)
-      lastError = e
-    }
-  }
-  throw lastError ?? new TypeError('No AI endpoint configured')
 }
 
 async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, retry = true): Promise<T> {
-  if (!FN_URL) throw new AIUnavailable('AI is not configured')
+  if (!supabase) throw new AIUnavailable('Sign in to use AI features.', 'unauthorized')
   let res: Response
-  let base = FN_URL
   try {
-    ({ res, base } = await postTask(task, payload))
+    res = await fetch(FN_URL, { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ task, payload }) })
   } catch {
-    // A cold serverless function can time out the very first call of the day; one more try, then give up.
     if (retry) return call(task, payload, schema, false)
-    throw new AIUnavailable('Could not reach the AI service. Check your connection.')
+    throw new AIUnavailable('Could not reach the AI service. Check your connection.', 'offline')
   }
-  if (res.status === 429) {
-    throw new AIUnavailable('The AI has used up today\'s free quota. It resets after midnight US Pacific time — everything else keeps working.')
+  const body = await res.json().catch(() => null) as { error?: string; message?: string } | null
+  if (!res.ok) {
+    if ((res.status === 502 || res.status === 504) && retry) return call(task, payload, schema, false)
+    throw new AIUnavailable(body?.message ?? `AI request failed (${res.status})`, body?.error ?? 'ai_unavailable')
   }
-  if (res.status === 503) throw new AIUnavailable()
-  if ((res.status === 502 || res.status === 504) && retry) return call(task, payload, schema, false)
-  if (!res.ok) throw new AIUnavailable(`AI request failed (${res.status})`)
-
-  let json = await res.json().catch(() => null)
-  if (res.status === 202 && json && typeof (json as { job_id?: string }).job_id === 'string') {
-    // Poll the same host that accepted the job — another host knows nothing about it.
-    json = await pollJob((json as { job_id: string }).job_id, base)
-  }
-  const parsed = schema.safeParse(json)
+  const parsed = schema.safeParse(body)
   if (parsed.success) return parsed.data
   if (retry) return call(task, payload, schema, false)
   throw new AIUnavailable('The AI returned an unexpected response. Enter the details manually.')
+}
+
+/** The signed-in user's Gemini keys: only a count and hints ever come back. */
+export const aiKeys = {
+  async get(): Promise<{ count: number; hints: string[] }> {
+    const r = await fetch(`${API_BASE}/api/keys`, { headers: await authHeaders() })
+    if (!r.ok) throw new AIUnavailable('Could not load your AI key status.')
+    return r.json()
+  },
+  async save(keys: string[]): Promise<{ count: number; hints: string[] }> {
+    const r = await fetch(`${API_BASE}/api/keys`, { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ keys }) })
+    const body = await r.json().catch(() => ({}))
+    if (!r.ok) throw new AIUnavailable(body?.message ?? 'Could not save your keys.', body?.error)
+    return body
+  },
+  async remove() {
+    await fetch(`${API_BASE}/api/keys`, { method: 'DELETE', headers: await authHeaders() })
+  },
 }
 
 export const PhysiqueAnalysisSchema = z.object({
@@ -198,9 +154,10 @@ export type GeneratedPlan = z.infer<typeof GeneratedPlan>
 
 export const ai = {
   configured: aiConfigured,
-  parseFoodText: (text: string) => call('parse_food_text', { text }, FoodListResponse).then(r => r.items),
-  analyzePhoto: (imageBase64: string, mimeType: string) =>
-    call('analyze_food_photo', { image: imageBase64, mimeType }, FoodListResponse).then(r => r.items),
+  parseFoodText: (text: string) => call('parse_food_text', { text }, FoodListResponse),
+  analyzePhoto: (imageBase64: string, mimeType: string, hint?: string) =>
+    call('analyze_food_photo', { image: imageBase64, mimeType, hint }, FoodListResponse),
+  coach: (messages: { role: 'user' | 'model'; text: string }[]) => call('coach_chat', { messages }, CoachResponse),
   targetAdvice: (input: unknown) => call('target_advice', input, TargetAdviceResponse),
   generatePlan: (input: {
     days_per_week: number

@@ -1,10 +1,11 @@
 import { useEffect, useId, useRef, useState, type ReactNode, type CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
 
 export function Screen({ title, sub, right, back, children }: {
   title?: string; sub?: string; right?: ReactNode; back?: () => void; children: ReactNode
 }) {
   return (
-    <div className="mx-auto w-full max-w-[520px] min-w-0 overflow-x-hidden px-4 pt-3 safe-bottom">
+    <div className="page mx-auto w-full max-w-[520px] min-w-0 overflow-x-hidden px-4 pt-3 safe-bottom" style={{ paddingTop: 'calc(12px + env(safe-area-inset-top))' }}>
       {(title || back || right) && (
         <header className="flex items-center gap-3 py-3">
           {back && (
@@ -42,7 +43,7 @@ export function Button({ children, onClick, variant = 'primary', className = '',
   className?: string; disabled?: boolean; type?: 'button' | 'submit'
 }) {
   const styles: Record<string, CSSProperties> = {
-    primary: { background: 'var(--accent-strong)', color: 'var(--color-ivory)', borderColor: 'transparent' },
+    primary: { background: 'var(--accent-strong)', color: 'var(--accent-ink)', borderColor: 'transparent' },
     ghost: { background: 'transparent', color: 'var(--text)', borderColor: 'var(--line)' },
     quiet: { background: 'var(--surface-high)', color: 'var(--text)', borderColor: 'var(--line)' },
     paper: { background: 'var(--paper-ink)', color: 'var(--paper)', borderColor: 'transparent' },
@@ -50,7 +51,7 @@ export function Button({ children, onClick, variant = 'primary', className = '',
   }
   return (
     <button type={type} onClick={onClick} disabled={disabled}
-      className={`min-h-[48px] w-full rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em] disabled:opacity-45 ${className}`}
+      className={`min-h-[50px] w-full rounded-2xl border px-4 text-[13px] font-bold uppercase tracking-[0.12em] transition-transform active:scale-[0.98] disabled:opacity-45 ${className}`}
       style={styles[variant]}>{children}</button>
   )
 }
@@ -107,7 +108,7 @@ export function Tabs<T extends string>({ value, onChange, options }: {
         <button key={o.value} role="tab" aria-selected={value === o.value} onClick={() => onChange(o.value)}
           className="min-h-[38px] shrink-0 rounded-lg border px-4 text-[11px] font-bold uppercase tracking-[0.14em]"
           style={value === o.value
-            ? { background: 'var(--accent-strong)', color: 'var(--color-ivory)', borderColor: 'transparent' }
+            ? { background: 'var(--accent-strong)', color: 'var(--accent-ink)', borderColor: 'transparent' }
             : { background: 'var(--surface-raised)', color: 'var(--text-dim)', borderColor: 'var(--line)' }}>
           {o.label}
         </button>
@@ -233,17 +234,19 @@ export function Sheet({ open, onClose, title, children }: {
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = '' }
   }, [open, onClose])
   if (!open) return null
-  return (
+  // Portalled to <body>: an animated (transformed) ancestor would otherwise trap position:fixed.
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="absolute inset-0 backdrop-blur-[2px]" style={{ background: 'var(--scrim)' }} onClick={onClose} />
+      <div className="anim-fade absolute inset-0" style={{ background: 'var(--scrim)' }} onClick={onClose} />
       <div ref={ref} tabIndex={-1}
-        className="sheet-surface relative max-h-[88vh] w-full max-w-[520px] overflow-y-auto rounded-t-3xl p-4"
+        className="anim-sheet sheet-surface relative max-h-[88vh] w-full max-w-[520px] overflow-y-auto rounded-t-3xl p-4"
         style={{ paddingBottom: 'calc(20px + env(safe-area-inset-bottom))' }}>
         <div className="mx-auto mb-3 h-1 w-10 rounded-full" style={{ background: 'var(--glass-border)' }} />
         {title && <h2 className="mb-3 text-[17px] font-extrabold">{title}</h2>}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
@@ -291,6 +294,20 @@ const PATHS: Record<string, string> = {
   gear: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4-.1 1.3 2 1.6-2 3.4-2.4-.8a7.7 7.7 0 0 1-2.2 1.3L15.9 22h-3.8l-.4-2.2a7.7 7.7 0 0 1-2.2-1.3l-2.4.8-2-3.4 2-1.6a8.6 8.6 0 0 1 0-2.6l-2-1.6 2-3.4 2.4.8a7.7 7.7 0 0 1 2.2-1.3L12.1 2h3.8l.4 2.2c.8.3 1.5.7 2.2 1.3l2.4-.8 2 3.4-2 1.6L21 12Z',
   trash: 'M9 3h6l1 2h4v2H4V5h4l1-2ZM6 9h12l-1 12H7L6 9Z',
   weight: 'M12 4a4 4 0 0 1 3.9 3H18a2 2 0 0 1 2 1.7l1 10A2 2 0 0 1 19 21H5a2 2 0 0 1-2-2.3l1-10A2 2 0 0 1 6 7h2.1A4 4 0 0 1 12 4Zm0 2a2 2 0 0 0-1.7 1h3.4A2 2 0 0 0 12 6Z',
+  water: 'M12 2.5s-6.5 7.2-6.5 12A6.5 6.5 0 0 0 12 21a6.5 6.5 0 0 0 6.5-6.5c0-4.8-6.5-12-6.5-12Zm0 16.5a4.5 4.5 0 0 1-4.5-4.5h2A2.5 2.5 0 0 0 12 17v2Z',
+  flame: 'M13.5 1.5s.8 2.9-1.3 5.6C10.4 9.4 7 10.6 7 15a5 5 0 0 0 10 0c0-2.2-1-3.7-1-3.7s-.2 1.9-1.9 2.4c0 0 1.4-3.4-.6-6.7-1-1.7 0-5.5 0-5.5Z',
+  timer: 'M9 1h6v2H9V1Zm3 4a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm-1 2h2v4.4l3 1.8-1 1.7-4-2.4V9Z',
+  calendar: 'M7 2h2v2h6V2h2v2h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3V2Zm12 8H5v9h14v-9Z',
+  barcode: 'M3 5h2v14H3V5Zm3 0h1v14H6V5Zm2 0h2v14H8V5Zm3 0h1v14h-1V5Zm2 0h3v14h-3V5Zm4 0h1v14h-1V5Zm2 0h2v14h-2V5Z',
+  search: 'M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z',
+  star: 'M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.2 1.3-6.6L2.5 9.3l6.6-.8 2.9-6Z',
+  chevron: 'M9 5l7 7-7 7-1.4-1.4 5.6-5.6-5.6-5.6L9 5Z',
+  left: 'M15 5 8 12l7 7 1.4-1.4-5.6-5.6 5.6-5.6L15 5Z',
+  body: 'M12 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Zm-7 6h14v2h-5v12h-2v-6h-0v6h-2V10H5V8Z',
+  bolt: 'M13 2 4 14h7l-1 8 9-12h-7l1-8Z',
+  user: 'M12 3a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm0 11c4.4 0 8 2.2 8 5v2H4v-2c0-2.8 3.6-5 8-5Z',
+  key: 'M8 10a5 5 0 1 1 4.6 5H11v2H9v2H7v2H3v-3.6l5.1-5.1A5 5 0 0 1 8 10Zm5-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z',
+  swap: 'M7 4 3 8l4 4V9h10V7H7V4Zm10 8v3H7v2h10v3l4-4-4-4Z',
   steps: 'M7 3c1.7 0 3 1.6 3 3.5 0 1.4-.4 2.5-.4 4 0 .9.4 1.5.4 2.5 0 1.4-1.1 2-2.5 2S5 14.4 5 13c0-1.3.4-2 .4-3.2C5.4 8 5 7.6 5 6.5 5 4.6 5.3 3 7 3Zm10 5c1.7 0 2 1.6 2 3.5 0 1.1-.4 1.5-.4 3.3 0 1.2.4 1.9.4 3.2 0 1.4-1.1 2-2.5 2s-2.5-.6-2.5-2c0-1 .4-1.6.4-2.5 0-1.5-.4-2.6-.4-4C14 9.6 15.3 8 17 8Z',
 }
 
