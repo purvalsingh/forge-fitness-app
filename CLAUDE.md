@@ -2,8 +2,9 @@
 
 Fitness + Indian nutrition app: training, nutrition, steps, water, fasting, bodyweight, goals,
 adherence, analytics, AI. One React codebase ships as a web app (/app on Vercel), a Capacitor
-Android APK and an iOS Xcode project. Design system "FORGE Ember" (Stitch project
-14736699563082618847): charcoal #0E0D0C + ember #FF6B2C; lime = done, blue = protein.
+Android APK and an iOS Xcode project. Design system "FORGE Blueprint" (since 2026-09-25, shared with
+the landing page): cyanotype #0A1F38 grid paper, pale line #BFE0FF, ember #FF6B2C as the one signal;
+lime = done, cyan = protein. Instrument Serif / IBM Plex Sans Condensed / Plex Mono, self-hosted.
 
 ## Commands
 
