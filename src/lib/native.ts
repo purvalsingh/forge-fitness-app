@@ -18,6 +18,6 @@ export async function initNative() {
   })
   const dark = document.documentElement.dataset.theme !== 'light'
   void StatusBar.setStyle({ style: dark ? Style.Dark : Style.Light }).catch(() => {})
-  void StatusBar.setBackgroundColor({ color: dark ? '#0E0D0C' : '#F6F2EE' }).catch(() => {})
+  void StatusBar.setBackgroundColor({ color: dark ? '#0A1F38' : '#EEF3F9' }).catch(() => {})
   requestAnimationFrame(() => void SplashScreen.hide({ fadeOutDuration: 200 }).catch(() => {}))
 }
