@@ -6,6 +6,7 @@ import { minutesByDate, muscleSets, working } from '../lib/training'
 import { loadExercises, matchExercise, type LibExercise } from '../lib/exercises'
 import { importWorkouts } from '../lib/importers'
 import { Button, Field, Notice, Screen, Sheet, Tabs } from '../ui'
+import { BodyMap, untrained, useRegionSets } from './BodyMap'
 
 /**
  * Training history: year heatmap, muscle map (balance / recency), session list, back-filling a
@@ -25,12 +26,15 @@ export default function History() {
   const byId = useMemo(() => new Map(lib.map(e => [e.id, e])), [lib])
   const sets = useMemo(() => muscleSets(s.sessions, today, Number(range), e => byId.get(e.exercise_id) ?? s.customExercises.find(x => x.id === e.exercise_id) ?? (lib.length ? matchExercise(lib, e.name) : undefined)),
     [s.sessions, today, range, byId, s.customExercises, lib])
+  const regions = useRegionSets(sets)
+  const missing = untrained(regions)
+  const sex = s.profile?.sex ?? 'male'
   const minutes = useMemo(() => minutesByDate(s.sessions), [s.sessions])
   const done = [...s.sessions].filter(x => x.finished_at).sort((a, b) => b.date.localeCompare(a.date))
 
   async function onImport(f: File) {
     const r = importWorkouts(await f.text())
-    if (!r || !r.sessions.length) { setMsg('That file doesn\'t look like a Strong or Hevy export.'); return }
+    if (!r || !r.sessions.length) { setMsg('That file isn\'t a workout export from the Strong or Hevy apps. In those apps use Settings → Export data → CSV.'); return }
     for (const sess of r.sessions) await s.save('workout_sessions', sess as never)
     setMsg(`Imported ${r.sessions.length} workouts from ${r.format === 'hevy' ? 'Hevy' : 'Strong'}.`)
   }
@@ -47,14 +51,22 @@ export default function History() {
           <div className="eyebrow">Muscle balance · sets</div>
           <Tabs value={range} onChange={setRange} options={[{ value: '7', label: '7d' }, { value: '30', label: '30d' }, { value: '365', label: '1y' }]} />
         </div>
-        <BodyMap sets={sets} />
-        <Untrained sets={sets} />
+        <div className="mt-3">
+          <BodyMap sets={regions} sex={sex}
+            onSexChange={sx => { if (s.profile) void s.save('profiles', { ...s.profile, sex: sx } as never) }} />
+        </div>
+        <div className="mt-2 text-[12px]" style={{ color: missing.length ? 'var(--text-dim)' : 'var(--lime)' }}>
+          {missing.length ? `Not trained in this window: ${missing.join(', ')}.` : 'Every major muscle got work in this window.'}
+        </div>
       </section>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <Button variant="quiet" onClick={() => setBackfill(true)}>Log a past workout</Button>
-        <Button variant="quiet" onClick={() => file.current?.click()}>Import Strong / Hevy</Button>
+        <Button variant="quiet" onClick={() => setBackfill(true)}>Add past workout</Button>
+        <Button variant="quiet" onClick={() => file.current?.click()}>Import workouts</Button>
       </div>
+      <p className="mt-1.5 text-[11px]" style={{ color: 'var(--text-mute)' }}>
+        Switching from the <b>Strong</b> or <b>Hevy</b> workout apps? Export your workouts there as a CSV file and pick it here — every set comes across.
+      </p>
       <input ref={file} type="file" accept=".csv,text/csv" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) void onImport(f); e.target.value = '' }} />
       {msg && <div className="mt-2"><Notice>{msg}</Notice></div>}
 
@@ -99,52 +111,6 @@ function Heatmap({ minutes, today }: { minutes: Record<string, number>; today: s
       </div>
     </div>
   )
-}
-
-/** Simplified front/back figure. Colour = sets in the window; a muscle you haven't trained stays grey. */
-const REGIONS: { key: string[]; label: string; d: string; back?: boolean }[] = [
-  { key: ['delts'], label: 'Shoulders', d: 'M30 44 a9 8 0 1 1 1 0 Z M70 44 a9 8 0 1 0 -1 0 Z' },
-  { key: ['pectorals'], label: 'Chest', d: 'M36 44 h28 v14 q-14 6 -28 0 Z' },
-  { key: ['biceps'], label: 'Biceps', d: 'M22 52 h9 v18 h-9 Z M69 52 h9 v18 h-9 Z' },
-  { key: ['forearms'], label: 'Forearms', d: 'M20 72 h9 v18 h-9 Z M71 72 h9 v18 h-9 Z' },
-  { key: ['abs', 'serratus anterior'], label: 'Abs', d: 'M40 60 h20 v26 h-20 Z' },
-  { key: ['quads', 'adductors', 'abductors'], label: 'Quads', d: 'M37 92 h12 v34 h-12 Z M51 92 h12 v34 h-12 Z' },
-  { key: ['calves'], label: 'Calves', d: 'M38 130 h10 v26 h-10 Z M52 130 h10 v26 h-10 Z' },
-  { key: ['traps', 'levator scapulae'], label: 'Traps', d: 'M40 36 h20 v8 h-20 Z', back: true },
-  { key: ['upper back'], label: 'Upper back', d: 'M36 44 h28 v12 h-28 Z', back: true },
-  { key: ['lats'], label: 'Lats', d: 'M34 56 h12 v18 h-12 Z M54 56 h12 v18 h-12 Z', back: true },
-  { key: ['triceps'], label: 'Triceps', d: 'M22 52 h9 v18 h-9 Z M69 52 h9 v18 h-9 Z', back: true },
-  { key: ['spine'], label: 'Lower back', d: 'M44 74 h12 v12 h-12 Z', back: true },
-  { key: ['glutes'], label: 'Glutes', d: 'M37 88 h26 v12 h-26 Z', back: true },
-  { key: ['hamstrings'], label: 'Hamstrings', d: 'M37 102 h12 v24 h-12 Z M51 102 h12 v24 h-12 Z', back: true },
-  { key: ['calves'], label: 'Calves', d: 'M38 130 h10 v26 h-10 Z M52 130 h10 v26 h-10 Z', back: true },
-]
-
-function BodyMap({ sets }: { sets: Record<string, number> }) {
-  const val = (keys: string[]) => keys.reduce((a, k) => a + (sets[k] ?? 0), 0)
-  const max = Math.max(1, ...REGIONS.map(r => val(r.key)))
-  const fill = (v: number) => (v === 0 ? 'var(--surface-high)' : `rgba(255,107,44,${0.25 + 0.75 * (v / max)})`)
-  const Figure = ({ back }: { back?: boolean }) => (
-    <svg viewBox="0 0 100 162" className="h-56 w-full" role="img" aria-label={back ? 'Back muscles' : 'Front muscles'}>
-      <circle cx="50" cy="22" r="10" fill="var(--surface-raised)" />
-      <path d="M32 36 h36 l10 16 v40 h-8 l-4 -22 v26 l-2 62 h-12 l-2 -40 l-2 40 h-12 l-2 -62 v-26 l-4 22 h-8 v-40 Z" fill="var(--surface-raised)" />
-      {REGIONS.filter(r => Boolean(r.back) === Boolean(back)).map(r => (
-        <path key={r.label} d={r.d} fill={fill(val(r.key))}><title>{`${r.label}: ${Math.round(val(r.key))} sets`}</title></path>
-      ))}
-    </svg>
-  )
-  return (
-    <div className="mt-2 grid grid-cols-2 gap-2">
-      <div><Figure /><div className="mono text-center text-[10px] uppercase" style={{ color: 'var(--text-mute)' }}>Front</div></div>
-      <div><Figure back /><div className="mono text-center text-[10px] uppercase" style={{ color: 'var(--text-mute)' }}>Back</div></div>
-    </div>
-  )
-}
-
-function Untrained({ sets }: { sets: Record<string, number> }) {
-  const missing = [...new Set(REGIONS.filter(r => r.key.every(k => !sets[k])).map(r => r.label))]
-  if (!missing.length) return <div className="mt-2 text-[12px]" style={{ color: 'var(--lime)' }}>Every major muscle got work in this window.</div>
-  return <div className="mt-2 text-[12px]" style={{ color: 'var(--text-dim)' }}>Not trained: {missing.join(', ')}</div>
 }
 
 function Backfill({ open, onClose, onGo, maxDate }: { open: boolean; onClose: () => void; onGo: (date: string, dayId: string) => void; maxDate: string }) {

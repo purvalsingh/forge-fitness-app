@@ -127,8 +127,8 @@
         </article>
         <article class="card tilt">
           <div class="icon">📈</div>
-          <h3>Progression that explains itself</h3>
-          <p>Linear or double progression, auto-deloads after three stalls, plate math, estimated 1RM, RIR/RPE, supersets, warm-ups, timed and cardio sets.</p>
+          <h3>Gets you stronger, and says why</h3>
+          <p>Hit all your reps and the weight goes up next time. Stall three sessions in a row and it eases off so you can rebuild. It also tells you which plates to load, estimates your one-rep max, and handles warm-ups, supersets, planks and cardio.</p>
         </article>
         <article class="card tilt">
           <div class="icon">🏋️</div>
@@ -137,8 +137,8 @@
         </article>
         <article class="card tilt">
           <div class="icon">🫀</div>
-          <h3>Muscle map & heatmap</h3>
-          <p>See which muscles got the work this week and which you skipped, next to a year-long training heatmap and PR history.</p>
+          <h3>Muscle map & training calendar</h3>
+          <p>A male or female body lights up by how much each muscle trained this week, so you can see what you skipped. A year-long calendar and personal records sit alongside it.</p>
         </article>
         <article class="card tilt">
           <div class="icon">💧</div>
@@ -157,8 +157,8 @@
         </article>
         <article class="card tilt">
           <div class="icon">↔️</div>
-          <h3>Bring your history</h3>
-          <p>Import from Strong or Hevy CSV. Export everything as JSON or CSV whenever you like.</p>
+          <h3>Switching from another app?</h3>
+          <p>Bring your whole workout history over from <b>Strong</b> or <b>Hevy</b>, two popular gym-tracking apps. And download everything you log in FORGE whenever you like.</p>
         </article>
       </div>
     </section>
@@ -168,8 +168,8 @@
       <div class="india-pin">
         <div class="india-head">
           <p class="eyebrow">Every state on your plate</p>
-          <h2 class="section-title"><span class="count" data-to="36">0</span> states & UTs. <span class="count" data-to="16365">0</span> foods.</h2>
-          <p class="muted">Regional dishes are calculated from USDA ingredient data at real serving sizes, alongside the Indian Nutrient Databank's 800+ recipes.</p>
+          <h2 class="section-title"><span class="count" data-to="28">0</span> states. <span class="count" data-to="8">0</span> union territories. <span class="count" data-to="16365">0</span> foods.</h2>
+          <p class="muted">Every region of India has its own dishes in FORGE — calculated from their ingredients at the portion you are actually served, alongside 800+ recipes from the Indian Nutrient Databank. Drag or scroll to travel the map.</p>
         </div>
         <div class="india-rail">{{STATE_CARDS}}</div>
       </div>
@@ -180,7 +180,7 @@
       <div class="acc-copy">
         <p class="eyebrow">Can't be fooled</p>
         <h2 class="section-title split">Tell it you ate a nuclear bomb. <span class="ember">It won't log it.</span></h2>
-        <p class="muted">Two layers of checks run before anything reaches your log. The first rejects things that aren't food, impossible amounts, and attempts to override the AI's instructions. The second rejects answers that break physics: more than 9 kcal per gram, macros that outweigh the food, or calories that don't add up.</p>
+        <p class="muted">Every entry is checked twice. First, anything that isn't food, an impossible amount (40 rotis at once) or an attempt to trick the AI is refused. Then the AI's answer is checked against basic food science: no food has more than 9 calories per gram, and the protein, carbs and fat must add up to the calories. If the numbers don't make sense, they never reach your diary.</p>
       </div>
       <form class="acc-demo card" onsubmit="return false">
         <label class="mono" for="acc-input">TRY IT: WHAT DID YOU EAT?</label>
@@ -203,12 +203,12 @@
     <section class="security" id="security">
       <h2 class="section-title split">Your keys. <span class="ember">Locked.</span></h2>
       <div class="sec-grid">
-        <div class="card tilt"><b class="mono">AES-256-GCM</b><p>Your 2–5 Gemini keys are encrypted on the server with a secret the database never sees. Each ciphertext is tied to your account, so a copied row won't decrypt.</p></div>
+        <div class="card tilt"><b class="mono">BANK-GRADE ENCRYPTION</b><p>Your 2–5 Gemini keys are locked with AES-256 encryption, the same standard banks use. The key that unlocks them never touches the database, and each one only works for your account.</p></div>
         <div class="card tilt"><b class="mono">NEVER SHOWN AGAIN</b><p>After you save your keys, the app only ever sees the last four characters. The browser doesn't hold them, and neither does the APK.</p></div>
-        <div class="card tilt"><b class="mono">ROW-LEVEL SECURITY</b><p>Every table is owner-only in Postgres, so one account can never read another's meals, workouts or keys.</p></div>
-        <div class="card tilt"><b class="mono">RATE LIMITS</b><p>AI calls are capped per minute and per day, logged in a table you can't erase. That keeps a leaked session from burning your quota.</p></div>
-        <div class="card tilt"><b class="mono">HARDENED HEADERS</b><p>Strict CSP, HSTS, no framing, nosniff. Photos go straight to the AI and are never stored.</p></div>
-        <div class="card tilt"><b class="mono">SIGNED APK</b><p>Every release is signed with the same FORGE key, and its SHA-256 is printed on this page so you can check your download.</p></div>
+        <div class="card tilt"><b class="mono">YOUR DATA IS YOURS</b><p>The database itself enforces that only you can read your meals, workouts and keys. Even a bug in the app couldn't show them to someone else.</p></div>
+        <div class="card tilt"><b class="mono">SPEED LIMITS ON AI</b><p>Each account can make only so many AI requests per minute and per day. If someone ever got into your account, they couldn't burn through your free quota.</p></div>
+        <div class="card tilt"><b class="mono">LOCKED-DOWN WEBSITE</b><p>Always HTTPS. The site can't be embedded in other sites or load code from anywhere else. Food photos go straight to the AI and are never stored.</p></div>
+        <div class="card tilt"><b class="mono">SIGNED APP</b><p>Every Android release is signed with the same FORGE key, and its fingerprint (SHA-256) is printed on this page so you can check your download wasn't tampered with.</p></div>
       </div>
     </section>
 
@@ -226,10 +226,10 @@
       </ol>
       <ol class="steps" data-panel="ios" hidden>
         <li><b>Open</b> <a href="/app/">forgefit-india.vercel.app/app</a> in <b>Safari</b>.</li>
-        <li>Tap <b>Share</b> <span class="mono">⎋</span> → <b>Add to Home Screen</b>. FORGE then opens full-screen with its own icon and works offline.</li>
+        <li>Tap the <b>Share</b> button (the square with an arrow pointing up), then <b>Add to Home Screen</b>. FORGE then opens full-screen with its own icon and works offline.</li>
         <li><b>Sign up</b> the same way as on Android. Your data syncs across all your devices.</li>
       </ol>
-      <p class="muted small">Why no iPhone download? Apple only lets iPhones install apps from the App Store, which needs a paid developer account. The home-screen version is the same app.</p>
+      <p class="muted small">Why no iPhone download? Apple only allows iPhone apps from the App Store, which requires a paid developer account. The home-screen version is the same app with the same features.</p>
     </section>
 
     <!-- FAQ -->
@@ -250,7 +250,7 @@
       <a href="https://github.com/purvalsingh/forge-fitness-app" target="_blank" rel="noopener">Source on GitHub</a>
       <a href="https://purvalsingh.github.io" target="_blank" rel="noopener">Built by Purval Singh</a>
     </div>
-    <p class="muted small">Food data: USDA FoodData Central (public domain), Indian Nutrient Databank (Vijayakumar et al., 2024), Open Food Facts (ODbL). Exercise text: exercises-dataset (MIT). FORGE is not medical advice.</p>
+    <p class="muted small">Food data: USDA FoodData Central (public domain), Indian Nutrient Databank (Vijayakumar et al., 2024), Open Food Facts (ODbL). Exercise text: exercises-dataset (MIT). Body map: react-native-body-highlighter (MIT). FORGE is not medical advice.</p>
   </footer>
 
   <script src="/vendor/gsap.min.js" defer></script>

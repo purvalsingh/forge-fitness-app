@@ -13,6 +13,7 @@ type Mode = 'signin' | 'signup' | 'reset'
 
 /** Keys typed at sign-up while the account still awaited email confirmation. Memory only — never persisted. */
 let pendingKeys: string[] | null = null
+let pendingSex: 'male' | 'female' | null = null
 
 const KEY_RE = /^AIza[0-9A-Za-z_-]{35}$/
 
@@ -38,6 +39,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (!session) { setKeys('unknown'); return }
     let alive = true
     ;(async () => {
+      if (pendingSex && supabase) {
+        // The body shown on the muscle map (and used for calorie maths) — chosen at sign-up.
+        await supabase.from('profiles').update({ sex: pendingSex }).eq('id', session.user.id).then(() => { pendingSex = null }, () => {})
+      }
       if (pendingKeys) {
         try { await aiKeys.save(pendingKeys); pendingKeys = null; if (alive) setKeys('ok'); return } catch { /* fall through to the gate */ }
       }
@@ -91,6 +96,7 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
   const [confirm, setConfirm] = useState('')
   const [keys, setKeys] = useState<string[]>(['', ''])
   const [consent, setConsent] = useState(false)
+  const [sex, setSex] = useState<'male' | 'female' | ''>('')
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ tone: 'info' | 'error'; text: string } | null>(null)
   const [failures, setFailures] = useState(0)
@@ -100,6 +106,7 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
 
   function validateSignup(): string | null {
     if (name.trim().length < 2) return 'Enter your name.'
+    if (!sex) return 'Choose male or female — it sets your body map and calorie maths.'
     const pw = passwordProblem(password)
     if (pw) return pw
     if (password !== confirm) return 'Passwords don\'t match.'
@@ -132,6 +139,7 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
         })
         if (error) throw error
         pendingKeys = filled
+        pendingSex = sex || null
         if (data.session) return // AuthGate saves the keys and lets them in
         setMsg({ tone: 'info', text: 'Check your inbox to confirm your email, then sign in here. Your keys are saved on first sign-in.' })
         setMode('signin')
@@ -168,6 +176,17 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
           {mode === 'signup' && (
             <Field label="Your name">
               <input autoComplete="name" required maxLength={60} value={name} onChange={e => setName(e.target.value)} placeholder="Aarav Sharma" />
+            </Field>
+          )}
+          {mode === 'signup' && (
+            <Field label="Gender" hint="Used for your calorie maths and the body shown on your muscle map.">
+              <div className="grid grid-cols-2 gap-2">
+                {(['male', 'female'] as const).map(g => (
+                  <button key={g} type="button" className="chip press !min-h-[44px] justify-center" aria-pressed={sex === g} onClick={() => setSex(g)}>
+                    {g === 'male' ? 'Male' : 'Female'}
+                  </button>
+                ))}
+              </div>
             </Field>
           )}
           <Field label="Email">

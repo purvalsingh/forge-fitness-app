@@ -70,6 +70,16 @@ export default function SettingsScreen() {
             <DraftInput value={s.profile?.display_name ?? ''} ariaLabel="Display name"
               onCommit={v => s.profile && s.save('profiles', { ...s.profile, display_name: v } as never)} />
           </Field>
+          <div className="mt-2">
+            <Field label="Gender" hint="Sets your calorie maths and the body on your muscle map.">
+              <div className="grid grid-cols-2 gap-2">
+                {(['male', 'female'] as const).map(g => (
+                  <button key={g} className="chip press !min-h-[44px] justify-center" aria-pressed={s.profile?.sex === g}
+                    onClick={() => s.profile && s.save('profiles', { ...s.profile, sex: g } as never)}>{g === 'male' ? 'Male' : 'Female'}</button>
+                ))}
+              </div>
+            </Field>
+          </div>
         </Card>
 
         <Card>
