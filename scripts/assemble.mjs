@@ -11,10 +11,6 @@ const cp = (a, b) => { fs.mkdirSync(b.split('/').slice(0, -1).join('/'), { recur
 for (const f of fs.readdirSync('site')) if (f !== 'index.html') fs.cpSync(`site/${f}`, `${dist}/${f}`, { recursive: true })
 fs.cpSync('public/fonts', `${dist}/fonts`, { recursive: true })
 cp('public/favicon.svg', `${dist}/favicon.svg`)
-cp('node_modules/gsap/dist/gsap.min.js', `${dist}/vendor/gsap.min.js`)
-cp('node_modules/gsap/dist/ScrollTrigger.min.js', `${dist}/vendor/ScrollTrigger.min.js`)
-cp('node_modules/lenis/dist/lenis.min.js', `${dist}/vendor/lenis.min.js`)
-cp('node_modules/lenis/dist/lenis.css', `${dist}/vendor/lenis.css`)
 
 let size = '—', sha = 'not built yet'
 if (fs.existsSync('release/forge.apk')) {

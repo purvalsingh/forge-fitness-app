@@ -53,7 +53,7 @@ api/
   ai.ts           the only route that calls Gemini — with the CALLER's decrypted keys
   keys.ts         save/list/delete a user's 2–5 Gemini keys (AES-256-GCM, never returned)
   _lib/           guard.ts (food abuse checks), prompts.ts, crypto.ts, http.ts
-site/             landing page (vanilla + GSAP/Lenis), assembled by scripts/assemble.mjs
+site/             landing page (vanilla JS, no libraries; blueprint scroll-draw), assembled by scripts/assemble.mjs
 scripts/          indian-states.mjs (dishes of all 28 states + 8 UTs), rebuild-catalog.mjs, build-apk.mjs
 supabase/migrations/  0001 schema + RLS, 0002 v2 (keys, ai_usage, water, exercises, settings)
 android/ ios/     Capacitor projects (package app.forge.fitness)

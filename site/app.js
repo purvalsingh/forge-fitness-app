@@ -1,46 +1,26 @@
-/* FORGE landing — motion + interactions. Transform/opacity only; everything degrades without JS. */
+/* FORGE blueprint landing. No libraries: native scroll, one rAF loop.
+   Each .sheet gets --d (line work inked) and --f (scan-line fill) from its scroll position. */
 (() => {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches
   const $ = (s, r = document) => r.querySelector(s)
   const $$ = (s, r = document) => [...r.querySelectorAll(s)]
+  const clamp = v => Math.min(1, Math.max(0, v))
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  /* ---------- Loader (≤ 1.6 s) ---------- */
-  const count = $('.loader-count')
-  let n = 0
-  const t0 = performance.now()
-  const tick = () => {
-    n = Math.min(100, Math.round(((performance.now() - t0) / 1200) * 100))
-    count.textContent = n
-    if (n < 100) requestAnimationFrame(tick)
-  }
-  requestAnimationFrame(tick)
-  const ready = new Promise(r => (document.readyState === 'complete' ? r() : addEventListener('load', r)))
-  Promise.race([ready.then(() => new Promise(r => setTimeout(r, 600))), new Promise(r => setTimeout(r, 1600))])
-    .then(() => { document.body.classList.add('loaded'); intro() })
-
-  /* ---------- Platform hint: put the right button first ---------- */
-  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-  if (ios) {
-    const cta = $('.hero-cta'), iosBtn = $('[data-ios]')
-    iosBtn.classList.remove('btn-ghost'); cta.prepend(iosBtn)
-    cta.querySelector('a[download]').classList.add('btn-ghost')
-    selectTab('ios')
-  }
-
-  /* ---------- Install tabs ---------- */
+  /* ---------- iOS visitors: open the iPhone install tab ---------- */
   function selectTab(name) {
     $$('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)))
     $$('.steps').forEach(p => { p.hidden = p.dataset.panel !== name })
   }
   $$('.tabs button').forEach(b => b.addEventListener('click', () => selectTab(b.dataset.tab)))
   $('[data-ios]').addEventListener('click', () => selectTab('ios'))
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+    const cta = $('.hero-cta'), iosBtn = $('[data-ios]')
+    iosBtn.classList.remove('btn-ghost'); cta.prepend(iosBtn)
+    cta.querySelector('a[download]').classList.add('btn-ghost')
+    selectTab('ios')
+  }
+  $$('.nav-index a').forEach(a => a.addEventListener('click', () => a.closest('details').removeAttribute('open')))
 
-  /* ---------- Mobile menu ---------- */
-  const burger = $('.burger'), menu = $('.mobile-menu')
-  const toggle = open => { burger.setAttribute('aria-expanded', String(open)); menu.classList.toggle('open', open); menu.setAttribute('aria-hidden', String(!open)) }
-  burger.addEventListener('click', () => toggle(!menu.classList.contains('open')))
-  $$('a', menu).forEach(a => a.addEventListener('click', () => toggle(false)))
 
   /* ---------- Accuracy demo (same rules as the app's pre-check) ---------- */
   const NON_FOOD = ['bomb', 'nuke', 'nuclear', 'uranium', 'grenade', 'bullet', 'gun', 'missile', 'poison', 'cyanide', 'bleach', 'detergent', 'soap', 'acid', 'petrol', 'diesel', 'kerosene', 'plastic', 'cement', 'brick', 'stone', 'rock', 'sand', 'metal', 'nail', 'coin', 'battery', 'phone', 'laptop', 'car', 'paper', 'shoe', 'paint', 'glue', 'human', 'sun', 'moon', 'planet', 'star', 'house']
@@ -67,123 +47,66 @@
   input.addEventListener('input', () => { if (!input.value) run() })
   $$('.acc-chips .chip').forEach(c => c.addEventListener('click', () => { input.value = c.textContent; run() }))
 
-  /* ---------- Hero word cycle ---------- */
-  const words = ['Indian', 'desi', 'Punjabi', 'Bengali', 'Kerala', 'Gujarati', 'Naga', 'Kashmiri', 'ghar ka']
-  const cyc = $('.cycle')
-  let wi = 0
-  if (!reduce) setInterval(() => {
-    wi = (wi + 1) % words.length
-    if (window.gsap) gsap.to(cyc, { yPercent: -40, opacity: 0, duration: .25, ease: 'power2.in', onComplete: () => { cyc.textContent = words[wi]; gsap.fromTo(cyc, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .35, ease: 'power3.out' }) } })
-    else cyc.textContent = words[wi]
-  }, 2600)
-
-  if (reduce || !window.gsap) { $$('.count').forEach(c => { c.textContent = Number(c.dataset.to).toLocaleString('en-IN') }); $$('.scrub').forEach(s => s.style.opacity = 1); return }
-
-  /* ---------- GSAP stack ---------- */
-  gsap.registerPlugin(ScrollTrigger)
-  const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
-  lenis.on('scroll', ScrollTrigger.update)
-  gsap.ticker.add(t => lenis.raf(t * 1000))
-  gsap.ticker.lagSmoothing(0)
-  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
-    const id = a.getAttribute('href'); if (id.length < 2) return
-    const el = $(id); if (!el) return
-    e.preventDefault(); lenis.scrollTo(el, { offset: -80 })
+  /* ---------- drawing setup: normalise every stroke to length 1, stagger by index ---------- */
+  $$('.dr').forEach(svg => $$('path, line, rect, circle, polyline', svg).forEach((el, i) => {
+    el.setAttribute('pathLength', '1'); el.style.setProperty('--i', i)
   }))
+  $$('.bom li, .survey .state, .layers li').forEach(el => el.style.setProperty('--r', [...el.parentNode.children].indexOf(el)))
 
-  // Progress bar + nav hide on scroll-down
-  const nav = $('.nav')
-  let lastY = 0
-  let marqueeBoost = 0, mx = 0
-  lenis.on('scroll', ({ scroll, limit, velocity }) => {
-    $('.progress').style.transform = `scaleX(${limit ? scroll / limit : 0})`
-    nav.classList.toggle('hide', scroll > 300 && scroll > lastY && !menu.classList.contains('open'))
-    lastY = scroll
-    marqueeBoost = Math.min(6, Math.abs(velocity) * 0.4)
-  })
+  const counters = $$('[data-to]').map(el => ({ el, to: Number(el.dataset.to), sheet: el.closest('.sheet'), last: -1 }))
+  const fmt = n => n.toLocaleString('en-IN')
 
-  function intro() {
-    if (reduce || !window.gsap) return
-    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
-    tl.from('.hero-title .line > span', { yPercent: 110, duration: 1.1, stagger: .09 })
-      .from('.hero-copy .reveal', { y: 24, opacity: 0, duration: .8, stagger: .08 }, '-=.7')
-      .from('.phone', { y: 80, opacity: 0, rotateY: -30, duration: 1.2 }, '-=1')
-      .from('.nav', { y: -30, opacity: 0, duration: .6 }, '-=1')
-      .to('.s-ring .arc', { strokeDashoffset: 264 * (1 - .6), duration: 1.4, ease: 'power2.out' }, '-=.6')
-    countUp($('.phone .count'), 1.4)
+  const sheets = $$('.sheet')
+  const state = new Map(sheets.map(s => [s, { d: -1, f: -1 }]))
+  const ruler = $('.ruler'), roSheet = $('.ro-sheet'), roTitle = $('.ro-title'), roPct = $('.ro-pct')
+  let lastSheet = null
+
+  function frame() {
+    const vh = innerHeight, max = document.documentElement.scrollHeight - vh
+    ruler.style.setProperty('--p', (scrollY / max).toFixed(4))
+    roPct.textContent = (scrollY / max * 100).toFixed(1).padStart(5, '0') + '%'
+    let current = sheets[0]
+    for (const s of sheets) {
+      const r = s.getBoundingClientRect()
+      if (r.top < vh * .5) current = s
+      if (r.bottom < -vh || r.top > vh * 2) continue // offscreen: leave as is
+      let p
+      if (s.hasAttribute('data-pin')) p = clamp(-r.top / (r.height - vh))           // sticky hero: whole track
+      else p = clamp((vh * .92 - r.top) / (Math.min(r.height, vh * 1.6) * .75 + vh * .2))
+      const d = reduce ? 1 : clamp(p / .6), f = reduce ? 1 : clamp((p - .4) / .5)
+      const st = state.get(s)
+      if (Math.abs(st.d - d) > .001) { s.style.setProperty('--d', d.toFixed(4)); st.d = d }
+      if (Math.abs(st.f - f) > .001) { s.style.setProperty('--f', f.toFixed(4)); st.f = f }
+    }
+    if (current !== lastSheet) {
+      lastSheet = current
+      roSheet.textContent = `SHEET ${current.dataset.sheet} / 08`
+      roTitle.textContent = current.dataset.title
+    }
+    // counters are scrubbed by their sheet's fill, so they run backwards when you scroll up
+    if (!reduce) for (const c of counters) {
+      const st = state.get(c.sheet), v = Math.round(c.to * (st ? Math.max(st.f, 0) ** .6 : 1))
+      if (v !== c.last) { c.el.textContent = fmt(v); c.last = v }
+    }
   }
+  let queued = false
+  const request = () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; frame() }) } }
+  addEventListener('scroll', request, { passive: true })
+  addEventListener('resize', request)
+  frame()
 
-  // Counters
-  function countUp(el, dur = 1.6) {
-    const to = Number(el.dataset.to), o = { v: 0 }
-    gsap.to(o, { v: to, duration: dur, ease: 'power2.out', onUpdate: () => { el.textContent = Math.round(o.v).toLocaleString('en-IN') } })
+  /* ---------- survey cells: their dish counts also scrub with the sheet ---------- */
+  $$('.survey .state .n').forEach(n => { n.dataset.to = n.textContent.trim(); n.textContent = '0' })
+  counters.push(...$$('.survey .state .n').map(el => ({ el, to: Number(el.dataset.to), sheet: el.closest('.sheet'), last: -1 })))
+  if (reduce) counters.forEach(c => { c.el.textContent = fmt(c.to) })
+  request()
+
+  /* ---------- crosshair with page coordinates (fine pointers only) ---------- */
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const xh = $('.xhair'), read = $('.xh-read')
+    addEventListener('pointermove', e => {
+      xh.style.setProperty('--x', e.clientX + 'px'); xh.style.setProperty('--y', e.clientY + 'px')
+      read.textContent = `X ${String(Math.round(e.clientX)).padStart(4, '0')} · Y ${String(Math.round(e.clientY + scrollY)).padStart(5, '0')}`
+    }, { passive: true })
   }
-  $$('.count').filter(c => !c.closest('.phone')).forEach(c => ScrollTrigger.create({ trigger: c, start: 'top 85%', once: true, onEnter: () => countUp(c) }))
-
-  // Split-word title reveals
-  $$('.split').forEach(el => {
-    el.innerHTML = el.innerHTML.replace(/(<[^>]+>)|([^<\s]+)/g, (m, tag, word) => tag ?? `<span class="word" style="display:inline-block">${word}</span>`)
-    gsap.from($$('.word', el), { yPercent: 60, opacity: 0, stagger: .04, duration: .8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 82%' } })
-  })
-
-  // Scroll-scrubbed statement, word by word
-  $$('.scrub').forEach(el => {
-    el.innerHTML = el.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ')
-    gsap.to($$('.w', el), { opacity: 1, stagger: .05, ease: 'none', scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: true } })
-  })
-
-  // Fade + lift, staggered cards
-  $$('.bento, .sec-grid, .steps, .faq').forEach(g => gsap.from(g.children, { y: 40, opacity: 0, duration: .8, stagger: .06, ease: 'power3.out', scrollTrigger: { trigger: g, start: 'top 85%' } }))
-
-  // Parallax blobs + phone
-  gsap.to('.b1', { yPercent: 40, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
-  gsap.to('.hero-phone', { yPercent: -18, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
-
-  // Pinned horizontal rail of states
-  const rail = $('.india-rail')
-  const distance = () => Math.max(0, rail.scrollWidth - innerWidth)
-  gsap.to(rail, { x: () => -distance(), ease: 'none', scrollTrigger: { trigger: '.india', start: 'top top', end: () => '+=' + distance(), pin: '.india-pin', scrub: 0.6, invalidateOnRefresh: true } })
-
-  // Marquee whose speed follows scroll velocity
-  const track = $('.marquee-track')
-  gsap.ticker.add(() => {
-    mx -= 0.6 + marqueeBoost; marqueeBoost *= 0.92
-    const half = track.scrollWidth / 2
-    if (-mx >= half) mx += half
-    track.style.transform = `translate3d(${mx}px,0,0)`
-  })
-
-  if (!fine) return
-
-  // Cursor with context labels
-  const cur = $('.cursor'), curLabel = $('.cursor span')
-  const qx = gsap.quickTo(cur, 'x', { duration: .25, ease: 'power3' }), qy = gsap.quickTo(cur, 'y', { duration: .25, ease: 'power3' })
-  addEventListener('pointermove', e => { qx(e.clientX); qy(e.clientY) })
-  $$('[data-cursor]').forEach(el => {
-    el.addEventListener('pointerenter', () => { curLabel.textContent = el.dataset.cursor.toUpperCase(); cur.classList.add('label') })
-    el.addEventListener('pointerleave', () => cur.classList.remove('label'))
-  })
-
-  // Cursor-following hero blobs
-  addEventListener('pointermove', e => {
-    const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5
-    gsap.to('.b1', { x: x * 80, y: y * 60, duration: 1.2, ease: 'power2.out', overwrite: 'auto' })
-    gsap.to('.b2', { x: -x * 60, y: -y * 40, duration: 1.4, ease: 'power2.out', overwrite: 'auto' })
-  })
-
-  // Magnetic buttons
-  $$('.magnetic').forEach(b => {
-    b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); gsap.to(b, { x: (e.clientX - r.left - r.width / 2) * .25, y: (e.clientY - r.top - r.height / 2) * .35, duration: .4, ease: 'power3.out' }) })
-    b.addEventListener('pointerleave', () => gsap.to(b, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1, .4)' }))
-  })
-
-  // 3D tilt + spotlight
-  $$('.tilt').forEach(c => {
-    c.addEventListener('pointermove', e => {
-      const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height
-      c.style.setProperty('--mx', `${px * 100}%`); c.style.setProperty('--my', `${py * 100}%`)
-      gsap.to(c.classList.contains('hero-phone') ? '.phone' : c, { rotateY: (px - .5) * 10, rotateX: (.5 - py) * 8, duration: .5, ease: 'power2.out', transformPerspective: 900 })
-    })
-    c.addEventListener('pointerleave', () => gsap.to(c.classList.contains('hero-phone') ? '.phone' : c, { rotateY: c.classList.contains('hero-phone') ? -14 : 0, rotateX: c.classList.contains('hero-phone') ? 6 : 0, duration: .8, ease: 'power3.out' }))
-  })
 })()
