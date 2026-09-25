@@ -20,7 +20,6 @@
   <!-- drawing-sheet frame: ruler, crosshair, readout -->
   <div class="ruler" aria-hidden="true"><i class="ruler-mark"></i></div>
   <div class="xhair" aria-hidden="true"><i class="xh-x"></i><i class="xh-y"></i><span class="xh-read mono">X 0000 · Y 0000</span></div>
-  <div class="readout mono" aria-hidden="true"><span class="ro-sheet">SHEET 01 / 08</span><span class="ro-title">GENERAL ARRANGEMENT</span><span class="ro-pct">000.0%</span></div>
 
   <header class="nav">
     <a href="#top" class="brand" aria-label="FORGE home">
@@ -28,11 +27,12 @@
       <span>FORGE</span><small class="mono">DWG. NO. FG-2.0</small>
     </a>
     <nav class="nav-links mono" aria-label="Sections">
-      <a href="#features">02 Parts</a><a href="#india">03 Survey</a><a href="#accuracy">04 Tolerance</a><a href="#security">05 Section A–A</a><a href="#install">06 Assembly</a>
+      <a href="#features">02 Features</a><a href="#india">03 Indian food</a><a href="#accuracy">04 Accuracy</a><a href="#security">05 Security</a><a href="#install">06 Install</a>
     </nav>
+    <p class="readout mono" aria-hidden="true"><span class="ro-sheet">SHEET 01 / 08</span><span class="ro-title">GENERAL ARRANGEMENT</span><span class="ro-pct">000.0%</span></p>
     <details class="nav-index mono">
       <summary>Index</summary>
-      <div><a href="#features">02 Parts</a><a href="#india">03 Survey</a><a href="#accuracy">04 Tolerance</a><a href="#security">05 Section A–A</a><a href="#install">06 Assembly</a><a href="#notes">07 Notes</a></div>
+      <div><a href="#features">02 Features</a><a href="#india">03 Indian food</a><a href="#accuracy">04 Accuracy</a><a href="#security">05 Security</a><a href="#install">06 Install</a><a href="#notes">07 Questions</a></div>
     </details>
     <a href="#download" class="btn btn-sm">Get the app</a>
   </header>
@@ -56,6 +56,7 @@
             <a class="btn btn-ghost press" href="#install" data-ios><span>Install on iPhone</span></a>
             <a class="text-link mono" href="/app/">Open the web app →</a>
           </div>
+          <p class="key-note">Needs 2 free Gemini API keys from Google AI Studio. They keep FORGE free with no ads; <a href="#key-step">setup takes a few minutes →</a></p>
           <p class="hero-note mono">REV v2.0.0 · signed APK · SHA-256 <code title="{{APK_SHA256}}">{{APK_SHA_SHORT}}</code></p>
         </div>
 
@@ -77,21 +78,21 @@
             <text class="dim-t" x="310" y="600" text-anchor="middle">28 STATES + 8 UNION TERRITORIES</text>
             <!-- leaders + callouts -->
             <g class="leaders">
-              <polyline points="345,41 380,30 630,30"/>
-              <polyline data-from="ring" data-y="120" points="0,0"/>
+              <polyline data-from="title" data-y="30" points="0,0"/>
+              <polyline data-from="ring" data-y="160" points="0,0"/>
               <polyline data-from="macros" data-y="285" points="0,0"/>
               <polyline data-from="meal" data-y="440" points="0,0"/>
             </g>
-            <text class="call" x="630" y="110" text-anchor="end">A · ENERGY BALANCE, LIVE</text>
-            <text class="call" x="630" y="20" text-anchor="end">B · AI CAMERA ON YOUR OWN KEYS</text>
+            <text class="call" x="630" y="150" text-anchor="end">B · ENERGY BALANCE, LIVE</text>
+            <text class="call" x="630" y="20" text-anchor="end">A · YOUR DAY ENDS AT 4 AM</text>
             <text class="call" x="630" y="275" text-anchor="end">C · MACROS ≤ 9 KCAL / G</text>
             <text class="call" x="630" y="430" text-anchor="end">D · 1 PIECE, 1 KATORI</text>
           </svg>
           <!-- the inked (filled) state, revealed by the scan line -->
           <div class="phone-fill">
-            <div class="s-top"><div><div class="s-eyebrow">THU 25 SEP</div><div class="s-title">Today<b>.</b></div></div><div class="s-avatar" data-trace="circle">A</div></div>
+            <div class="s-top"><div><div class="s-eyebrow">THU 25 SEP</div><div class="s-title" data-callout="title">Today<b>.</b></div></div><div class="s-avatar" data-trace="circle">A</div></div>
             <div class="s-hero" data-trace="rect">
-              <div><div class="s-eyebrow ember">ENERGY BALANCE</div><div class="s-kcal"><span data-to="1284">0</span><small> / 2,150</small></div><div class="s-chip" data-trace="rect">866 kcal left</div></div>
+              <div><div class="s-eyebrow ember">ENERGY BALANCE</div><div class="s-kcal"><span data-to="1284">1,284</span><small> / 2,150</small></div><div class="s-chip" data-trace="rect">866 kcal left</div></div>
               <svg class="s-ring" data-trace="circle" data-callout="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/><circle class="arc" cx="50" cy="50" r="42"/></svg>
             </div>
             <div class="s-macros" data-callout="macros"><div data-trace="rect"><span>PROTEIN</span><b>96</b></div><div data-trace="rect"><span>CARBS</span><b>140</b></div><div data-trace="rect"><span>FAT</span><b>38</b></div></div>
@@ -102,8 +103,8 @@
           </div>
           <i class="scan"></i>
         </figure>
+        <p class="scroll-hint mono" aria-hidden="true">SCROLL TO INK THE DRAWING ↓</p>
       </div>
-      <p class="scroll-hint mono" aria-hidden="true">SCROLL TO INK THE DRAWING ↓</p>
     </section>
 
     <!-- statement: outlined type fills as the scan passes -->
@@ -119,7 +120,7 @@
         <li><span class="no mono">01</span><svg class="dr glyph" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="4"/><path d="M8 7l2-3h4l2 3"/></svg><h3>AI food camera</h3><p>Snap your thali. FORGE finds each item, estimates the portion from the plate and katori, then checks it against its own database before you log it. Every number stays editable.</p></li>
         <li><span class="no mono">02</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/></svg><h3>Gym after midnight?</h3><p>Your day ends at 4 AM, not 12. A 12:30 AM session or snack still counts for the evening before. You can also log to yesterday, or any day, in one tap.</p></li>
         <li><span class="no mono">03</span><svg class="dr glyph" viewBox="0 0 24 24"><polyline points="3,19 9,13 13,16 21,6"/><polyline points="16,6 21,6 21,11"/></svg><h3>Gets you stronger, and says why</h3><p>Hit all your reps and the weight goes up next time. Stall three sessions in a row and it eases off so you can rebuild. It also tells you which plates to load, estimates your one-rep max, and handles warm-ups, supersets, planks and cardio.</p></li>
-        <li><span class="no mono">04</span><svg class="dr glyph" viewBox="0 0 24 24"><line x1="6" y1="12" x2="18" y2="12"/><rect x="2" y="8" width="4" height="8"/><rect x="18" y="8" width="4" height="8"/></svg><h3><span data-to="1324">0</span> exercises</h3><p>Search by muscle or the equipment you own, add favourites and your own exercises, and read instructions in English or Hindi.</p></li>
+        <li><span class="no mono">04</span><svg class="dr glyph" viewBox="0 0 24 24"><line x1="6" y1="12" x2="18" y2="12"/><rect x="2" y="8" width="4" height="8"/><rect x="18" y="8" width="4" height="8"/></svg><h3><span data-to="1324">1,324</span> exercises</h3><p>Search by muscle or the equipment you own, add favourites and your own exercises, and read instructions in English or Hindi.</p></li>
         <li><span class="no mono">05</span><svg class="dr glyph" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M7 10h10M12 15l-3 6M12 15l3 6"/></svg><h3>Muscle map &amp; training calendar</h3><p>A male or female body lights up by how much each muscle trained this week, so you can see what you skipped. A year-long calendar and personal records sit alongside it.</p></li>
         <li><span class="no mono">06</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M12 3C12 3 5 11 5 15a7 7 0 0 0 14 0c0-4-7-12-7-12z"/></svg><h3>Water, fasting, steps</h3><p>One-tap water, an intermittent-fasting timer, step goals and a daily adherence score. Rest days never count against you.</p></li>
         <li><span class="no mono">07</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M4 5v14M7 5v14M9.5 5v14M13 5v14M16 5v14M18 5v14M20.5 5v14"/></svg><h3>Barcode &amp; quick meals</h3><p>Scan packaged food through Open Food Facts, copy a meal from yesterday, or save any meal as a one-tap quick meal.</p></li>
@@ -132,7 +133,7 @@
     <section class="sheet india" id="india" data-sheet="03" data-title="SURVEY GRID">
       <header class="sheet-head">
         <span class="mono">SHEET 03 — SURVEY OF EVERY STATE</span>
-        <h2><span data-to="28">0</span> states. <span data-to="8">0</span> union territories. <em><span data-to="16365">0</span> foods.</em></h2>
+        <h2><span data-to="28">28</span> states. <span data-to="8">8</span> union territories. <em><span data-to="16365">16,365</span> foods.</em></h2>
         <p class="muted">Every region of India has its own dishes in FORGE — calculated from their ingredients at the portion you are actually served, alongside 800+ recipes from the Indian Nutrient Databank. Each plot shows how many dishes that region has.</p>
       </header>
       <div class="survey">{{STATE_CARDS}}</div>
@@ -194,19 +195,23 @@
 
     <!-- 06 INSTALL as assembly steps -->
     <section class="sheet install" id="install" data-sheet="06" data-title="ASSEMBLY">
-      <header class="sheet-head"><span class="mono">SHEET 06 — ASSEMBLY INSTRUCTIONS</span><h2>Install in a minute.</h2></header>
-      <div class="tabs mono" role="tablist">
-        <button role="tab" aria-selected="true" data-tab="android">Android</button>
-        <button role="tab" aria-selected="false" data-tab="ios">iPhone</button>
+      <header class="sheet-head"><span class="mono">SHEET 06 — ASSEMBLY INSTRUCTIONS</span><h2>Install in a few minutes.</h2></header>
+      <div class="tabs mono" role="tablist" aria-label="Your phone">
+        <button role="tab" id="tab-android" aria-controls="panel-android" aria-selected="true" data-tab="android">Android</button>
+        <button role="tab" id="tab-ios" aria-controls="panel-ios" aria-selected="false" tabindex="-1" data-tab="ios">iPhone</button>
       </div>
-      <ol class="steps" data-panel="android">
-        <li><b>Download</b> <a href="/download/forge.apk" download>forge.apk</a> ({{APK_SIZE}}).</li>
-        <li><b>Open it.</b> If Android asks, allow your browser to “install unknown apps”. That's normal for apps outside the Play Store.</li>
-        <li><b>Install &amp; sign up</b> with your name, email, a password and 2–5 free Gemini keys from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.</li>
+      <ol class="steps" id="panel-android" role="tabpanel" aria-labelledby="tab-android" data-panel="android">
+        <li><b>Download</b> <a href="/download/forge.apk" download>forge.apk</a> ({{APK_SIZE}}). Its SHA-256 fingerprint should be:
+          <span class="sha-row"><code class="sha mono">{{APK_SHA256}}</code><button type="button" class="chip copy" data-copy="{{APK_SHA256}}">Copy</button></span>
+          <span class="muted small">To check on a computer: <code>sha256sum forge.apk</code> (Mac/Linux) or <code>certutil -hashfile forge.apk SHA256</code> (Windows) must print exactly this. If it doesn't, delete the file.</span></li>
+        <li><b>Open it.</b> If Android asks, allow your browser to “install unknown apps”. That's normal for apps outside the Play Store. If Play Protect warns about an unknown developer, tap <b>More details → Install anyway</b>.</li>
+        <li id="key-step"><b>Get 2 free Gemini keys</b> (a few minutes): sign in at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>, tap <b>Create API key</b>, then make a second one in a new project. You can add up to 5.</li>
+        <li><b>Sign up</b> in FORGE with your name, email, a password and those keys.</li>
       </ol>
-      <ol class="steps" data-panel="ios" hidden>
+      <ol class="steps" id="panel-ios" role="tabpanel" aria-labelledby="tab-ios" data-panel="ios" hidden>
         <li><b>Open</b> <a href="/app/">forgefit-india.vercel.app/app</a> in <b>Safari</b>.</li>
         <li>Tap the <b>Share</b> button (the square with an arrow pointing up), then <b>Add to Home Screen</b>. FORGE then opens full-screen with its own icon and works offline.</li>
+        <li><b>Get 2 free Gemini keys</b> at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> (<b>Create API key</b>, then a second one in a new project).</li>
         <li><b>Sign up</b> the same way as on Android. Your data syncs across all your devices.</li>
       </ol>
       <p class="muted small">Why no iPhone download? Apple only allows iPhone apps from the App Store, which requires a paid developer account. The home-screen version is the same app with the same features.</p>
@@ -225,7 +230,16 @@
 
   <!-- 08 title block -->
   <footer class="sheet footer" data-sheet="08" data-title="TITLE BLOCK">
-    <table class="title-block mono">
+    <div class="closing">
+      <h2>Start logging tonight. <em>Thali and all.</em></h2>
+      <div class="hero-cta">
+        <a class="btn press" href="/download/forge.apk" download><span>Download for Android</span><small class="mono">APK · {{APK_SIZE}}</small></a>
+        <a class="btn btn-ghost press" href="#install" data-ios><span>Install on iPhone</span></a>
+        <a class="text-link mono" href="/app/">Open the web app →</a>
+      </div>
+      <p class="key-note">Free, no ads. You'll need 2 free Gemini keys; <a href="#key-step">here's how</a>.</p>
+    </div>
+    <table class="title-block mono" role="presentation">
       <tr><td>PROJECT</td><td class="tb-big" colspan="3">FORGE<span class="ember">.</span></td></tr>
       <tr><td>DRAWN BY</td><td><a href="https://purvalsingh.github.io" target="_blank" rel="noopener">Purval Singh</a></td><td>REV</td><td>v2.0.0</td></tr>
       <tr><td>MADE IN</td><td>India · © 2026</td><td>SOURCE</td><td><a href="https://github.com/purvalsingh/forge-fitness-app" target="_blank" rel="noopener">GitHub</a></td></tr>
@@ -234,6 +248,7 @@
     <p class="muted small">Food data: USDA FoodData Central (public domain), Indian Nutrient Databank (Vijayakumar et al., 2024), Open Food Facts (ODbL). Exercise text: exercises-dataset (MIT). Body map: react-native-body-highlighter (MIT). FORGE is not medical advice.</p>
   </footer>
 
+  <a class="dock btn press" href="/download/forge.apk" download data-dock><span>Download for Android</span><small class="mono">APK · {{APK_SIZE}}</small></a>
   <script src="/app.js" defer></script>
 </body>
 </html>

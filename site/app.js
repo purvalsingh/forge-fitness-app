@@ -6,19 +6,44 @@
   const clamp = v => Math.min(1, Math.max(0, v))
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  /* ---------- iOS visitors: open the iPhone install tab ---------- */
-  function selectTab(name) {
-    $$('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)))
+  /* ---------- install tabs (ARIA tabs: click, ←/→, Home/End) ---------- */
+  const tabs = $$('.tabs [role="tab"]')
+  function selectTab(name, focus) {
+    tabs.forEach(b => {
+      const on = b.dataset.tab === name
+      b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1
+      if (on && focus) b.focus()
+    })
     $$('.steps').forEach(p => { p.hidden = p.dataset.panel !== name })
   }
-  $$('.tabs button').forEach(b => b.addEventListener('click', () => selectTab(b.dataset.tab)))
-  $('[data-ios]').addEventListener('click', () => selectTab('ios'))
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => selectTab(b.dataset.tab))
+    b.addEventListener('keydown', e => {
+      const j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key]
+      if (j === undefined) return
+      e.preventDefault(); selectTab(tabs[(j + tabs.length) % tabs.length].dataset.tab, true)
+    })
+  })
+  $$('[data-ios]').forEach(a => a.addEventListener('click', () => selectTab('ios')))
+
+  /* ---------- iOS visitors: iPhone path first everywhere ---------- */
   if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
-    const cta = $('.hero-cta'), iosBtn = $('[data-ios]')
-    iosBtn.classList.remove('btn-ghost'); cta.prepend(iosBtn)
-    cta.querySelector('a[download]').classList.add('btn-ghost')
+    $$('.hero-cta').forEach(cta => {
+      const iosBtn = $('[data-ios]', cta)
+      iosBtn.classList.remove('btn-ghost'); cta.prepend(iosBtn)
+      cta.querySelector('a[download]').classList.add('btn-ghost')
+    })
+    const dock = $('[data-dock]')
+    dock.removeAttribute('download'); dock.href = '#install'; dock.innerHTML = '<span>Install on iPhone</span>'
+    dock.addEventListener('click', () => selectTab('ios'))
     selectTab('ios')
   }
+
+  /* ---------- copy the APK fingerprint ---------- */
+  $$('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied ✓' } catch { b.textContent = 'Select & copy' }
+    setTimeout(() => { b.textContent = 'Copy' }, 2000)
+  }))
   $$('.nav-index a').forEach(a => a.addEventListener('click', () => a.closest('details').removeAttribute('open')))
 
 
@@ -35,11 +60,25 @@
     OK.forEach(o => { w = w.replaceAll(o, '') })
     const hit = NON_FOOD.find(b => w.includes(` ${b} `) || w.includes(` ${b}s `))
     if (hit) return ['bad', `✗ Rejected: "${hit}" isn't food. FORGE only logs things people can actually eat.`]
-    const m = t.match(/\b(\d{2,})\s*(roti|rotis|eggs?|samosas?|idlis?|dosas?|puris?|pav|plates?)\b/i)
-    if (m && Number(m[1]) > 20) return ['bad', `✗ Rejected: ${m[1]} ${m[2]} in one sitting isn't realistic.`]
-    const found = Object.keys(KNOWN).filter(k => w.includes(k.split(' ')[0]))
-    if (!found.length) return ['ok', '✓ Looks like food. In the app, the AI estimates each item and FORGE checks the numbers against its database.']
-    return ['ok', '✓ ' + found.map(k => { const [q, u, kcal, p] = KNOWN[k]; return `${k}: ${q} ${u} · ${kcal} kcal · ${p} g protein` }).join('   ')]
+    const qty = parseQty(w)
+    const big = qty.find(q => q.n > 20 && !UNITS.has(q.word))
+    if (big) return ['bad', `✗ Rejected: ${big.n} ${big.word} in one sitting isn't realistic.`]
+    const found = Object.keys(KNOWN).map(k => ({ k, at: w.indexOf(k.split(' ')[0]) })).filter(x => x.at >= 0).sort((x, y) => x.at - y.at)
+    if (!found.length) return ['unk', '? Not in this demo\'s short list. In the app, the AI names each item and FORGE checks its numbers against a database of 16,000+ foods before anything is logged.']
+    return ['ok', '✓ ' + found.map(({ k, at }) => {
+      const n = qty.find(q => q.end <= at && at - q.end <= 2)?.n ?? 1
+      const [, u, kcal, p] = KNOWN[k]
+      return `${n} × ${k} (${u}) · ${Math.round(kcal * n)} kcal · ${+(p * n).toFixed(1)} g protein`
+    }).join('   ')]
+  }
+  const UNITS = new Set(['g', 'gm', 'gms', 'gram', 'grams', 'ml', 'kcal', 'cal', 'calories', 'minutes', 'mins', 'min', 'km', 'percent'])
+  const WORDS = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, fifteen: 15, twenty: 20, thirty: 30, forty: 40, fifty: 50, hundred: 100, thousand: 1000, dozen: 12 }
+  // every number in the text with the word after it; `end` is where the next word starts
+  function parseQty(w) {
+    return [...w.matchAll(/ (\d+|[a-z]+)(?= ([a-z]+))/g)].flatMap(m => {
+      const n = /^\d+$/.test(m[1]) ? Number(m[1]) : WORDS[m[1]]
+      return n === undefined ? [] : [{ n, word: m[2], end: m.index + m[1].length + 2 }]
+    })
   }
   const input = $('#acc-input'), out = $('.acc-out')
   const run = () => { const [cls, msg] = check(input.value); out.className = 'acc-out mono ' + cls; out.textContent = msg }
@@ -86,8 +125,20 @@
   }))
   $$('.bom li, .survey .state, .layers li').forEach(el => el.style.setProperty('--r', [...el.parentNode.children].indexOf(el)))
 
-  const counters = $$('[data-to]').map(el => ({ el, to: Number(el.dataset.to), sheet: el.closest('.sheet'), last: -1 }))
   const fmt = n => n.toLocaleString('en-IN')
+  $$('.survey .state .n').forEach(n => { n.dataset.to = n.textContent.trim() })
+  const counters = reduce ? [] : $$('[data-to]').map(el => ({ el, to: Number(el.dataset.to), sheet: el.closest('.sheet'), done: false }))
+  // start at 0 only once JS is running (the HTML keeps the real number for no-JS, crawlers, previews)
+  counters.forEach(c => { c.el.textContent = '0' })
+  function countUp(c, dur = 900) {
+    const t0 = performance.now()
+    const step = t => {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - 2 ** (-10 * k)   // exponential ease-out
+      c.el.textContent = fmt(k === 1 ? c.to : Math.round(c.to * e))
+      if (k < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }
 
   const sheets = $$('.sheet')
   const state = new Map(sheets.map(s => [s, { d: -1, f: -1 }]))
@@ -116,11 +167,11 @@
       roSheet.textContent = `SHEET ${current.dataset.sheet} / 08`
       roTitle.textContent = current.dataset.title
     }
-    // counters are scrubbed by their sheet's fill, so they run backwards when you scroll up
-    if (!reduce) for (const c of counters) {
-      const st = state.get(c.sheet), v = Math.round(c.to * (st ? Math.max(st.f, 0) ** .6 : 1))
-      if (v !== c.last) { c.el.textContent = fmt(v); c.last = v }
-    }
+    // each counter runs once, forwards, when its sheet starts to fill; it never scrubs backwards
+    for (const c of counters) if (!c.done && state.get(c.sheet)?.f > .02) { c.done = true; countUp(c) }
+    // mobile dock: visible after the hero, hidden at the install steps and the closing CTA
+    const hero = sheets[0].getBoundingClientRect(), endZone = $('#install').getBoundingClientRect().top < vh
+    document.body.classList.toggle('dock-on', hero.bottom < vh * .5 && !endZone)
   }
   let queued = false
   const request = () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; frame() }) } }
@@ -128,11 +179,6 @@
   addEventListener('resize', request)
   frame()
 
-  /* ---------- survey cells: their dish counts also scrub with the sheet ---------- */
-  $$('.survey .state .n').forEach(n => { n.dataset.to = n.textContent.trim(); n.textContent = '0' })
-  counters.push(...$$('.survey .state .n').map(el => ({ el, to: Number(el.dataset.to), sheet: el.closest('.sheet'), last: -1 })))
-  if (reduce) counters.forEach(c => { c.el.textContent = fmt(c.to) })
-  request()
 
   /* ---------- crosshair with page coordinates (fine pointers only) ---------- */
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
