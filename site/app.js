@@ -47,6 +47,39 @@
   input.addEventListener('input', () => { if (!input.value) run() })
   $$('.acc-chips .chip').forEach(c => c.addEventListener('click', () => { input.value = c.textContent; run() }))
 
+  /* ---------- hero: trace the real screen's boxes into the blueprint, so line and fill always match ---------- */
+  const drawing = $('.drawing'), traced = $('.traced', drawing), NS = 'http://www.w3.org/2000/svg'
+  const targets = $$('[data-trace]', drawing).map(el => {
+    const shape = document.createElementNS(NS, el.dataset.trace)
+    if (el.hasAttribute('data-dash')) shape.style.strokeDasharray = '.012 .012'
+    traced.append(shape)
+    return { el, shape }
+  })
+  function trace() {
+    const d = drawing.getBoundingClientRect()
+    if (!d.width) return
+    const k = 640 / d.width
+    const box = el => { const r = el.getBoundingClientRect(); return { x: (r.left - d.left) * k, y: (r.top - d.top) * k, w: r.width * k, h: r.height * k } }
+    for (const { el, shape } of targets) {
+      const b = box(el)
+      if (shape.tagName === 'circle') {
+        shape.setAttribute('cx', b.x + b.w / 2); shape.setAttribute('cy', b.y + b.h / 2); shape.setAttribute('r', Math.min(b.w, b.h) / 2 * (el.tagName === 'svg' ? .92 : 1))
+      } else {
+        const rx = Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) * k || 0, b.h / 2)
+        Object.entries({ x: b.x, y: b.y, width: b.w, height: b.h, rx }).forEach(([a, v]) => shape.setAttribute(a, v.toFixed(1)))
+      }
+    }
+    // callout leaders start at the right edge of the element they describe
+    $$('.leaders [data-from]', drawing).forEach(l => {
+      const b = box($(`[data-callout="${l.dataset.from}"]`, drawing)), y = Number(l.dataset.y)
+      const sx = b.x + b.w, sy = b.y + b.h / 2
+      l.setAttribute('points', `${sx.toFixed(1)},${sy.toFixed(1)} ${Math.max(sx + 30, 480)},${y} 630,${y}`)
+    })
+  }
+  trace()
+  new ResizeObserver(trace).observe(drawing)
+  document.fonts?.ready.then(trace)
+
   /* ---------- drawing setup: normalise every stroke to length 1, stagger by index ---------- */
   $$('.dr').forEach(svg => $$('path, line, rect, circle, polyline', svg).forEach((el, i) => {
     el.setAttribute('pathLength', '1'); el.style.setProperty('--i', i)
