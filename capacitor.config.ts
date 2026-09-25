@@ -9,12 +9,12 @@ const config: CapacitorConfig = {
   appId: 'app.forge.fitness',
   appName: 'FORGE',
   webDir: 'dist-native',
-  backgroundColor: '#0A1F38',
+  backgroundColor: '#0E0D0C',
   android: { allowMixedContent: false, webContentsDebuggingEnabled: false },
-  ios: { contentInset: 'never', backgroundColor: '#0A1F38' },
+  ios: { contentInset: 'never', backgroundColor: '#0E0D0C' },
   plugins: {
-    SplashScreen: { launchAutoHide: false, backgroundColor: '#0A1F38', showSpinner: false },
-    StatusBar: { overlaysWebView: false, backgroundColor: '#0A1F38', style: 'DARK' },
+    SplashScreen: { launchAutoHide: false, backgroundColor: '#0E0D0C', showSpinner: false },
+    StatusBar: { overlaysWebView: false, backgroundColor: '#0E0D0C', style: 'DARK' },
   },
 }
 
