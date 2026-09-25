@@ -46,7 +46,7 @@ export function Button({ children, onClick, variant = 'primary', className = '',
     primary: { background: 'var(--accent-strong)', color: 'var(--accent-ink)', borderColor: 'transparent' },
     ghost: { background: 'transparent', color: 'var(--text)', borderColor: 'var(--line)' },
     quiet: { background: 'var(--surface-high)', color: 'var(--text)', borderColor: 'var(--line)' },
-    paper: { background: 'var(--paper-ink)', color: 'var(--paper)', borderColor: 'transparent' },
+    paper: { background: 'var(--accent)', color: 'var(--accent-ink)', borderColor: 'transparent' },
     danger: { background: 'transparent', color: '#D98A8A', borderColor: 'rgba(217,138,138,.4)' },
   }
   return (

@@ -1,28 +1,40 @@
 # FORGE v2 — PROJECT STATE
 
 ## CURRENT OBJECTIVE
-Ship FORGE v2: new Stitch "Ember" design, per-user encrypted Gemini keys (2–5), SmiTriX feature
-parity (reimplemented, no AGPL code copied), competitor features, every-state Indian food DB with
-real serving sizes, AI abuse guards, Capacitor APK + iOS project, landing site on Vercel
-(forgefit-india.vercel.app — forgefitness.app is owned by someone else), GitHub push, portfolio link.
+FORGE v2 shipped 2026-09-25: Ember redesign, Capacitor APK, per-user encrypted Gemini keys, every-state
+Indian food DB, AI abuse guards, SmiTriX-style training features, landing site on Vercel.
+
+## STATUS
+LIVE — https://forgefit-india.vercel.app (landing), /app (web app), /download/forge.apk (v2.0.0, code 4).
+GitHub: purvalsingh/forge-fitness-app (public) + release v2.0.0. Portfolio card updated.
 
 ## DECISIONS
-- Domain: free Vercel subdomain (user said "change name"; forgefitness.app registered by a third party since 2018).
-- App: Capacitor native shell (bundled assets, native camera) — replaces the old TWA.
-- iOS: PWA "Add to Home Screen" + generated Xcode project (no Apple dev account).
-- AI moves to Vercel function `api/ai.ts`; per-user keys AES-256-GCM encrypted with server secret
-  `FORGE_KEY_SECRET`; row stored under RLS; server reads it with the caller's JWT (no service-role key).
-- Stitch project 14736699563082618847, design system assets/3503674894253681249 ("FORGE Ember"):
-  bg #0E0D0C, card #171514, raised #221F1D, ember #FF6B2C, lime #C8F560 (done), blue #7AA7FF (protein),
-  Bricolage Grotesque / Inter / JetBrains Mono. Screens in design/v2/.
-- SmiTriX is AGPL-3.0: features reimplemented from its README, no code copied. Exercise metadata from
-  hasaneyldrm/exercises-dataset (MIT metadata only, no GIFs — media rights disputed).
+- Domain: forgefit-india.vercel.app. forgefitness.app is owned by a third party (Namecheap, since 2018) and
+  forgefit.vercel.app belongs to another Vercel team. Vercel project name: "forgefit" (also forgefit-one.vercel.app).
+- Native: Capacitor 8, package app.forge.fitness, signed with the old TWA key (installs as an update).
+  Key + password + FORGE_KEY_SECRET backup: ~/.forge-signing (NOT in repo). JDK 21: ~/.local/jdk-21.
+  Android SDK: ~/.bubblewrap/android_sdk.
+- iOS: PWA install + ios/ Xcode project (needs a Mac + an Apple Developer account for a real build).
+- AI: api/ai.ts on Vercel, per-user keys (2–5) AES-256-GCM, bound to user id, rate limit 12/min, 400/day.
+  Models: gemini-3.6-flash → gemini-flash-latest → gemini-flash-lite-latest.
+- Supabase reached via the /sb rewrite (supabase.co DNS is blocked on the dev machine's ISP, and on Jio).
+  Auth: autoconfirm ON; Site URL = https://forgefit-india.vercel.app/app/ ; redirect https://forgefit-india.vercel.app/**
+- Migrations 0001 + 0002 applied (via the dashboard SQL editor, 2026-09-25).
+- Supabase MCP added at user scope; needs one OAuth via /mcp in an interactive `claude` terminal.
 
-## STATUS / TODO — see TODO.md
+## NOT VERIFIED
+- Live AI calls: nobody has signed up with real Gemini keys yet (the assistant must not create accounts or enter keys).
+- The APK hasn't been installed on a physical phone yet (no device on adb).
+
+## NEXT ACTION
+User: install the APK, sign up with 2+ Gemini keys, and test the food camera and describe-meal. Report issues.
+Possible next steps: Play Store listing, native camera plugin, native local notifications for the rest timer.
 
 ## IMPORTANT FILES
-src/lib/{types,calc,db,ai,catalog}.ts, src/store.tsx, supabase/migrations/, api/ (Vercel functions)
+api/{ai,keys}.ts, api/_lib/guard.ts, src/lib/{catalog,training,exercises}.ts, src/screens/{Today,AddFood,Camera,Session}.tsx,
+scripts/{indian-states,rebuild-catalog,assemble,build-apk}.mjs, site/, vercel.json, capacitor.config.ts
 
-## BLOCKERS
-- Supabase project jdogjpskctrpjtuygmdx restoring (2026-09-25). Supabase MCP added at user scope; needs
-  one-time OAuth via /mcp in an interactive `claude` terminal.
+## LAST VALIDATION (2026-09-25)
+tsc clean · 57 vitest tests pass · live smoke: landing/app/deep links 200, /api/* 401 unauthenticated,
+/sb health 200, APK served with the Android MIME type and a matching SHA-256 · demo-mode walkthrough in the browser
+(log food by serving, browse by state, live session with a rest timer).

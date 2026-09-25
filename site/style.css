@@ -86,7 +86,7 @@ section { position: relative; padding: clamp(80px, 12vw, 160px) var(--pad); }
 .hero-title { font: 800 clamp(3rem, 8.6vw, 7.4rem)/.92 var(--display); letter-spacing: -.05em; margin: 0 0 28px; }
 .hero-title .line { display: block; overflow: hidden; padding-bottom: .06em; }
 .hero-title .line > span { display: inline-block; will-change: transform; }
-.hero-title em { font-style: normal; color: var(--ember); display: inline-block; min-width: 3ch; }
+.hero-title em { font-style: normal; color: var(--ember); display: inline-block; }
 .hero-sub { font-size: clamp(1.02rem, 1.5vw, 1.25rem); color: var(--dim); max-width: 38ch; margin: 0 0 34px; }
 .hero-sub b { color: var(--text); font-weight: 600; }
 .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; }
@@ -152,7 +152,7 @@ section { position: relative; padding: clamp(80px, 12vw, 160px) var(--pad); }
 
 /* India rail */
 .india { padding-inline: 0; }
-.india-pin { min-height: 100svh; display: grid; align-content: center; gap: 36px; overflow: hidden; }
+.india-pin { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; gap: 36px; overflow: hidden; }
 .india-head { padding-inline: var(--pad); max-width: 900px; }
 .india-rail { display: flex; gap: 16px; padding-inline: var(--pad); width: max-content; will-change: transform; }
 .state { width: clamp(220px, 24vw, 290px); flex: none; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 22px; display: grid; gap: 10px; transition: border-color .3s, transform .3s; }
