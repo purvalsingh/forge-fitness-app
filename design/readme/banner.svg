@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" width="1280" height="420">
+  <defs>
+    <pattern id="minor" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#BFE0FF" stroke-opacity=".07" stroke-width="1"/>
+    </pattern>
+    <pattern id="major" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M100 0H0V100" fill="none" stroke="#BFE0FF" stroke-opacity=".16" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="420" fill="#0A1F38"/>
+  <rect width="1280" height="420" fill="url(#minor)"/>
+  <rect width="1280" height="420" fill="url(#major)"/>
+  <rect x="24" y="24" width="1232" height="372" fill="none" stroke="#BFE0FF" stroke-opacity=".55" stroke-width="1.5"/>
+  <path d="M40 40h28M40 40v28M1240 380h-28M1240 380v-28" stroke="#BFE0FF" stroke-width="2" fill="none"/>
+
+  <text x="80" y="92" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace" font-size="15" letter-spacing="3" fill="#BFE0FF" fill-opacity=".7">SHEET 01 / 01 · GENERAL ARRANGEMENT</text>
+  <text x="74" y="222" font-family="'Instrument Serif', Georgia, 'Times New Roman', serif" font-size="150" fill="#EEF6FF">FORGE<tspan fill="#FF6B2C">.</tspan></text>
+  <text x="80" y="282" font-family="'Instrument Serif', Georgia, 'Times New Roman', serif" font-size="40" font-style="italic" fill="#BFE0FF">Train hard. Eat Indian. Track everything.</text>
+  <text x="80" y="340" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace" font-size="16" letter-spacing="1.5" fill="#BFE0FF" fill-opacity=".75">16,365 FOODS · 28 STATES + 8 UTs · 1,324 EXERCISES · <tspan fill="#FF6B2C">AI ON YOUR OWN KEYS</tspan></text>
+
+  <!-- title block -->
+  <g font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace" font-size="12" letter-spacing="1.5" fill="#BFE0FF">
+    <rect x="930" y="60" width="290" height="150" fill="#0A1F38" stroke="#BFE0FF" stroke-opacity=".55"/>
+    <path d="M930 110h290M930 160h290M1075 110v100" stroke="#BFE0FF" stroke-opacity=".55"/>
+    <text x="946" y="82" fill-opacity=".6">PROJECT</text>
+    <text x="946" y="100" font-size="16" fill="#EEF6FF">FORGE · DWG FG-2.0</text>
+    <text x="946" y="130" fill-opacity=".6">PLATFORMS</text>
+    <text x="946" y="148" fill="#EEF6FF">WEB·APK·iOS</text>
+    <text x="1091" y="130" fill-opacity=".6">REV</text>
+    <text x="1091" y="148" fill="#EEF6FF">v2.0.0</text>
+    <text x="946" y="180" fill-opacity=".6">MADE IN</text>
+    <text x="946" y="198" fill="#EEF6FF">INDIA</text>
+    <text x="1091" y="180" fill-opacity=".6">SCALE</text>
+    <text x="1091" y="198" fill="#FF6B2C">1 : 1 KATORI</text>
+  </g>
+
+  <!-- a katori, drawn -->
+  <g fill="none" stroke="#BFE0FF" stroke-width="1.5" stroke-opacity=".8">
+    <ellipse cx="1075" cy="300" rx="110" ry="22"/>
+    <path d="M965 300c6 52 50 78 110 78s104-26 110-78"/>
+    <path d="M1035 378h80" stroke-dasharray="4 4" stroke-opacity=".5"/>
+    <path d="M960 250h230" stroke-dasharray="2 6" stroke-opacity=".4"/>
+  </g>
+  <path d="M990 296c28-12 142-12 170 0" fill="none" stroke="#FF6B2C" stroke-width="2"/>
+  <text x="1075" y="244" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.5" fill="#BFE0FF" fill-opacity=".7">Ø 1 KATORI ≈ 150 g DAL</text>
+</svg>
