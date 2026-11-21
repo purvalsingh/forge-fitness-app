@@ -8,6 +8,7 @@
  * Vijayakumar et al. 2024, open access) recipes after a plausibility filter — INDB counts all frying
  * oil as eaten, which inflates some fried items past anything physically plausible.
  */
+import { applyFixes } from './catalog-fixes.mjs'
 import fs from 'node:fs'
 import { execFileSync } from 'node:child_process'
 
@@ -124,6 +125,8 @@ for (const r of indbRows) {
   indbKept++
 }
 
+const fixed = applyFixes(out)
+out.length = 0; out.push(...fixed)
 out.sort((a, b) => a.name.localeCompare(b.name))
 fs.writeFileSync(catalogPath, JSON.stringify({
   version: 2,

@@ -1,0 +1,21 @@
+Read ~/forge/native/AGENT_BRIEF.md first and follow it exactly. You are batch "logic".
+
+YOU OWN these new files under native/app/src/main/java/app/forge/fitness/logic/ (create them):
+- Training.kt   <- ~/forge/src/lib/training.ts (e1RM, plate maths, progression/deload, muscle sets, heatmap)
+- Templates.kt  <- src/lib/templates.ts (data-driven plan generation)
+- Planner.kt    <- src/lib/planner.ts
+- Physique.kt   <- src/lib/physique.ts (deterministic roadmap + clamping/reconcile of AI output)
+- Catalog.kt    <- src/lib/catalog.ts (load assets/food-catalog.json once, lazily, off the main thread; same search/ranking)
+- Exercises.kt  <- src/lib/exercises.ts (load assets/exercises.json; name matching)
+- Importers.kt  <- src/lib/importers.ts (Strong / Hevy CSV)
+- Ai.kt         <- src/lib/ai.ts: typed suspend functions over `Api.ai(task, payload)` for every task
+                   (parse_food_text, analyze_food_photo, coach_chat, target_advice, generate_workout_plan, physique_analysis,
+                   insights) + keys. Decode into @Serializable data classes and VALIDATE every bound from the zod schemas
+                   (throw ApiError("The AI returned an unexpected response. Enter the details manually.") on violation).
+                   Same payload JSON shapes as ai.ts.
+- Photos.kt     <- src/lib/photos.ts but storing JPEGs in context.filesDir/photos (on-device only)
+And tests under native/app/src/test/java/app/forge/fitness/: TrainingTest.kt (port src/lib/training.test.ts),
+ImportersTest.kt if importers have tests in calc.test.ts, plus at least one test each for Templates and Physique clamping.
+Logic must be pure Kotlin where possible (no Android imports except Catalog/Exercises/Photos asset/file access, which take a Context).
+Keep public APIs simple and documented with KDoc — three screen batches will build on them right after you.
+Finish with the mandatory build+test check and reports/logic.md listing every public function signature.

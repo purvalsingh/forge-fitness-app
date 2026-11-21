@@ -1,0 +1,260 @@
+[
+{
+"en": "12 AM",
+"new_en": "12 AM",
+"hi": "रात 12 बजे",
+"mr": "रात्री 12 वाजता"
+},
+{
+"en": "A rest day never counts as a missed workout.",
+"new_en": "A rest day never counts as a missed workout.",
+"hi": "Rest day कभी missed workout नहीं गिना जाता।",
+"mr": "Rest day कधीही missed workout मानला जात नाही."
+},
+{
+"en": "Barbell weight",
+"new_en": "Barbell weight",
+"hi": "Barbell का वज़न",
+"mr": "Barbell चे वजन"
+},
+{
+"en": "Couldn't send. Try again.",
+"new_en": "Couldn't send. Try again.",
+"hi": "भेजा नहीं जा सका। फिर कोशिश करें।",
+"mr": "पाठवता आले नाही. पुन्हा प्रयत्न करा."
+},
+{
+"en": "Default rest between sets",
+"new_en": "Default rest between sets",
+"hi": "Sets के बीच default rest",
+"mr": "Sets मधील default rest"
+},
+{
+"en": "Diet margin",
+"new_en": "Diet margin",
+"hi": "Diet की छूट",
+"mr": "Diet ची सूट"
+},
+{
+"en": "During workouts",
+"new_en": "During workouts",
+"hi": "Workout के दौरान",
+"mr": "Workout दरम्यान"
+},
+{
+"en": "English",
+"new_en": "English",
+"hi": "English",
+"mr": "English"
+},
+{
+"en": "FORGE calculates these numbers. The AI explains them and may suggest small changes. This is an estimate, not medical advice.",
+"new_en": "FORGE calculates these numbers. The AI explains them and may suggest small changes. This is an estimate, not medical advice.",
+"hi": "ये नंबर FORGE निकालता है। AI इन्हें समझाता है और छोटे बदलाव सुझा सकता है। यह अनुमान है, medical सलाह नहीं।",
+"mr": "हे आकडे FORGE काढते. AI ते समजावते आणि छोटे बदल सुचवू शकते. हा अंदाज आहे, medical सल्ला नाही."
+},
+{
+"en": "Fasting window",
+"new_en": "Fasting window",
+"hi": "Fasting का समय",
+"mr": "Fasting ची वेळ"
+},
+{
+"en": "Feedback",
+"new_en": "Feedback",
+"hi": "फ़ीडबैक",
+"mr": "अभिप्राय"
+},
+{
+"en": "Flash when rest ends",
+"new_en": "Flash when rest ends",
+"hi": "Rest खत्म होने पर flash",
+"mr": "Rest संपल्यावर flash"
+},
+{
+"en": "Food and workouts logged before this time count for the day before.",
+"new_en": "Food and workouts logged before this time count for the day before.",
+"hi": "इस समय से पहले log किया खाना और workout पिछले दिन में गिना जाता है।",
+"mr": "या वेळेपूर्वी log केलेले जेवण आणि workout आदल्या दिवसात मोजले जातात."
+},
+{
+"en": "Hours. Set 0 to turn fasting off.",
+"new_en": "Hours. Set 0 to turn fasting off.",
+"hi": "घंटे। Fasting बंद करने के लिए 0 रखें।",
+"mr": "तास. Fasting बंद करण्यासाठी 0 ठेवा."
+},
+{
+"en": "How close to your calorie and protein targets still counts as a full day",
+"new_en": "How close to your calorie and protein targets still counts as a full day",
+"hi": "Calorie और protein target के कितने पास रहने पर दिन पूरा गिना जाए",
+"mr": "Calorie आणि protein target च्या किती जवळ राहिल्यास दिवस पूर्ण मानावा"
+},
+{
+"en": "How you rate how hard a set felt",
+"new_en": "How you rate how hard a set felt",
+"hi": "Set कितना भारी लगा, यह कैसे बताएं",
+"mr": "Set किती जड वाटला ते कसे सांगावे"
+},
+{
+"en": "I like it",
+"new_en": "I like it",
+"hi": "मुझे पसंद है",
+"mr": "मला आवडले"
+},
+{
+"en": "Idea",
+"new_en": "Idea",
+"hi": "सुझाव",
+"mr": "कल्पना"
+},
+{
+"en": "Keep screen on",
+"new_en": "Keep screen on",
+"hi": "Screen चालू रखें",
+"mr": "Screen चालू ठेवा"
+},
+{
+"en": "Language",
+"new_en": "Language",
+"hi": "भाषा",
+"mr": "भाषा"
+},
+{
+"en": "Other",
+"new_en": "Other",
+"hi": "अन्य",
+"mr": "इतर"
+},
+{
+"en": "Per day",
+"new_en": "Per day",
+"hi": "रोज़ाना",
+"mr": "दररोज"
+},
+{
+"en": "Problem",
+"new_en": "Problem",
+"hi": "समस्या",
+"mr": "समस्या"
+},
+{
+"en": "Rest timer",
+"new_en": "Rest timer",
+"hi": "Rest timer",
+"mr": "Rest timer"
+},
+{
+"en": "Seconds between sets",
+"new_en": "Seconds between sets",
+"hi": "Sets के बीच सेकंड",
+"mr": "Sets मधील सेकंद"
+},
+{
+"en": "Send",
+"new_en": "Send",
+"hi": "भेजें",
+"mr": "पाठवा"
+},
+{
+"en": "Send feedback",
+"new_en": "Send feedback",
+"hi": "फ़ीडबैक भेजें",
+"mr": "अभिप्राय पाठवा"
+},
+{
+"en": "Sending",
+"new_en": "Sending",
+"hi": "भेजा जा रहा है",
+"mr": "पाठवत आहे"
+},
+{
+"en": "Set 0 to turn fasting off",
+"new_en": "Set 0 to turn fasting off",
+"hi": "Fasting बंद करने के लिए 0 रखें",
+"mr": "Fasting बंद करण्यासाठी 0 ठेवा"
+},
+{
+"en": "Sign in to send feedback.",
+"new_en": "Sign in to send feedback.",
+"hi": "फ़ीडबैक भेजने के लिए sign in करें।",
+"mr": "अभिप्राय पाठवण्यासाठी sign in करा."
+},
+{
+"en": "Something broken, confusing or missing? Something you like? We read every message.",
+"new_en": "Something broken, confusing or missing? Something you like? We read every message.",
+"hi": "कुछ खराब, उलझाने वाला या गायब है? कुछ पसंद आया? हम हर संदेश पढ़ते हैं।",
+"mr": "काही बिघडले, गोंधळात टाकणारे किंवा कमी आहे? काही आवडले? आम्ही प्रत्येक संदेश वाचतो."
+},
+{
+"en": "Tap a number to change it.",
+"new_en": "Tap a number to change it.",
+"hi": "बदलने के लिए नंबर पर tap करें।",
+"mr": "बदलण्यासाठी आकड्यावर tap करा."
+},
+{
+"en": "Tell us what you think",
+"new_en": "Tell us what you think",
+"hi": "अपनी राय बताएं",
+"mr": "तुमचे मत सांगा"
+},
+{
+"en": "Thanks! Your message reached the FORGE team.",
+"new_en": "Thanks! Your message reached the FORGE team.",
+"hi": "धन्यवाद! आपका संदेश FORGE टीम तक पहुंच गया।",
+"mr": "धन्यवाद! तुमचा संदेश FORGE टीमपर्यंत पोहोचला."
+},
+{
+"en": "Used for plate maths",
+"new_en": "Used for plate maths",
+"hi": "Plate का हिसाब लगाने के लिए",
+"mr": "Plate चा हिशोब करण्यासाठी"
+},
+{
+"en": "Useful in loud gyms",
+"new_en": "Useful in loud gyms",
+"hi": "शोर वाले gym में काम का",
+"mr": "गोंगाट असलेल्या gym मध्ये उपयोगी"
+},
+{
+"en": "Water goal",
+"new_en": "Water goal",
+"hi": "पानी का लक्ष्य",
+"mr": "पाण्याचे लक्ष्य"
+},
+{
+"en": "Week starts on",
+"new_en": "Week starts on",
+"hi": "हफ़्ता शुरू होता है",
+"mr": "आठवडा सुरू होतो"
+},
+{
+"en": "Write your message",
+"new_en": "Write your message",
+"hi": "अपना संदेश लिखें",
+"mr": "तुमचा संदेश लिहा"
+},
+{
+"en": "Your target",
+"new_en": "Your target",
+"hi": "आपका target",
+"mr": "तुमचे target"
+},
+{
+"en": "kg, for plate maths",
+"new_en": "kg, for plate maths",
+"hi": "kg, plate के हिसाब के लिए",
+"mr": "kg, plate च्या हिशोबासाठी"
+},
+{
+"en": "ml per day",
+"new_en": "ml per day",
+"hi": "ml रोज़ाना",
+"mr": "ml दररोज"
+},
+{
+"en": "Highest:",
+"new_en": "Highest:",
+"hi": "सबसे ज़्यादा:",
+"mr": "सर्वाधिक:"
+}
+]

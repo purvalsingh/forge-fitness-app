@@ -1,0 +1,902 @@
+[
+  {
+    "en": "Moderate deficit with high protein to hold onto muscle.",
+    "new_en": "Moderate deficit with high protein to keep muscle.",
+    "hi": "मसल बचाने के लिए हाई protein के साथ moderate deficit।",
+    "mr": "मसल टिकवण्यासाठी हाय protein सोबत moderate deficit."
+  },
+  {
+    "en": "Mom's rajma",
+    "new_en": "Mom's rajma",
+    "hi": "Mom's rajma",
+    "mr": "Mom's rajma"
+  },
+  {
+    "en": "Mon",
+    "new_en": "Mon",
+    "hi": "सोम",
+    "mr": "सोम"
+  },
+  {
+    "en": "Monday",
+    "new_en": "Monday",
+    "hi": "सोमवार",
+    "mr": "सोमवार"
+  },
+  {
+    "en": "Monsoon",
+    "new_en": "Monsoon",
+    "hi": "मानसून",
+    "mr": "पावसाळा"
+  },
+  {
+    "en": "Month average",
+    "new_en": "Month average",
+    "hi": "महीने का औसत",
+    "mr": "महिन्याची सरासरी"
+  },
+  {
+    "en": "Monthly adherence",
+    "new_en": "Monthly adherence",
+    "hi": "महीने का adherence",
+    "mr": "महिन्याचे adherence"
+  },
+  {
+    "en": "Monthly adherence calendar",
+    "new_en": "Monthly adherence calendar",
+    "hi": "महीने का adherence कैलेंडर",
+    "mr": "महिन्याचे adherence कॅलेंडर"
+  },
+  {
+    "en": "Most",
+    "new_en": "Most",
+    "hi": "ज़्यादातर",
+    "mr": "बहुतेक"
+  },
+  {
+    "en": "Move down",
+    "new_en": "Move down",
+    "hi": "नीचे करें",
+    "mr": "खाली हलवा"
+  },
+  {
+    "en": "Move up",
+    "new_en": "Move up",
+    "hi": "ऊपर करें",
+    "mr": "वर हलवा"
+  },
+  {
+    "en": "Muscle Map",
+    "new_en": "Muscle Map",
+    "hi": "Muscle Map",
+    "mr": "Muscle Map"
+  },
+  {
+    "en": "Muscle balance · sets",
+    "new_en": "Muscle balance · sets",
+    "hi": "Muscle balance · sets",
+    "mr": "Muscle balance · sets"
+  },
+  {
+    "en": "My Gemini AI keys",
+    "new_en": "My Gemini AI keys",
+    "hi": "मेरी Gemini AI keys",
+    "mr": "माझ्या Gemini AI keys"
+  },
+  {
+    "en": "My bench press has stalled for 3 weeks — what should I change?",
+    "new_en": "My bench press has stalled for 3 weeks — what should I change?",
+    "hi": "मेरी bench press 3 हफ़्तों से रुक गई है — मुझे क्या बदलना चाहिए?",
+    "mr": "माझी bench press 3 आठवडे अडकली आहे — मी काय बदलावे?"
+  },
+  {
+    "en": "My day ends at",
+    "new_en": "My day ends at",
+    "hi": "मेरा दिन ख़त्म होता है",
+    "mr": "माझा दिवस संपतो"
+  },
+  {
+    "en": "My keys are encrypted (AES-256) on the FORGE server, used only for my own AI requests and never shown again. I can delete them any time in Settings.",
+    "new_en": "My keys are encrypted (AES-256) on the FORGE server, used only for my AI requests and never shown again. I can delete them anytime in Settings.",
+    "hi": "मेरी keys FORGE सर्वर पर encrypted (AES-256) हैं, सिर्फ़ मेरी AI requests के लिए इस्तेमाल होती हैं और कभी दोबारा नहीं दिखाई जातीं। इन्हें Settings में कभी भी डिलीट कर सकते हैं।",
+    "mr": "माझ्या keys FORGE सर्व्हरवर encrypted (AES-256) आहेत, फक्त माझ्या AI requests साठी वापरल्या जातात आणि पुन्हा कधीही दाखवल्या जात नाहीत. Settings मध्ये कधीही delete करू शकता."
+  },
+  {
+    "en": "My plan",
+    "new_en": "My plan",
+    "hi": "मेरा plan",
+    "mr": "माझा plan"
+  },
+  {
+    "en": "Name",
+    "new_en": "Name",
+    "hi": "नाम",
+    "mr": "नाव"
+  },
+  {
+    "en": "Needs an account and your Gemini keys.",
+    "new_en": "Needs an account and your Gemini keys.",
+    "hi": "अकाउंट और आपकी Gemini keys चाहिए।",
+    "mr": "अकाउंट आणि तुमच्या Gemini keys आवश्यक आहेत."
+  },
+  {
+    "en": "New check-in",
+    "new_en": "New check-in",
+    "hi": "नया check-in",
+    "mr": "नवीन check-in"
+  },
+  {
+    "en": "New food",
+    "new_en": "New food",
+    "hi": "नया food",
+    "mr": "नवीन food"
+  },
+  {
+    "en": "New meal",
+    "new_en": "New meal",
+    "hi": "नया meal",
+    "mr": "नवीन meal"
+  },
+  {
+    "en": "New recipe",
+    "new_en": "New recipe",
+    "hi": "नई recipe",
+    "mr": "नवीन recipe"
+  },
+  {
+    "en": "Next day",
+    "new_en": "Next day",
+    "hi": "अगला दिन",
+    "mr": "पुढचा दिवस"
+  },
+  {
+    "en": "Next month",
+    "new_en": "Next month",
+    "hi": "अगला महीना",
+    "mr": "पुढचा महिना"
+  },
+  {
+    "en": "Next session targets",
+    "new_en": "Next session targets",
+    "hi": "अगले session के targets",
+    "mr": "पुढच्या session चे targets"
+  },
+  {
+    "en": "Next set — let's go.",
+    "new_en": "Next set — let's go.",
+    "hi": "अगला set — let's go.",
+    "mr": "पुढचा set — let's go."
+  },
+  {
+    "en": "No AI analysis available — this roadmap is calculated from your goal, current weight and training frequency.",
+    "new_en": "No AI analysis available — this roadmap is based on your goal, current weight, and training frequency.",
+    "hi": "कोई AI analysis उपलब्ध नहीं — यह roadmap आपके goal, मौजूदा वज़न और ट्रेनिंग frequency पर आधारित है।",
+    "mr": "कोणतेही AI analysis उपलब्ध नाही — हा roadmap तुमचे goal, सध्याचे वजन आणि ट्रेनिंग frequency वर आधारित आहे."
+  },
+  {
+    "en": "No AI insight for this day",
+    "new_en": "No AI insight for this day",
+    "hi": "इस दिन के लिए कोई AI insight नहीं",
+    "mr": "या दिवसासाठी कोणतीही AI insight नाही"
+  },
+  {
+    "en": "No account, so FORGE matches your words to its food list instead of using AI. Check the amounts before saving.",
+    "new_en": "No account, so FORGE matches words to its food list without AI. Check amounts before saving.",
+    "hi": "अकाउंट नहीं है, इसलिए FORGE AI के बिना फ़ूड लिस्ट से मैच करता है। सेव करने से पहले मात्रा जांच लें।",
+    "mr": "अकाउंट नाही, त्यामुळे FORGE AI शिवाय food लिस्टशी जुळवतो. सेव्ह करण्यापूर्वी प्रमाण तपासा."
+  },
+  {
+    "en": "No account?",
+    "new_en": "No account?",
+    "hi": "अकाउंट नहीं है?",
+    "mr": "अकाउंट नाही?"
+  },
+  {
+    "en": "No active days yet",
+    "new_en": "No active days yet",
+    "hi": "अभी कोई एक्टिव दिन नहीं",
+    "mr": "अजून एकही active दिवस नाही"
+  },
+  {
+    "en": "No automatic warm-ups",
+    "new_en": "No automatic warm-ups",
+    "hi": "कोई ऑटोमैटिक warm-ups नहीं",
+    "mr": "कोणतेही ऑटोमॅटिक warm-ups नाहीत"
+  },
+  {
+    "en": "No barbell squats, my left knee hurts. I have 75 minutes per session.",
+    "new_en": "No barbell squats, my left knee hurts. I have 75 minutes per session.",
+    "hi": "Barbell squats नहीं, मेरे बाएं घुटने में दर्द है। मेरे पास हर session के 75 मिनट हैं।",
+    "mr": "Barbell squats नको, माझ्या डाव्या गुडघ्यात दुखत आहे. माझ्याकडे प्रत्येक session साठी 75 मिनिटे आहेत."
+  },
+  {
+    "en": "No check-ins yet",
+    "new_en": "No check-ins yet",
+    "hi": "अभी कोई check-in नहीं",
+    "mr": "अजून कोणतेही check-in नाही"
+  },
+  {
+    "en": "No connection. Try again when you're online.",
+    "new_en": "No connection. Try again when you're online.",
+    "hi": "कनेक्शन नहीं है। ऑनलाइन होने पर दोबारा कोशिश करें।",
+    "mr": "कनेक्शन नाही. ऑनलाइन आल्यावर पुन्हा प्रयत्न करा."
+  },
+  {
+    "en": "No finished workouts in this period yet. Log a few sessions (with RPE) and come back.",
+    "new_en": "No finished workouts in this period. Log a few sessions (with RPE) and come back.",
+    "hi": "इस दौरान कोई पूरा हुआ workout नहीं है। RPE के साथ कुछ sessions log करें और फिर देखें।",
+    "mr": "या काळात कोणताही पूर्ण झालेला workout नाही. RPE सह काही sessions log करा आणि परत या."
+  },
+  {
+    "en": "No finished workouts in this range",
+    "new_en": "No finished workouts in this range",
+    "hi": "इस रेंज में कोई पूरा हुआ workout नहीं",
+    "mr": "या रेंजमध्ये कोणताही पूर्ण झालेला workout नाही"
+  },
+  {
+    "en": "No finished workouts yet.",
+    "new_en": "No finished workouts yet.",
+    "hi": "अभी कोई पूरा हुआ workout नहीं।",
+    "mr": "अजून कोणताही पूर्ण झालेला workout नाही."
+  },
+  {
+    "en": "No food recognised. Try a clearer, top-down shot of the plate, or search manually.",
+    "new_en": "No food recognized. Try a clear top-down photo, or search manually.",
+    "hi": "कोई खाना नहीं पहचाना गया। ऊपर से साफ़ फ़ोटो लें, या सर्च करें।",
+    "mr": "कोणतेही अन्न ओळखले नाही. वरून स्पष्ट फोटो घ्या, किंवा मॅन्युअली सर्च करा."
+  },
+  {
+    "en": "No foods recognised. Name the foods, or use Search.",
+    "new_en": "No foods recognized. Name the foods or use search.",
+    "hi": "कोई खाना नहीं पहचाना गया। नाम लिखें या सर्च करें।",
+    "mr": "काहीही ओळखता आले नाही. नाव सांगा किंवा सर्च वापरा."
+  },
+  {
+    "en": "No goal set",
+    "new_en": "No goal set",
+    "hi": "कोई goal सेट नहीं",
+    "mr": "कोणताही goal सेट नाही"
+  },
+  {
+    "en": "No ingredients yet",
+    "new_en": "No ingredients yet",
+    "hi": "अभी कोई सामग्री नहीं",
+    "mr": "अजून कोणतेही घटक नाहीत"
+  },
+  {
+    "en": "No matches. Try “AI describe”, or add it under “Custom”.",
+    "new_en": "No matches. Try “AI describe” or add under “Custom”.",
+    "hi": "कोई मैच नहीं। “AI describe” आज़माएं या “Custom” में जोड़ें।",
+    "mr": "काही जुळले नाही. “AI describe” वापरून पहा किंवा “Custom” मध्ये जोडा."
+  },
+  {
+    "en": "No plan yet.",
+    "new_en": "No plan yet.",
+    "hi": "अभी कोई plan नहीं।",
+    "mr": "अजून कोणताही plan नाही."
+  },
+  {
+    "en": "No protein logged yet",
+    "new_en": "No protein logged yet",
+    "hi": "अभी कोई प्रोटीन log नहीं किया",
+    "mr": "अजून प्रोटीन log केलेले नाही"
+  },
+  {
+    "en": "No quick meals yet",
+    "new_en": "No quick meals yet",
+    "hi": "अभी कोई quick meals नहीं",
+    "mr": "अजून कोणतेही quick meals नाहीत"
+  },
+  {
+    "en": "No saved quick meals yet.",
+    "new_en": "No saved quick meals yet.",
+    "hi": "अभी कोई सेव किए गए quick meals नहीं।",
+    "mr": "अजून कोणतेही सेव्ह केलेले quick meals नाहीत."
+  },
+  {
+    "en": "No session logged.",
+    "new_en": "No session logged.",
+    "hi": "कोई session log नहीं हुआ।",
+    "mr": "कोणतेही session log केलेले नाही."
+  },
+  {
+    "en": "No steps yet",
+    "new_en": "No steps yet",
+    "hi": "अभी कोई steps नहीं",
+    "mr": "अजून steps नाहीत"
+  },
+  {
+    "en": "No weigh-ins yet",
+    "new_en": "No weigh-ins yet",
+    "hi": "अभी कोई weigh-in नहीं",
+    "mr": "अजून कोणतेही weigh-in नाही"
+  },
+  {
+    "en": "No workout plan",
+    "new_en": "No workout plan",
+    "hi": "कोई workout plan नहीं",
+    "mr": "कोणताही workout plan नाही"
+  },
+  {
+    "en": "No workouts recognized. Supported formats: Strong CSV, Hevy CSV.",
+    "new_en": "No workouts recognized. Supported formats: Strong CSV, Hevy CSV.",
+    "hi": "कोई workout नहीं मिला। सपोर्टेड फ़ॉर्मेट: Strong CSV, Hevy CSV.",
+    "mr": "कोणतेही workout ओळखले नाही. सपोर्टेड फॉरमॅट: Strong CSV, Hevy CSV."
+  },
+  {
+    "en": "None",
+    "new_en": "None",
+    "hi": "कोई नहीं",
+    "mr": "काहीही नाही"
+  },
+  {
+    "en": "Not a doctor — for pain, injury or medical conditions, see one.",
+    "new_en": "Not a doctor — for pain, injury or medical conditions, see one.",
+    "hi": "डॉक्टर की सलाह नहीं है — दर्द, चोट या बीमारी के लिए डॉक्टर को दिखाएं।",
+    "mr": "डॉक्टरचा सल्ला नाही — वेदना, दुखापत किंवा आजारासाठी डॉक्टरांचा सल्ला घ्या."
+  },
+  {
+    "en": "Not counted",
+    "new_en": "Not counted",
+    "hi": "गिना नहीं गया",
+    "mr": "मोजले नाही"
+  },
+  {
+    "en": "Not fasting",
+    "new_en": "Not fasting",
+    "hi": "फ़ास्टिंग नहीं",
+    "mr": "फास्टिंग नाही"
+  },
+  {
+    "en": "Not quite right?",
+    "new_en": "Not quite right?",
+    "hi": "सही नहीं लग रहा?",
+    "mr": "योग्य वाटत नाही?"
+  },
+  {
+    "en": "Not saved yet — it stays on screen and will save when you are back online.",
+    "new_en": "Not saved yet — stays on screen and will save once you are back online.",
+    "hi": "अभी सेव नहीं हुआ — स्क्रीन पर रहेगा और ऑनलाइन आने पर सेव हो जाएगा।",
+    "mr": "अजून सेव्ह झाले नाही — स्क्रीनवर राहील आणि ऑनलाइन आल्यावर सेव्ह होईल."
+  },
+  {
+    "en": "Note",
+    "new_en": "Note",
+    "hi": "नोट",
+    "mr": "नोंद"
+  },
+  {
+    "en": "Notes",
+    "new_en": "Notes",
+    "hi": "नोट्स",
+    "mr": "नोंदी"
+  },
+  {
+    "en": "Nothing logged in this range",
+    "new_en": "Nothing logged in this range",
+    "hi": "इस रेंज में कुछ भी log नहीं किया",
+    "mr": "या रेंजमध्ये काहीही log केलेले नाही"
+  },
+  {
+    "en": "Nothing logged.",
+    "new_en": "Nothing logged.",
+    "hi": "कुछ भी log नहीं किया।",
+    "mr": "काहीही log केलेले नाही."
+  },
+  {
+    "en": "Noticeable shift in proportions if training and nutrition stayed consistent.",
+    "new_en": "Noticeable change in physique with consistent training and diet.",
+    "hi": "ट्रेनिंग और न्यूट्रिशन सही रहे, तो शरीर में साफ़ बदलाव दिखेगा।",
+    "mr": "ट्रेनिंग आणि न्यूट्रिशन नियमित ठेवल्यास शरीरात स्पष्ट बदल दिसेल."
+  },
+  {
+    "en": "Nutrition strategy",
+    "new_en": "Nutrition strategy",
+    "hi": "न्यूट्रिशन स्ट्रैटेजी",
+    "mr": "न्यूट्रिशन स्ट्रॅटेजी"
+  },
+  {
+    "en": "Nutrition target",
+    "new_en": "Nutrition target",
+    "hi": "न्यूट्रिशन टारगेट",
+    "mr": "न्यूट्रिशन टारगेट"
+  },
+  {
+    "en": "Nutrition targets hit on most days.",
+    "new_en": "Nutrition targets hit on most days.",
+    "hi": "ज़्यादातर दिन न्यूट्रिशन टारगेट पूरा हुआ।",
+    "mr": "बहुतेक दिवस न्यूट्रिशन टारगेट पूर्ण झाले."
+  },
+  {
+    "en": "OK",
+    "new_en": "OK",
+    "hi": "ठीक है",
+    "mr": "ठीक आहे"
+  },
+  {
+    "en": "Obliques",
+    "new_en": "Obliques",
+    "hi": "Obliques",
+    "mr": "Obliques"
+  },
+  {
+    "en": "Odisha",
+    "new_en": "Odisha",
+    "hi": "Odisha",
+    "mr": "Odisha"
+  },
+  {
+    "en": "Off",
+    "new_en": "Off",
+    "hi": "बंद",
+    "mr": "बंद"
+  },
+  {
+    "en": "Off (offline mode)",
+    "new_en": "Off (offline mode)",
+    "hi": "बंद (ऑफ़लाइन मोड)",
+    "mr": "बंद (ऑफलाइन मोड)"
+  },
+  {
+    "en": "Off by default. Other users can never see your data, whatever you choose here. Photos never leave your phone.",
+    "new_en": "Off by default. Other users can never see your data, whatever you pick. Photos never leave your phone.",
+    "hi": "डिफ़ॉल्ट रूप से बंद। आप जो भी चुनें, दूसरे यूज़र्स आपका डेटा कभी नहीं देख सकते। फ़ोटो आपके फ़ोन से बाहर कभी नहीं जातीं।",
+    "mr": "बाय डीफॉल्ट बंद. तुम्ही काहीही निवडले तरी इतर युजर्स तुमचा डेटा कधीही पाहू शकत नाहीत. फोटो फोनबाहेर कधीही जात नाहीत."
+  },
+  {
+    "en": "Offline — showing your last saved data. New entries save once you reconnect.",
+    "new_en": "Offline — showing last saved data. New entries save once you reconnect.",
+    "hi": "ऑफ़लाइन — पिछला सेव किया डेटा दिख रहा है। दोबारा कनेक्ट होने पर नई एंट्रीज़ सेव होंगी।",
+    "mr": "ऑफलाइन — शेवटचा सेव्ह केलेला डेटा दिसत आहे. पुन्हा कनेक्ट झाल्यावर नवीन नोंदी सेव्ह होतील."
+  },
+  {
+    "en": "Olive Oil",
+    "new_en": "Olive Oil",
+    "hi": "Olive Oil",
+    "mr": "Olive Oil"
+  },
+  {
+    "en": "On iPhone? Open it in Safari, tap Share, then",
+    "new_en": "On iPhone? Open in Safari, tap Share, then",
+    "hi": "iPhone पर हैं? Safari में खोलें, Share दबाएं, फिर",
+    "mr": "iPhone वर आहात? Safari मध्ये उघडा, Share दाबा, मग"
+  },
+  {
+    "en": "One last step",
+    "new_en": "One last step",
+    "hi": "बस एक आख़िरी कदम",
+    "mr": "फक्त एक शेवटची पायरी"
+  },
+  {
+    "en": "One weigh-in so far. The trend line starts at the second.",
+    "new_en": "One weigh-in so far. The trend line starts at the second.",
+    "hi": "अभी तक एक ही weigh-in हुआ है। Trend line दूसरे weigh-in से शुरू होगी।",
+    "mr": "अजून फक्त एक weigh-in झाले आहे. Trend line दुसऱ्या weigh-in नंतर सुरू होईल."
+  },
+  {
+    "en": "Only above",
+    "new_en": "Only above",
+    "hi": "सिर्फ़ ऊपर",
+    "mr": "फक्त वर"
+  },
+  {
+    "en": "Only you can see your meals, workouts and weight. We handle the security on our side. There's nothing for you to set up or check.",
+    "new_en": "Only you can see your meals, workouts, and weight. We handle security, so there is nothing for you to set up.",
+    "hi": "सिर्फ़ आप अपने meals, workouts और वज़न देख सकते हैं। सिक्योरिटी हम संभालते हैं, आपको कुछ सेट नहीं करना।",
+    "mr": "फक्त तुम्हीच तुमचे meals, workouts आणि वजन पाहू शकता. सिक्युरिटी आम्ही सांभाळतो, तुम्हाला काहीही सेट करायचे नाही."
+  },
+  {
+    "en": "Open goals",
+    "new_en": "Open goals",
+    "hi": "Goals खोलें",
+    "mr": "Goals उघडा"
+  },
+  {
+    "en": "Open in your browser",
+    "new_en": "Open in browser",
+    "hi": "ब्राउज़र में खोलें",
+    "mr": "ब्राउझरमध्ये उघडा"
+  },
+  {
+    "en": "Open plan builder",
+    "new_en": "Open plan builder",
+    "hi": "Plan builder खोलें",
+    "mr": "Plan builder उघडा"
+  },
+  {
+    "en": "Open workout",
+    "new_en": "Open workout",
+    "hi": "Workout खोलें",
+    "mr": "Workout उघडा"
+  },
+  {
+    "en": "Other day",
+    "new_en": "Other day",
+    "hi": "दूसरा दिन",
+    "mr": "दुसरा दिवस"
+  },
+  {
+    "en": "Overhead Cable Tricep Extension",
+    "new_en": "Overhead Cable Tricep Extension",
+    "hi": "Overhead Cable Tricep Extension",
+    "mr": "Overhead Cable Tricep Extension"
+  },
+  {
+    "en": "Overhead Press",
+    "new_en": "Overhead Press",
+    "hi": "Overhead Press",
+    "mr": "Overhead Press"
+  },
+  {
+    "en": "PREV",
+    "new_en": "Prev",
+    "hi": "पिछला",
+    "mr": "मागे"
+  },
+  {
+    "en": "PROTEIN",
+    "new_en": "Protein",
+    "hi": "प्रोटीन",
+    "mr": "प्रोटीन"
+  },
+  {
+    "en": "Packaged food",
+    "new_en": "Packaged food",
+    "hi": "Packaged food",
+    "mr": "Packaged food"
+  },
+  {
+    "en": "Pakhala",
+    "new_en": "Pakhala",
+    "hi": "Pakhala",
+    "mr": "Pakhala"
+  },
+  {
+    "en": "Password",
+    "new_en": "Password",
+    "hi": "पासवर्ड",
+    "mr": "पासवर्ड"
+  },
+  {
+    "en": "Pasta, cooked",
+    "new_en": "Pasta, cooked",
+    "hi": "Pasta, cooked",
+    "mr": "Pasta, cooked"
+  },
+  {
+    "en": "Paste a key first.",
+    "new_en": "Paste a key first.",
+    "hi": "पहले key पेस्ट करें।",
+    "mr": "आधी key पेस्ट करा."
+  },
+  {
+    "en": "Peanut Butter",
+    "new_en": "Peanut Butter",
+    "hi": "Peanut Butter",
+    "mr": "Peanut Butter"
+  },
+  {
+    "en": "Pec Dec Fly",
+    "new_en": "Pec Dec Fly",
+    "hi": "Pec Dec Fly",
+    "mr": "Pec Dec Fly"
+  },
+  {
+    "en": "Per amount",
+    "new_en": "Per amount",
+    "hi": "प्रति मात्रा",
+    "mr": "प्रमाणानुसार"
+  },
+  {
+    "en": "Perfect",
+    "new_en": "Perfect",
+    "hi": "परफ़ेक्ट",
+    "mr": "परफेक्ट"
+  },
+  {
+    "en": "Perfect days",
+    "new_en": "Perfect days",
+    "hi": "परफ़ेक्ट दिन",
+    "mr": "परफेक्ट दिवस"
+  },
+  {
+    "en": "Pesarattu",
+    "new_en": "Pesarattu",
+    "hi": "Pesarattu",
+    "mr": "Pesarattu"
+  },
+  {
+    "en": "Photo",
+    "new_en": "Photo",
+    "hi": "फ़ोटो",
+    "mr": "फोटो"
+  },
+  {
+    "en": "Photo or barcode",
+    "new_en": "Photo or barcode",
+    "hi": "फ़ोटो या बारकोड",
+    "mr": "फोटो किंवा बारकोड"
+  },
+  {
+    "en": "Photos are sent once for this analysis and are never stored outside this device.",
+    "new_en": "Photos are sent once for analysis and never stored outside this device.",
+    "hi": "फ़ोटो सिर्फ़ एनालिसिस के लिए भेजी जाती हैं और इस डिवाइस के बाहर कभी स्टोर नहीं होतीं।",
+    "mr": "फोटो फक्त analysis साठी पाठवले जातात आणि या डिव्हाइसबाहेर कधीही सेव्ह केले जात नाहीत."
+  },
+  {
+    "en": "Physique Lab",
+    "new_en": "Physique Lab",
+    "hi": "Physique Lab",
+    "mr": "Physique Lab"
+  },
+  {
+    "en": "Physique photos are stored only in this app's private storage on this device. They are never uploaded to the database and never shared. Deleting a check-in deletes its photos.",
+    "new_en": "Physique photos stay in this app's private storage on your device. They are never uploaded or shared. Deleting a check-in deletes its photos.",
+    "hi": "Physique फ़ोटो सिर्फ़ इसी डिवाइस पर ऐप के प्राइवेट स्टोरेज में रहती हैं। ये कभी अपलोड या शेयर नहीं होतीं। Check-in डिलीट करने पर फ़ोटो भी डिलीट हो जाती हैं।",
+    "mr": "Physique फोटो फक्त या डिव्हाइसवर ॲपच्या खाजगी स्टोरेजमध्ये राहतात. ते कधीही अपलोड किंवा शेअर केले जात नाहीत. Check-in delete केल्यास फोटोही delete होतात."
+  },
+  {
+    "en": "Physique photos are stored only in this browser's private storage on this device. They are never uploaded to the database and never shared. Deleting a check-in deletes its photos.",
+    "new_en": "Physique photos stay in this browser's private storage on your device. They are never uploaded or shared. Deleting a check-in deletes its photos.",
+    "hi": "Physique फ़ोटो सिर्फ़ इसी डिवाइस पर ब्राउज़र के प्राइवेट स्टोरेज में रहती हैं। ये कभी अपलोड या शेयर नहीं होतीं। Check-in डिलीट करने पर फ़ोटो भी डिलीट हो जाती हैं।",
+    "mr": "Physique फोटो फक्त या डिव्हाइसवर ब्राउझरच्या खाजगी स्टोरेजमध्ये राहतात. ते कधीही अपलोड किंवा शेअर केले जात नाहीत. Check-in delete केल्यास फोटोही delete होतात."
+  },
+  {
+    "en": "Pick a day",
+    "new_en": "Pick a day",
+    "hi": "दिन चुनें",
+    "mr": "दिवस निवडा"
+  },
+  {
+    "en": "Pick a day for today",
+    "new_en": "Pick a day for today",
+    "hi": "आज के लिए दिन चुनें",
+    "mr": "आजसाठी एक दिवस निवडा"
+  },
+  {
+    "en": "Pick a gradient and the whole app follows, right down to the icon on your home screen. Tap one to try it here.",
+    "new_en": "Pick a gradient and the whole app follows, right down to your home screen icon. Tap one to try it.",
+    "hi": "कोई gradient चुनें और पूरा ऐप उसी रंग में बदल जाएगा, होम स्क्रीन आइकन भी। आज़माने के लिए टैप करें।",
+    "mr": "एक gradient निवडा आणि पूर्ण ॲप त्यानुसार बदलेल, होम स्क्रीन आयकॉनसुद्धा. वापरून पाहण्यासाठी टॅप करा."
+  },
+  {
+    "en": "Pick a ready plan or build your own. FORGE tells you what to lift today and times your rest.",
+    "new_en": "Pick a plan or build your own. FORGE tells you what to lift today and times your rest.",
+    "hi": "बना-बनाया plan चुनें या अपना बनाएं। FORGE बताएगा कि आज क्या lift करना है और rest टाइमर भी चलाएगा।",
+    "mr": "तयार plan निवडा किंवा स्वतःचा बनवा. FORGE आज काय lift करायचे ते सांगेल आणि rest वेळ मोजेल."
+  },
+  {
+    "en": "Pick an exercise",
+    "new_en": "Pick an exercise",
+    "hi": "एक exercise चुनें",
+    "mr": "एक exercise निवडा"
+  },
+  {
+    "en": "Plan",
+    "new_en": "Plan",
+    "hi": "Plan",
+    "mr": "Plan"
+  },
+  {
+    "en": "Plan activated",
+    "new_en": "Plan activated",
+    "hi": "Plan एक्टिवेट हो गया",
+    "mr": "Plan ॲक्टिव्हेट झाला"
+  },
+  {
+    "en": "Plan builder",
+    "new_en": "Plan builder",
+    "hi": "Plan builder",
+    "mr": "Plan builder"
+  },
+  {
+    "en": "Plan days",
+    "new_en": "Plan days",
+    "hi": "Plan के दिन",
+    "mr": "Plan चे दिवस"
+  },
+  {
+    "en": "Plan name",
+    "new_en": "Plan name",
+    "hi": "Plan का नाम",
+    "mr": "Plan चे नाव"
+  },
+  {
+    "en": "Plan or freestyle",
+    "new_en": "Plan or freestyle",
+    "hi": "Plan या फ़्रीस्टाइल",
+    "mr": "Plan किंवा फ्रीस्टाइल"
+  },
+  {
+    "en": "Plans",
+    "new_en": "Plans",
+    "hi": "Plans",
+    "mr": "Plans"
+  },
+  {
+    "en": "Plans for gym or home",
+    "new_en": "Plans for gym or home",
+    "hi": "Gym या घर के लिए plans",
+    "mr": "Gym किंवा घरासाठी plans"
+  },
+  {
+    "en": "Poha",
+    "new_en": "Poha",
+    "hi": "Poha",
+    "mr": "Poha"
+  },
+  {
+    "en": "Point at your plate",
+    "new_en": "Point at your plate",
+    "hi": "प्लेट की तरफ़ कैमरा रखें",
+    "mr": "कॅमेरा प्लेटकडे रोखा"
+  },
+  {
+    "en": "Pongal",
+    "new_en": "Pongal",
+    "hi": "Pongal",
+    "mr": "Pongal"
+  },
+  {
+    "en": "Portions are estimated — adjust with − / + before logging.",
+    "new_en": "Portions are estimated — adjust with − / + before logging.",
+    "hi": "मात्रा का अनुमान लगाया गया है — log करने से पहले − / + से बदल लें।",
+    "mr": "प्रमाण अंदाजे आहे — log करण्यापूर्वी − / + वापरून बदला."
+  },
+  {
+    "en": "Potato, boiled",
+    "new_en": "Potato, boiled",
+    "hi": "Potato, boiled",
+    "mr": "Potato, boiled"
+  },
+  {
+    "en": "Powerlifting wave",
+    "new_en": "Powerlifting wave",
+    "hi": "Powerlifting wave",
+    "mr": "Powerlifting wave"
+  },
+  {
+    "en": "Prev",
+    "new_en": "Prev",
+    "hi": "पिछला",
+    "mr": "मागे"
+  },
+  {
+    "en": "Previous day",
+    "new_en": "Previous day",
+    "hi": "पिछला दिन",
+    "mr": "मागचा दिवस"
+  },
+  {
+    "en": "Previous month",
+    "new_en": "Previous month",
+    "hi": "पिछला महीना",
+    "mr": "मागचा महिना"
+  },
+  {
+    "en": "Priority — push this one",
+    "new_en": "Priority — push this one",
+    "hi": "Priority — इस पर ज़ोर दें",
+    "mr": "Priority — यावर जास्त भर द्या"
+  },
+  {
+    "en": "Privacy",
+    "new_en": "Privacy",
+    "hi": "प्राइवेसी",
+    "mr": "प्रायव्हसी"
+  },
+  {
+    "en": "Product not found in Open Food Facts. Add it under “Custom”.",
+    "new_en": "Product not found in Open Food Facts. Add it under “Custom”.",
+    "hi": "Open Food Facts में प्रोडक्ट नहीं मिला। इसे “Custom” में जोड़ें।",
+    "mr": "Open Food Facts मध्ये प्रॉडक्ट सापडले नाही. “Custom” मध्ये जोडा."
+  },
+  {
+    "en": "Profile",
+    "new_en": "Profile",
+    "hi": "प्रोफ़ाइल",
+    "mr": "प्रोफाइल"
+  },
+  {
+    "en": "Progress",
+    "new_en": "Progress",
+    "hi": "प्रोग्रेस",
+    "mr": "प्रोग्रेस"
+  },
+  {
+    "en": "Progress screen with weight and averages",
+    "new_en": "Progress screen with weight and averages",
+    "hi": "वज़न और औसत वाला प्रोग्रेस स्क्रीन",
+    "mr": "वजन आणि सरासरी दाखवणारी प्रोग्रेस स्क्रीन"
+  },
+  {
+    "en": "Progress to target",
+    "new_en": "Progress to target",
+    "hi": "टारगेट तक प्रोग्रेस",
+    "mr": "टारगेटपर्यंत प्रोग्रेस"
+  },
+  {
+    "en": "Progression",
+    "new_en": "Progression",
+    "hi": "Progression",
+    "mr": "Progression"
+  },
+  {
+    "en": "Progression off for this exercise.",
+    "new_en": "Progression off for this exercise.",
+    "hi": "इस exercise के लिए progression बंद है।",
+    "mr": "या exercise साठी progression बंद आहे."
+  },
+  {
+    "en": "Promise",
+    "new_en": "Promise",
+    "hi": "वादा",
+    "mr": "वचन"
+  },
+  {
+    "en": "Protein",
+    "new_en": "Protein",
+    "hi": "प्रोटीन",
+    "mr": "प्रोटीन"
+  },
+  {
+    "en": "Protein (g)",
+    "new_en": "Protein (g)",
+    "hi": "प्रोटीन (g)",
+    "mr": "प्रोटीन (g)"
+  },
+  {
+    "en": "Protein Oats",
+    "new_en": "Protein Oats",
+    "hi": "Protein Oats",
+    "mr": "Protein Oats"
+  },
+  {
+    "en": "Protein goal",
+    "new_en": "Protein goal",
+    "hi": "प्रोटीन गोल",
+    "mr": "प्रोटीन गोल"
+  },
+  {
+    "en": "Pull Aesthetics",
+    "new_en": "Pull Aesthetics",
+    "hi": "Pull Aesthetics",
+    "mr": "Pull Aesthetics"
+  },
+  {
+    "en": "Pull Strength",
+    "new_en": "Pull Strength",
+    "hi": "Pull Strength",
+    "mr": "Pull Strength"
+  },
+  {
+    "en": "Punjab",
+    "new_en": "Punjab",
+    "hi": "Punjab",
+    "mr": "Punjab"
+  },
+  {
+    "en": "Push Aesthetics",
+    "new_en": "Push Aesthetics",
+    "hi": "Push Aesthetics",
+    "mr": "Push Aesthetics"
+  },
+  {
+    "en": "Push Strength",
+    "new_en": "Push Strength",
+    "hi": "Push Strength",
+    "mr": "Push Strength"
+  },
+  {
+    "en": "Qty",
+    "new_en": "Qty",
+    "hi": "मात्रा",
+    "mr": "प्रमाण"
+  },
+  {
+    "en": "Quads",
+    "new_en": "Quads",
+    "hi": "Quads",
+    "mr": "Quads"
+  }
+]

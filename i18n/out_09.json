@@ -1,0 +1,452 @@
+[
+{
+"en": "Energy balance",
+"new_en": "Energy balance",
+"hi": "ऊर्जा संतुलन",
+"mr": "ऊर्जा संतुलन"
+},
+{
+"en": "ENERGY BALANCE",
+"new_en": "ENERGY BALANCE",
+"hi": "ऊर्जा संतुलन",
+"mr": "ऊर्जा संतुलन"
+},
+{
+"en": "Steps",
+"new_en": "Steps",
+"hi": "कदम",
+"mr": "पावले"
+},
+{
+"en": "Steps goal",
+"new_en": "Steps goal",
+"hi": "कदमों का लक्ष्य",
+"mr": "पावलांचे लक्ष्य"
+},
+{
+"en": "Streak",
+"new_en": "Streak",
+"hi": "लगातार दिन",
+"mr": "सलग दिवस"
+},
+{
+"en": "Streaks",
+"new_en": "Streaks",
+"hi": "लगातार दिन",
+"mr": "सलग दिवस"
+},
+{
+"en": "Workout streak",
+"new_en": "Workout streak",
+"hi": "Workout लगातार दिन",
+"mr": "Workout सलग दिवस"
+},
+{
+"en": "Calories",
+"new_en": "Calories",
+"hi": "कैलोरी",
+"mr": "कॅलरी"
+},
+{
+"en": "Carbs",
+"new_en": "Carbs",
+"hi": "कार्ब्स",
+"mr": "कार्ब्स"
+},
+{
+"en": "CARBS",
+"new_en": "CARBS",
+"hi": "कार्ब्स",
+"mr": "कार्ब्स"
+},
+{
+"en": "Carbs (g)",
+"new_en": "Carbs (g)",
+"hi": "कार्ब्स (g)",
+"mr": "कार्ब्स (g)"
+},
+{
+"en": "Dark",
+"new_en": "Dark",
+"hi": "डार्क",
+"mr": "डार्क"
+},
+{
+"en": "Light",
+"new_en": "Light",
+"hi": "लाइट",
+"mr": "लाइट"
+},
+{
+"en": "Data",
+"new_en": "Data",
+"hi": "डेटा",
+"mr": "डेटा"
+},
+{
+"en": "Best",
+"new_en": "Best",
+"hi": "सबसे अच्छा",
+"mr": "सर्वोत्तम"
+},
+{
+"en": "Insights",
+"new_en": "Insights",
+"hi": "सुझाव",
+"mr": "सूचना"
+},
+{
+"en": "Plan",
+"new_en": "Plan",
+"hi": "प्लान",
+"mr": "प्लॅन"
+},
+{
+"en": "Plans",
+"new_en": "Plans",
+"hi": "प्लान",
+"mr": "प्लॅन"
+},
+{
+"en": "Settings",
+"new_en": "Settings",
+"hi": "सेटिंग्स",
+"mr": "सेटिंग्ज"
+},
+{
+"en": "Sign in",
+"new_en": "Sign in",
+"hi": "साइन इन",
+"mr": "साइन इन"
+},
+{
+"en": "Sign out",
+"new_en": "Sign out",
+"hi": "साइन आउट",
+"mr": "साइन आउट"
+},
+{
+"en": "Sign up",
+"new_en": "Sign up",
+"hi": "साइन अप",
+"mr": "साइन अप"
+},
+{
+"en": "System",
+"new_en": "System",
+"hi": "सिस्टम",
+"mr": "सिस्टम"
+},
+{
+"en": "Theme",
+"new_en": "Theme",
+"hi": "थीम",
+"mr": "थीम"
+},
+{
+"en": "Target",
+"new_en": "Target",
+"hi": "लक्ष्य",
+"mr": "लक्ष्य"
+},
+{
+"en": "Train",
+"new_en": "Train",
+"hi": "ट्रेन",
+"mr": "ट्रेन"
+},
+{
+"en": "Training",
+"new_en": "Training",
+"hi": "ट्रेनिंग",
+"mr": "ट्रेनिंग"
+},
+{
+"en": "Units",
+"new_en": "Units",
+"hi": "इकाई",
+"mr": "एकक"
+},
+{
+"en": "Unit",
+"new_en": "Unit",
+"hi": "इकाई",
+"mr": "एकक"
+},
+{
+"en": "Weight",
+"new_en": "Weight",
+"hi": "वज़न",
+"mr": "वजन"
+},
+{
+"en": "Weight (kg)",
+"new_en": "Weight (kg)",
+"hi": "वज़न (kg)",
+"mr": "वजन (kg)"
+},
+{
+"en": "Target weight (kg)",
+"new_en": "Target weight (kg)",
+"hi": "लक्ष्य वज़न (kg)",
+"mr": "लक्ष्य वजन (kg)"
+},
+{
+"en": "Workout",
+"new_en": "Workout",
+"hi": "वर्कआउट",
+"mr": "वर्कआउट"
+},
+{
+"en": "Workout plans",
+"new_en": "Workout plans",
+"hi": "वर्कआउट प्लान",
+"mr": "वर्कआउट प्लॅन"
+},
+{
+"en": "Workout plan",
+"new_en": "Workout plan",
+"hi": "वर्कआउट प्लान",
+"mr": "वर्कआउट प्लॅन"
+},
+{
+"en": "Rest day",
+"new_en": "Rest day",
+"hi": "आराम का दिन",
+"mr": "विश्रांतीचा दिवस"
+},
+{
+"en": "Rest day.",
+"new_en": "Rest day.",
+"hi": "आराम का दिन।",
+"mr": "विश्रांतीचा दिवस."
+},
+{
+"en": "Rest days",
+"new_en": "Rest days",
+"hi": "आराम के दिन",
+"mr": "विश्रांतीचे दिवस"
+},
+{
+"en": "Quick meals",
+"new_en": "Quick meals",
+"hi": "झटपट खाना",
+"mr": "झटपट जेवण"
+},
+{
+"en": "Saved plates",
+"new_en": "Saved plates",
+"hi": "सेव की गई थालियां",
+"mr": "सेव्ह केलेली ताटे"
+},
+{
+"en": "Saved recipes",
+"new_en": "Saved recipes",
+"hi": "सेव की गई रेसिपी",
+"mr": "सेव्ह केलेल्या रेसिपी"
+},
+{
+"en": "Sessions",
+"new_en": "Sessions",
+"hi": "सेशन",
+"mr": "सेशन"
+},
+{
+"en": "Training volume",
+"new_en": "Training volume",
+"hi": "ट्रेनिंग वॉल्यूम",
+"mr": "ट्रेनिंग व्हॉल्यूम"
+},
+{
+"en": "Bodyweight",
+"new_en": "Bodyweight",
+"hi": "शरीर का वज़न",
+"mr": "शरीराचे वजन"
+},
+{
+"en": "Maintenance",
+"new_en": "Maintenance",
+"hi": "मेंटेनेंस",
+"mr": "मेंटेनन्स"
+},
+{
+"en": "Adaptive maintenance",
+"new_en": "Adaptive maintenance",
+"hi": "अपने-आप सीखने वाला मेंटेनेंस",
+"mr": "आपोआप शिकणारा मेंटेनन्स"
+},
+{
+"en": "Coach",
+"new_en": "Coach",
+"hi": "कोच",
+"mr": "कोच"
+},
+{
+"en": "Exercises",
+"new_en": "Exercises",
+"hi": "एक्सरसाइज़",
+"mr": "व्यायाम"
+},
+{
+"en": "Exercise",
+"new_en": "Exercise",
+"hi": "एक्सरसाइज़",
+"mr": "व्यायाम"
+},
+{
+"en": "Muscle Map",
+"new_en": "Muscle Map",
+"hi": "मसल मैप",
+"mr": "स्नायू नकाशा"
+},
+{
+"en": "Accent colour",
+"new_en": "Accent colour",
+"hi": "मुख्य रंग",
+"mr": "मुख्य रंग"
+},
+{
+"en": "Connection",
+"new_en": "Connection",
+"hi": "कनेक्शन",
+"mr": "कनेक्शन"
+},
+{
+"en": "Consistency",
+"new_en": "Consistency",
+"hi": "नियमितता",
+"mr": "सातत्य"
+},
+{
+"en": "Category",
+"new_en": "Category",
+"hi": "श्रेणी",
+"mr": "प्रकार"
+},
+{
+"en": "DETAILS →",
+"new_en": "DETAILS →",
+"hi": "विवरण →",
+"mr": "तपशील →"
+},
+{
+"en": "Details →",
+"new_en": "Details →",
+"hi": "विवरण →",
+"mr": "तपशील →"
+},
+{
+"en": "kcal / day",
+"new_en": "kcal / day",
+"hi": "kcal / दिन",
+"mr": "kcal / दिवस"
+},
+{
+"en": "Calculator",
+"new_en": "Calculator",
+"hi": "कैलकुलेटर",
+"mr": "कॅल्क्युलेटर"
+},
+{
+"en": "Water goal (ml)",
+"new_en": "Water goal (ml)",
+"hi": "पानी का लक्ष्य (ml)",
+"mr": "पाण्याचे लक्ष्य (ml)"
+},
+{
+"en": "Training settings",
+"new_en": "Training settings",
+"hi": "ट्रेनिंग सेटिंग्स",
+"mr": "ट्रेनिंग सेटिंग्ज"
+},
+{
+"en": "Effort",
+"new_en": "Effort",
+"hi": "मेहनत",
+"mr": "मेहनत"
+},
+{
+"en": "Effort scale",
+"new_en": "Effort scale",
+"hi": "मेहनत का पैमाना",
+"mr": "मेहनतीचे प्रमाण"
+},
+{
+"en": "Unknown food",
+"new_en": "Unknown food",
+"hi": "अनजान खाना",
+"mr": "अज्ञात पदार्थ"
+},
+{
+"en": "Servings",
+"new_en": "Servings",
+"hi": "सर्विंग",
+"mr": "सर्व्हिंग"
+},
+{
+"en": "Train · Eat · Track",
+"new_en": "Train · Eat · Track",
+"hi": "ट्रेन करें · खाएं · ट्रैक करें",
+"mr": "ट्रेन करा · खा · ट्रॅक करा"
+},
+{
+"en": "Beginner",
+"new_en": "Beginner",
+"hi": "शुरुआती",
+"mr": "नवशिका"
+},
+{
+"en": "Intermediate",
+"new_en": "Intermediate",
+"hi": "मध्यम",
+"mr": "मध्यम"
+},
+{
+"en": "Strength",
+"new_en": "Strength",
+"hi": "ताकत",
+"mr": "ताकद"
+},
+{
+"en": "Hypertrophy",
+"new_en": "Hypertrophy",
+"hi": "मसल बढ़ाना",
+"mr": "स्नायू वाढ"
+},
+{
+"en": "Aesthetics",
+"new_en": "Aesthetics",
+"hi": "शरीर की बनावट",
+"mr": "शरीराची ठेवण"
+},
+{
+"en": "Volume",
+"new_en": "Volume",
+"hi": "वॉल्यूम",
+"mr": "व्हॉल्यूम"
+},
+{
+"en": "Body",
+"new_en": "Body",
+"hi": "शरीर",
+"mr": "शरीर"
+},
+{
+"en": "Body part",
+"new_en": "Body part",
+"hi": "शरीर का हिस्सा",
+"mr": "शरीराचा भाग"
+},
+{
+"en": "Reference",
+"new_en": "Reference",
+"hi": "संदर्भ",
+"mr": "संदर्भ"
+},
+{
+"en": "Sections",
+"new_en": "Sections",
+"hi": "हिस्से",
+"mr": "विभाग"
+}
+]

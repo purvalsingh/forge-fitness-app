@@ -1,0 +1,7 @@
+Rest days no longer break your streak: a day off right after a workout counts as rest, even if you haven't picked rest days.
+Calorie targets no longer count your walking twice.
+The "first steps" card stays until you've set a goal, logged a meal and finished a workout.
+Picking "AI coach" now checks the AI by itself. No test for you to run.
+Voice logging listens in Hindi or Marathi when the app is set to that language.
+Age must be between 13 and 90, and physique check-ins are for 18 and over.
+Fixed: the update banner kept showing after updating.

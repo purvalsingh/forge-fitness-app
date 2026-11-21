@@ -80,7 +80,7 @@ export default function Goals() {
               </Field>
               <Field label="Age">
                 <DraftInput type="number" value={s.profile.age} ariaLabel="Age"
-                  onCommit={v => s.save('profiles', { ...s.profile!, age: Number(v) || s.profile!.age } as never)} />
+                  onCommit={v => s.save('profiles', { ...s.profile!, age: Math.min(90, Math.max(13, Number(v) || s.profile!.age)) } as never)} />
               </Field>
               <Field label="Sex">
                 <select value={s.profile.sex}
@@ -116,7 +116,7 @@ export default function Goals() {
           </div>
         </Card>
 
-        {invalid && <Notice tone="warn">Check the weights: the target does not match the selected goal mode, or is out of range.</Notice>}
+        {invalid && <Notice tone="warn">Check weights: target does not match your goal or is out of range.</Notice>}
         {saved && <Notice>Goal saved.</Notice>}
 
         <Button disabled={invalid} onClick={async () => {

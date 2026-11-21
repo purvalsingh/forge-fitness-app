@@ -1,0 +1,902 @@
+[
+  {
+    "en": "General Fitness",
+    "new_en": "General fitness",
+    "hi": "General fitness",
+    "mr": "General fitness"
+  },
+  {
+    "en": "Generate insights",
+    "new_en": "Generate insights",
+    "hi": "Insights जनरेट करें",
+    "mr": "Insights तयार करा"
+  },
+  {
+    "en": "Generate with AI",
+    "new_en": "Generate with AI",
+    "hi": "AI से जनरेट करें",
+    "mr": "AI द्वारे तयार करा"
+  },
+  {
+    "en": "Generating insights",
+    "new_en": "Generating insights",
+    "hi": "Insights जनरेट हो रहे हैं…",
+    "mr": "Insights तयार होत आहेत…"
+  },
+  {
+    "en": "Genetics, starting condition, training history and recovery can change this substantially.",
+    "new_en": "Genetics, starting condition, training history, and recovery can change this a lot.",
+    "hi": "Genetics, शुरुआती स्थिति, training history और recovery से इसमें काफी फर्क पड़ सकता है।",
+    "mr": "Genetics, सुरुवातीची स्थिती, training history आणि recovery मुळे यात खूप फरक पडू शकतो."
+  },
+  {
+    "en": "Get started",
+    "new_en": "Get started",
+    "hi": "शुरू करें",
+    "mr": "सुरू करा"
+  },
+  {
+    "en": "Get the app, or open it in your browser.",
+    "new_en": "Get the app, or open it in your browser.",
+    "hi": "App डाउनलोड करें या ब्राउज़र में खोलें।",
+    "mr": "App डाउनलोड करा किंवा ब्राउझरमध्ये उघडा."
+  },
+  {
+    "en": "Glass (ml)",
+    "new_en": "Glass (ml)",
+    "hi": "ग्लास (ml)",
+    "mr": "ग्लास (ml)"
+  },
+  {
+    "en": "Glutes",
+    "new_en": "Glutes",
+    "hi": "Glutes",
+    "mr": "Glutes"
+  },
+  {
+    "en": "Goa",
+    "new_en": "Goa",
+    "hi": "गोवा",
+    "mr": "गोवा"
+  },
+  {
+    "en": "Goal",
+    "new_en": "Goal",
+    "hi": "लक्ष्य",
+    "mr": "ध्येय"
+  },
+  {
+    "en": "Goal %,d",
+    "new_en": "Goal %,d",
+    "hi": "लक्ष्य %,d",
+    "mr": "ध्येय %,d"
+  },
+  {
+    "en": "Goal saved.",
+    "new_en": "Goal saved.",
+    "hi": "लक्ष्य सेव हो गया।",
+    "mr": "ध्येय सेव्ह झाले."
+  },
+  {
+    "en": "Goals",
+    "new_en": "Goals",
+    "hi": "लक्ष्य",
+    "mr": "ध्येये"
+  },
+  {
+    "en": "Good Morning",
+    "new_en": "Good Morning",
+    "hi": "Good Morning",
+    "mr": "Good Morning"
+  },
+  {
+    "en": "Good to know",
+    "new_en": "Good to know",
+    "hi": "काम की बात",
+    "mr": "कामाची माहिती"
+  },
+  {
+    "en": "Gradient theme",
+    "new_en": "Gradient theme",
+    "hi": "Gradient थीम",
+    "mr": "Gradient थीम"
+  },
+  {
+    "en": "Grams",
+    "new_en": "Grams",
+    "hi": "ग्राम",
+    "mr": "ग्रॅम"
+  },
+  {
+    "en": "Greek Yogurt",
+    "new_en": "Greek Yogurt",
+    "hi": "Greek Yogurt",
+    "mr": "Greek Yogurt"
+  },
+  {
+    "en": "Gujarat",
+    "new_en": "Gujarat",
+    "hi": "गुजरात",
+    "mr": "गुजरात"
+  },
+  {
+    "en": "Hack Squat",
+    "new_en": "Hack Squat",
+    "hi": "Hack Squat",
+    "mr": "Hack Squat"
+  },
+  {
+    "en": "Hamstrings",
+    "new_en": "Hamstrings",
+    "hi": "Hamstrings",
+    "mr": "Hamstrings"
+  },
+  {
+    "en": "Hanging Knee Raise",
+    "new_en": "Hanging Knee Raise",
+    "hi": "Hanging Knee Raise",
+    "mr": "Hanging Knee Raise"
+  },
+  {
+    "en": "Height (cm)",
+    "new_en": "Height (cm)",
+    "hi": "ऊंचाई (cm)",
+    "mr": "उंची (cm)"
+  },
+  {
+    "en": "Help improve FORGE",
+    "new_en": "Help improve FORGE",
+    "hi": "FORGE को बेहतर बनाने में मदद करें",
+    "mr": "FORGE सुधारण्यात मदत करा"
+  },
+  {
+    "en": "Hevy",
+    "new_en": "Hevy",
+    "hi": "Hevy",
+    "mr": "Hevy"
+  },
+  {
+    "en": "Hide",
+    "new_en": "Hide",
+    "hi": "छिपाएं",
+    "mr": "लपवा"
+  },
+  {
+    "en": "High-protein vegetarian Indian breakfast ideas?",
+    "new_en": "High-protein vegetarian Indian breakfast ideas?",
+    "hi": "High-protein शाकाहारी भारतीय नाश्ते के आइडिया?",
+    "mr": "High-protein शाकाहारी भारतीय नाश्त्याचे पर्याय?"
+  },
+  {
+    "en": "Highest: 2,340 kcal on 12 Nov",
+    "new_en": "Highest: 2,340 kcal on 12 Nov",
+    "hi": "सबसे ज़्यादा: 12 Nov को 2,340 kcal",
+    "mr": "सर्वाधिक: 12 Nov रोजी 2,340 kcal"
+  },
+  {
+    "en": "Himachal Pradesh",
+    "new_en": "Himachal Pradesh",
+    "hi": "हिमाचल प्रदेश",
+    "mr": "हिमाचल प्रदेश"
+  },
+  {
+    "en": "History",
+    "new_en": "History",
+    "hi": "हिस्ट्री",
+    "mr": "हिस्ट्री"
+  },
+  {
+    "en": "History & muscle map",
+    "new_en": "History & muscle map",
+    "hi": "हिस्ट्री और muscle map",
+    "mr": "हिस्ट्री आणि muscle map"
+  },
+  {
+    "en": "History, heatmap & muscle map",
+    "new_en": "History, heatmap & muscle map",
+    "hi": "हिस्ट्री, heatmap और muscle map",
+    "mr": "हिस्ट्री, heatmap आणि muscle map"
+  },
+  {
+    "en": "Hold current weight",
+    "new_en": "Hold current weight",
+    "hi": "मौजूदा वज़न बनाए रखें",
+    "mr": "सध्याचे वजन टिकवून ठेवा"
+  },
+  {
+    "en": "Homemade",
+    "new_en": "Homemade",
+    "hi": "घर का बना",
+    "mr": "घरी बनवलेले"
+  },
+  {
+    "en": "How close to your calorie and protein targets still counts as complete.",
+    "new_en": "How close to your calorie and protein targets counts as complete.",
+    "hi": "Calories और protein टारगेट के कितने करीब पहुंचने पर दिन पूरा माना जाए।",
+    "mr": "Calories आणि protein टार्गेटच्या किती जवळ पोहोचल्यावर दिवस पूर्ण समजायचा."
+  },
+  {
+    "en": "How it works",
+    "new_en": "How it works",
+    "hi": "यह कैसे काम करता है",
+    "mr": "हे कसे काम करते"
+  },
+  {
+    "en": "How it's worked out",
+    "new_en": "How it's worked out",
+    "hi": "यह कैसे कैलकुलेट होता है",
+    "mr": "हे कसे काढले जाते"
+  },
+  {
+    "en": "How much protein do I need to build muscle?",
+    "new_en": "How much protein do I need to build muscle?",
+    "hi": "Muscle बनाने के लिए कितना protein चाहिए?",
+    "mr": "Muscle बनवण्यासाठी किती protein हवे?"
+  },
+  {
+    "en": "How much the weight drops",
+    "new_en": "How much the weight drops",
+    "hi": "वज़न कितना कम होता है",
+    "mr": "वजन किती कमी होते"
+  },
+  {
+    "en": "How weights progress",
+    "new_en": "How weights progress",
+    "hi": "Weights कैसे बढ़ते हैं",
+    "mr": "Weights कसे वाढतात"
+  },
+  {
+    "en": "Hypertrophy",
+    "new_en": "Hypertrophy",
+    "hi": "Hypertrophy",
+    "mr": "Hypertrophy"
+  },
+  {
+    "en": "IDENTIFYING FOOD…",
+    "new_en": "Identifying food…",
+    "hi": "खाना पहचाना जा रहा है…",
+    "mr": "Food ओळखले जात आहे…"
+  },
+  {
+    "en": "INGREDIENTS",
+    "new_en": "Ingredients",
+    "hi": "सामग्री",
+    "mr": "साहित्य"
+  },
+  {
+    "en": "Identifying food…",
+    "new_en": "Identifying food…",
+    "hi": "खाना पहचाना जा रहा है…",
+    "mr": "Food ओळखले जात आहे…"
+  },
+  {
+    "en": "Idli",
+    "new_en": "Idli",
+    "hi": "Idli",
+    "mr": "Idli"
+  },
+  {
+    "en": "Ignored while maintaining.",
+    "new_en": "Ignored while maintaining.",
+    "hi": "Maintenance के दौरान अनदेखा किया जाता है।",
+    "mr": "Maintenance दरम्यान दुर्लक्षित केले जाते."
+  },
+  {
+    "en": "Import workouts",
+    "new_en": "Import workouts",
+    "hi": "Workouts इंपोर्ट करें",
+    "mr": "Workouts इम्पोर्ट करा"
+  },
+  {
+    "en": "Import workouts (Strong / Hevy CSV)",
+    "new_en": "Import workouts (Strong / Hevy CSV)",
+    "hi": "Workouts इंपोर्ट करें (Strong / Hevy CSV)",
+    "mr": "Workouts इम्पोर्ट करा (Strong / Hevy CSV)"
+  },
+  {
+    "en": "Imported workout",
+    "new_en": "Imported workout",
+    "hi": "इंपोर्ट किया गया workout",
+    "mr": "इम्पोर्ट केलेला workout"
+  },
+  {
+    "en": "Incline DB Press",
+    "new_en": "Incline DB Press",
+    "hi": "Incline DB Press",
+    "mr": "Incline DB Press"
+  },
+  {
+    "en": "Incline Dumbbell Press",
+    "new_en": "Incline Dumbbell Press",
+    "hi": "Incline Dumbbell Press",
+    "mr": "Incline Dumbbell Press"
+  },
+  {
+    "en": "Incline Treadmill Walk",
+    "new_en": "Incline Treadmill Walk",
+    "hi": "Incline Treadmill Walk",
+    "mr": "Incline Treadmill Walk"
+  },
+  {
+    "en": "Indian & global foods",
+    "new_en": "Indian & global foods",
+    "hi": "भारतीय और ग्लोबल फूड्स",
+    "mr": "भारतीय आणि ग्लोबल फूड्स"
+  },
+  {
+    "en": "Ingredients",
+    "new_en": "Ingredients",
+    "hi": "सामग्री",
+    "mr": "साहित्य"
+  },
+  {
+    "en": "Insights",
+    "new_en": "Insights",
+    "hi": "Insights",
+    "mr": "Insights"
+  },
+  {
+    "en": "Insights updated.",
+    "new_en": "Insights updated.",
+    "hi": "Insights अपडेट हो गए।",
+    "mr": "Insights अपडेट झाले."
+  },
+  {
+    "en": "Install",
+    "new_en": "Install",
+    "hi": "इंस्टॉल करें",
+    "mr": "इन्स्टॉल करा"
+  },
+  {
+    "en": "Install instructions",
+    "new_en": "Install instructions",
+    "hi": "इंस्टॉल करने के निर्देश",
+    "mr": "इन्स्टॉल करण्याच्या सूचना"
+  },
+  {
+    "en": "Intermediate",
+    "new_en": "Intermediate",
+    "hi": "Intermediate",
+    "mr": "Intermediate"
+  },
+  {
+    "en": "Is it okay to train on 5 hours of sleep?",
+    "new_en": "Is it okay to train on 5 hours of sleep?",
+    "hi": "क्या 5 घंटे की नींद के बाद workout करना ठीक है?",
+    "mr": "5 तास झोप घेऊन workout करणे योग्य आहे का?"
+  },
+  {
+    "en": "Is it really free?",
+    "new_en": "Is it really free?",
+    "hi": "क्या यह सच में फ्री है?",
+    "mr": "हे खरंच फ्री आहे का?"
+  },
+  {
+    "en": "Jammu and Kashmir",
+    "new_en": "Jammu and Kashmir",
+    "hi": "जम्मू और कश्मीर",
+    "mr": "जम्मू आणि काश्मीर"
+  },
+  {
+    "en": "Judge strength from the first set",
+    "new_en": "Judge strength from the first set",
+    "hi": "पहले set से ताकत का अंदाज़ा लगाएं",
+    "mr": "पहिल्या set वरून ताकदीचा अंदाज घ्या"
+  },
+  {
+    "en": "Just say it: “do roti aur dal”",
+    "new_en": "Just say it: “do roti aur dal”",
+    "hi": "बस बोलें: “do roti aur dal”",
+    "mr": "फक्त बोला: “do roti aur dal”"
+  },
+  {
+    "en": "KCAL",
+    "new_en": "KCAL",
+    "hi": "KCAL",
+    "mr": "KCAL"
+  },
+  {
+    "en": "KG",
+    "new_en": "KG",
+    "hi": "KG",
+    "mr": "KG"
+  },
+  {
+    "en": "KM",
+    "new_en": "KM",
+    "hi": "KM",
+    "mr": "KM"
+  },
+  {
+    "en": "Karnataka",
+    "new_en": "Karnataka",
+    "hi": "कर्नाटक",
+    "mr": "कर्नाटक"
+  },
+  {
+    "en": "Katori, roti, plate sizes built in",
+    "new_en": "Katori, roti, plate sizes built in",
+    "hi": "Katori, roti, plate साइज़ पहले से शामिल",
+    "mr": "Katori, roti, plate चे आकार इनबिल्ट आहेत"
+  },
+  {
+    "en": "Keep the screen awake during workouts",
+    "new_en": "Keep the screen awake during workouts",
+    "hi": "Workouts के दौरान स्क्रीन चालू रखें",
+    "mr": "Workouts दरम्यान स्क्रीन चालू ठेवा"
+  },
+  {
+    "en": "Keep your phone in your pocket, or log steps from the Today tile.",
+    "new_en": "Keep your phone in your pocket, or log steps from the Today tile.",
+    "hi": "Phone जेब में रखें, या Today टाइल से steps लॉग करें।",
+    "mr": "Phone खिशात ठेवा, किंवा Today टाइलवरून steps लॉग करा."
+  },
+  {
+    "en": "Kerala",
+    "new_en": "Kerala",
+    "hi": "केरल",
+    "mr": "केरळ"
+  },
+  {
+    "en": "Keys deleted.",
+    "new_en": "Keys deleted.",
+    "hi": "Keys डिलीट हो गईं।",
+    "mr": "Keys डिलीट झाल्या."
+  },
+  {
+    "en": "LB",
+    "new_en": "LB",
+    "hi": "LB",
+    "mr": "LB"
+  },
+  {
+    "en": "Lagoon",
+    "new_en": "Lagoon",
+    "hi": "Lagoon",
+    "mr": "Lagoon"
+  },
+  {
+    "en": "Landmine press",
+    "new_en": "Landmine press",
+    "hi": "Landmine press",
+    "mr": "Landmine press"
+  },
+  {
+    "en": "Last 12 months",
+    "new_en": "Last 12 months",
+    "hi": "पिछले 12 महीने",
+    "mr": "मागील 12 महिने"
+  },
+  {
+    "en": "Last volume",
+    "new_en": "Last volume",
+    "hi": "पिछला volume",
+    "mr": "मागील volume"
+  },
+  {
+    "en": "Lat Pulldown — Close Grip",
+    "new_en": "Lat Pulldown — Close Grip",
+    "hi": "Lat Pulldown — Close Grip",
+    "mr": "Lat Pulldown — Close Grip"
+  },
+  {
+    "en": "Lat Pulldown — Wide Grip",
+    "new_en": "Lat Pulldown — Wide Grip",
+    "hi": "Lat Pulldown — Wide Grip",
+    "mr": "Lat Pulldown — Wide Grip"
+  },
+  {
+    "en": "Later",
+    "new_en": "Later",
+    "hi": "बाद में",
+    "mr": "नंतर"
+  },
+  {
+    "en": "Later sets tire from fatigue and short rest",
+    "new_en": "Later sets tire from fatigue and short rest",
+    "hi": "थकान और कम rest से बाद के sets धीमे पड़ते हैं",
+    "mr": "थकवा आणि कमी rest मुळे नंतरचे sets थकून जातात"
+  },
+  {
+    "en": "Leg Curl / DB RDL",
+    "new_en": "Leg Curl / DB RDL",
+    "hi": "Leg Curl / DB RDL",
+    "mr": "Leg Curl / DB RDL"
+  },
+  {
+    "en": "Leg Extension",
+    "new_en": "Leg Extension",
+    "hi": "Leg Extension",
+    "mr": "Leg Extension"
+  },
+  {
+    "en": "Leg Press",
+    "new_en": "Leg Press",
+    "hi": "Leg Press",
+    "mr": "Leg Press"
+  },
+  {
+    "en": "Legs & Core",
+    "new_en": "Legs & Core",
+    "hi": "Legs & Core",
+    "mr": "Legs & Core"
+  },
+  {
+    "en": "Legs Strength",
+    "new_en": "Legs Strength",
+    "hi": "Legs Strength",
+    "mr": "Legs Strength"
+  },
+  {
+    "en": "Lift done late in the workout → don't punish it",
+    "new_en": "Lift done late in the workout → don't punish it",
+    "hi": "Workout के आखिर में की गई lift → स्कोर कम न करें",
+    "mr": "Workout च्या शेवटी केलेली lift → स्कोर कमी करू नका"
+  },
+  {
+    "en": "Lifts of the day that get a ramp",
+    "new_en": "Lifts of the day that get a ramp",
+    "hi": "आज की lifts जिनमें ramp-up मिलेगा",
+    "mr": "आजच्या lifts ज्यांना ramp-up मिळेल"
+  },
+  {
+    "en": "Light",
+    "new_en": "Light",
+    "hi": "Light",
+    "mr": "Light"
+  },
+  {
+    "en": "Lighter for more reps → strength kept, jump still capped",
+    "new_en": "Lighter for more reps → strength kept, jump still capped",
+    "hi": "हल्के वज़न पर ज़्यादा reps → ताकत बनी रही, बढ़ोतरी सीमित",
+    "mr": "हलक्या वजनाने जास्त reps → ताकद टिकून राहिली, वाढ मर्यादित"
+  },
+  {
+    "en": "Lilac",
+    "new_en": "Lilac",
+    "hi": "Lilac",
+    "mr": "Lilac"
+  },
+  {
+    "en": "List it all: barbells, dumbbells up to 30 kg, cable machine, leg press, pull-up bar…",
+    "new_en": "List it all: barbells, dumbbells up to 30 kg, cable machine, leg press, pull-up bar…",
+    "hi": "सब लिखें: barbells, 30 kg तक dumbbells, cable machine, leg press, pull-up bar…",
+    "mr": "सर्व लिहा: barbells, 30 kg पर्यंत dumbbells, cable machine, leg press, pull-up bar…"
+  },
+  {
+    "en": "Litti chokha",
+    "new_en": "Litti chokha",
+    "hi": "Litti chokha",
+    "mr": "Litti chokha"
+  },
+  {
+    "en": "Live camera not available",
+    "new_en": "Live camera not available",
+    "hi": "लाइव कैमरा उपलब्ध नहीं है",
+    "mr": "लाइव्ह कॅमेरा उपलब्ध नाही"
+  },
+  {
+    "en": "Live scanning isn't available on this device — type the number under the barcode.",
+    "new_en": "Live scanning isn't available on this device — type the number under the barcode.",
+    "hi": "इस डिवाइस पर लाइव स्कैनिंग उपलब्ध नहीं है — बारकोड के नीचे का नंबर टाइप करें।",
+    "mr": "या डिव्हाइसवर लाइव्ह स्कॅनिंग उपलब्ध नाही — बारकोडखालील नंबर टाइप करा."
+  },
+  {
+    "en": "Loading",
+    "new_en": "Loading",
+    "hi": "लोड हो रहा है",
+    "mr": "लोड होत आहे"
+  },
+  {
+    "en": "Loading 16,000 foods",
+    "new_en": "Loading 16,000 foods",
+    "hi": "16,000 फूड्स लोड हो रहे हैं",
+    "mr": "16,000 फूड्स लोड होत आहेत"
+  },
+  {
+    "en": "Loading FORGE",
+    "new_en": "Loading FORGE",
+    "hi": "FORGE लोड हो रहा है",
+    "mr": "FORGE लोड होत आहे"
+  },
+  {
+    "en": "Loading food database",
+    "new_en": "Loading food database",
+    "hi": "फूड डेटाबेस लोड हो रहा है",
+    "mr": "फूड डेटाबेस लोड होत आहे"
+  },
+  {
+    "en": "Loading library",
+    "new_en": "Loading library",
+    "hi": "लाइब्रेरी लोड हो रही है",
+    "mr": "लाइब्ररी लोड होत आहे"
+  },
+  {
+    "en": "Loading library…",
+    "new_en": "Loading library…",
+    "hi": "लाइब्रेरी लोड हो रही है…",
+    "mr": "लाइब्ररी लोड होत आहे…"
+  },
+  {
+    "en": "Loading your account",
+    "new_en": "Loading your account",
+    "hi": "आपका अकाउंट लोड हो रहा है",
+    "mr": "तुमचे अकाउंट लोड होत आहे"
+  },
+  {
+    "en": "Local device",
+    "new_en": "Local device",
+    "hi": "लोकल डिवाइस",
+    "mr": "लोकल डिव्हाइस"
+  },
+  {
+    "en": "Log a meal and your daily calories chart here.",
+    "new_en": "Log a meal and your daily calories chart here.",
+    "hi": "खाना लॉग करें और अपनी रोज़ाना की कैलोरी यहाँ देखें।",
+    "mr": "जेवण लॉग करा आणि रोजच्या कॅलरी येथे पहा."
+  },
+  {
+    "en": "Log a past workout",
+    "new_en": "Log a past workout",
+    "hi": "पिछला workout लॉग करें",
+    "mr": "मागील workout लॉग करा"
+  },
+  {
+    "en": "Log bodyweight",
+    "new_en": "Log bodyweight",
+    "hi": "Bodyweight लॉग करें",
+    "mr": "Bodyweight लॉग करा"
+  },
+  {
+    "en": "Log food",
+    "new_en": "Log food",
+    "hi": "खाना लॉग करें",
+    "mr": "जेवण लॉग करा"
+  },
+  {
+    "en": "Log food on 14 of the last 21 days and weigh in at least twice, a week apart, and FORGE will learn your real maintenance from your data.",
+    "new_en": "Log food for 14 of the last 21 days and weigh in at least twice a week apart. FORGE will learn your real maintenance from your data.",
+    "hi": "पिछले 21 में से 14 दिन खाना लॉग करें और एक हफ्ते के अंतर में कम से कम दो बार वज़न मापें। FORGE आपके डेटा से आपकी असली maintenance कैलोरी समझ लेगा।",
+    "mr": "मागील 21 पैकी 14 दिवस जेवण लॉग करा आणि आठवड्याच्या अंतराने किमान दोनदा वजन करा. FORGE तुमच्या डेटावरून तुमचे खरे maintenance कॅलरी ओळखेल."
+  },
+  {
+    "en": "Log food the way you actually eat it, like",
+    "new_en": "Log food the way you eat it, like",
+    "hi": "खाना वैसे ही लॉग करें जैसे आप खाते हैं, जैसे",
+    "mr": "तुम्ही जसे खाता तसेच जेवण लॉग करा, जसे की"
+  },
+  {
+    "en": "Log food, steps or a workout and each day gets a score.",
+    "new_en": "Log food, steps, or a workout to get a daily score.",
+    "hi": "खाना, steps या workout लॉग करें और हर दिन का स्कोर पाएं।",
+    "mr": "जेवण, steps किंवा workout लॉग करा आणि प्रत्येक दिवसाचा स्कोर मिळवा."
+  },
+  {
+    "en": "Log steps",
+    "new_en": "Log steps",
+    "hi": "Steps लॉग करें",
+    "mr": "Steps लॉग करा"
+  },
+  {
+    "en": "Log weight",
+    "new_en": "Log weight",
+    "hi": "वज़न लॉग करें",
+    "mr": "वजन लॉग करा"
+  },
+  {
+    "en": "Log your first meal",
+    "new_en": "Log your first meal",
+    "hi": "अपना पहला खाना लॉग करें",
+    "mr": "तुमचे पहिले जेवण लॉग करा"
+  },
+  {
+    "en": "Logged as",
+    "new_en": "Logged as",
+    "hi": "इस तरह लॉग किया गया",
+    "mr": "असे लॉग केले"
+  },
+  {
+    "en": "Logging for",
+    "new_en": "Logging for",
+    "hi": "इसके लिए लॉग कर रहे हैं",
+    "mr": "यासाठी लॉग करत आहे"
+  },
+  {
+    "en": "Look up",
+    "new_en": "Look up",
+    "hi": "सर्च करें",
+    "mr": "शोधा"
+  },
+  {
+    "en": "Looking up…",
+    "new_en": "Looking up…",
+    "hi": "सर्च हो रहा है…",
+    "mr": "शोधत आहे…"
+  },
+  {
+    "en": "Lookup failed. Check your connection.",
+    "new_en": "Lookup failed. Check your connection.",
+    "hi": "सर्च नहीं हो पाया। अपना इंटरनेट कनेक्शन जांचें।",
+    "mr": "शोध अयशस्वी. तुमचे इंटरनेट कनेक्शन तपासा."
+  },
+  {
+    "en": "Lose body fat",
+    "new_en": "Lose body fat",
+    "hi": "Body fat कम करें",
+    "mr": "Body fat कमी करा"
+  },
+  {
+    "en": "Lower Aesthetics",
+    "new_en": "Lower Aesthetics",
+    "hi": "Lower Aesthetics",
+    "mr": "Lower Aesthetics"
+  },
+  {
+    "en": "Lower Strength",
+    "new_en": "Lower Strength",
+    "hi": "Lower Strength",
+    "mr": "Lower Strength"
+  },
+  {
+    "en": "Lower back",
+    "new_en": "Lower back",
+    "hi": "Lower back",
+    "mr": "Lower back"
+  },
+  {
+    "en": "MIN",
+    "new_en": "MIN",
+    "hi": "MIN",
+    "mr": "MIN"
+  },
+  {
+    "en": "Macher jhol",
+    "new_en": "Macher jhol",
+    "hi": "Macher jhol",
+    "mr": "Macher jhol"
+  },
+  {
+    "en": "Made for Indian food.",
+    "new_en": "Made for Indian food.",
+    "hi": "खास भारतीय खाने के लिए बनाया गया।",
+    "mr": "खास भारतीय जेवणासाठी बनवले आहे."
+  },
+  {
+    "en": "Madhya Pradesh",
+    "new_en": "Madhya Pradesh",
+    "hi": "मध्य प्रदेश",
+    "mr": "मध्य प्रदेश"
+  },
+  {
+    "en": "Maharashtra",
+    "new_en": "Maharashtra",
+    "hi": "महाराष्ट्र",
+    "mr": "महाराष्ट्र"
+  },
+  {
+    "en": "Maintenance",
+    "new_en": "Maintenance",
+    "hi": "Maintenance",
+    "mr": "Maintenance"
+  },
+  {
+    "en": "Make active",
+    "new_en": "Make active",
+    "hi": "एक्टिव करें",
+    "mr": "अॅक्टिव्ह करा"
+  },
+  {
+    "en": "Make it yours",
+    "new_en": "Make it yours",
+    "hi": "इसे अपनी पसंद के अनुसार बदलें",
+    "mr": "हे तुमच्या आवडीनुसार बदला"
+  },
+  {
+    "en": "Make this my active plan",
+    "new_en": "Make this my active plan",
+    "hi": "इसे अपना एक्टिव प्लान बनाएं",
+    "mr": "हा माझा अॅक्टिव्ह प्लॅन बनवा"
+  },
+  {
+    "en": "Male",
+    "new_en": "Male",
+    "hi": "पुरुष",
+    "mr": "पुरुष"
+  },
+  {
+    "en": "Manage my Gemini keys",
+    "new_en": "Manage my Gemini keys",
+    "hi": "अपनी Gemini keys मैनेज करें",
+    "mr": "माझ्या Gemini keys मॅनेज करा"
+  },
+  {
+    "en": "Manual",
+    "new_en": "Manual",
+    "hi": "मैन्युअल",
+    "mr": "मॅन्युअल"
+  },
+  {
+    "en": "Masala chai",
+    "new_en": "Masala chai",
+    "hi": "Masala chai",
+    "mr": "Masala chai"
+  },
+  {
+    "en": "Masor tenga",
+    "new_en": "Masor tenga",
+    "hi": "Masor tenga",
+    "mr": "Masor tenga"
+  },
+  {
+    "en": "Meal configuration",
+    "new_en": "Meal settings",
+    "hi": "Meal सेटिंग्स",
+    "mr": "Meal सेटिंग्स"
+  },
+  {
+    "en": "Meal name",
+    "new_en": "Meal name",
+    "hi": "Meal का नाम",
+    "mr": "Meal चे नाव"
+  },
+  {
+    "en": "Meal time",
+    "new_en": "Meal time",
+    "hi": "Meal का समय",
+    "mr": "Meal ची वेळ"
+  },
+  {
+    "en": "Meals logged",
+    "new_en": "Meals logged",
+    "hi": "लॉग किए गए meals",
+    "mr": "लॉग केलेले meals"
+  },
+  {
+    "en": "Measurable strength progression and the first clear changes in the prioritised areas.",
+    "new_en": "Measurable strength gains and clear changes in target areas.",
+    "hi": "ताकत में साफ़ सुधार और चुने हुए हिस्सों में पहला स्पष्ट बदलाव।",
+    "mr": "ताकदीत मोजता येणारी वाढ आणि लक्षित भागांमध्ये स्पष्ट बदल."
+  },
+  {
+    "en": "Midnight (12:00 AM)",
+    "new_en": "Midnight (12:00 AM)",
+    "hi": "आधी रात (12:00 AM)",
+    "mr": "मध्यरात्र (12:00 AM)"
+  },
+  {
+    "en": "Milk, full fat",
+    "new_en": "Milk, full fat",
+    "hi": "Milk, full fat",
+    "mr": "Milk, full fat"
+  },
+  {
+    "en": "Milk, toned",
+    "new_en": "Milk, toned",
+    "hi": "Milk, toned",
+    "mr": "Milk, toned"
+  },
+  {
+    "en": "Millilitres",
+    "new_en": "Millilitres",
+    "hi": "मिलीलीटर",
+    "mr": "मिलीलीटर"
+  },
+  {
+    "en": "Minimum 2. Free at",
+    "new_en": "Minimum 2. Free at",
+    "hi": "न्यूनतम 2। इस पर मुफ़्त:",
+    "mr": "किमान 2. येथे मोफत:"
+  },
+  {
+    "en": "Missed reps at RPE 10 → don't add load",
+    "new_en": "Missed reps at RPE 10 → don't add load",
+    "hi": "RPE 10 पर छूटे reps → लोड न बढ़ाएं",
+    "mr": "RPE 10 वर चुकलेले reps → लोड वाढवू नका"
+  },
+  {
+    "en": "Mixed Vegetables",
+    "new_en": "Mixed vegetables",
+    "hi": "Mixed Vegetables",
+    "mr": "Mixed Vegetables"
+  }
+]

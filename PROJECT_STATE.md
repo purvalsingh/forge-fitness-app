@@ -34,7 +34,7 @@ Possible next steps: Play Store listing, native camera plugin, native local noti
 api/{ai,keys}.ts, api/_lib/guard.ts, src/lib/{catalog,training,exercises}.ts, src/screens/{Today,AddFood,Camera,Session}.tsx,
 scripts/{indian-states,rebuild-catalog,assemble,build-apk}.mjs, site/, vercel.json, capacitor.config.ts
 
-## LAST VALIDATION (2026-09-25)
+## LAST VALIDATION (2026-09-25, blueprint APK)
 tsc clean · 57 vitest tests pass · live smoke: landing/app/deep links 200, /api/* 401 unauthenticated,
 /sb health 200, APK served with the Android MIME type and a matching SHA-256 · demo-mode walkthrough in the browser
 (log food by serving, browse by state, live session with a rest timer).

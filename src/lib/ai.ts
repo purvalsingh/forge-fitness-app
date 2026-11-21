@@ -1,3 +1,4 @@
+import { currentLang } from './i18n'
 import { z } from 'zod'
 import { supabase } from './supabase'
 
@@ -66,18 +67,19 @@ export async function authHeaders(): Promise<Record<string, string>> {
   }
 }
 
+/** The server answers within ~22 s; the call is capped at 28 s and never retried (a retry doubles the wait). */
 async function call<T>(task: string, payload: unknown, schema: z.ZodType<T>, retry = true): Promise<T> {
   if (!supabase) throw new AIUnavailable('Sign in to use AI features.', 'unauthorized')
   let res: Response
   try {
-    res = await fetch(FN_URL, { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ task, payload }) })
-  } catch {
-    if (retry) return call(task, payload, schema, false)
+    res = await fetch(FN_URL, { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ task, payload, lang: currentLang() }), signal: AbortSignal.timeout(28_000) })
+  } catch (e) {
+    if ((e as Error)?.name === 'TimeoutError') throw new AIUnavailable('The AI took too long to answer. Try again, or log it manually.', 'ai_slow')
     throw new AIUnavailable('Could not reach the AI service. Check your connection.', 'offline')
   }
   const body = await res.json().catch(() => null) as { error?: string; message?: string } | null
   if (!res.ok) {
-    if ((res.status === 502 || res.status === 504) && retry) return call(task, payload, schema, false)
+    if (res.status >= 502 && res.status <= 504) throw new AIUnavailable('The AI took too long to answer. Try again, or log it manually.', 'ai_slow')
     throw new AIUnavailable(body?.message ?? `AI request failed (${res.status})`, body?.error ?? 'ai_unavailable')
   }
   const parsed = schema.safeParse(body)
@@ -93,8 +95,9 @@ export const aiKeys = {
     if (!r.ok) throw new AIUnavailable('Could not load your AI key status.')
     return r.json()
   },
-  async save(keys: string[]): Promise<{ count: number; hints: string[] }> {
-    const r = await fetch(`${API_BASE}/api/keys`, { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ keys }) })
+  /** add = merge into the saved keys instead of replacing them. */
+  async save(keys: string[], add = false): Promise<{ count: number; hints: string[] }> {
+    const r = await fetch(`${API_BASE}/api/keys`, { method: 'POST', headers: await authHeaders(), body: JSON.stringify(add ? { keys, mode: 'add' } : { keys }) })
     const body = await r.json().catch(() => ({}))
     if (!r.ok) throw new AIUnavailable(body?.message ?? 'Could not save your keys.', body?.error)
     return body
@@ -134,21 +137,24 @@ export type PhysiqueAnalysisResult = z.infer<typeof PhysiqueAnalysisSchema>
 
 export interface PhysiquePhoto { angle: string; mimeType: string; data: string }
 
+/** Lenient on cosmetics (long text trimmed, numbers clamped), strict on structure, so one long note can't sink a good plan. */
+const cut = (n: number) => z.string().transform(v => (v.length <= n ? v : v.slice(0, n - 1) + '…'))
+const clampInt = (lo: number, hi: number, d: number) => z.coerce.number().catch(d).transform(v => Math.min(hi, Math.max(lo, Math.round(v))))
 export const GeneratedPlan = z.object({
-  name: z.string().min(1).max(80),
-  rationale: z.string().min(1).max(800),
+  name: cut(80).pipe(z.string().min(1)),
+  rationale: cut(800).catch(''),
   days: z.array(z.object({
-    name: z.string().min(1).max(60),
-    focus: z.string().max(40),
+    name: cut(60).catch('Day'),
+    focus: cut(40).catch(''),
     exercises: z.array(z.object({
-      name: z.string().min(1).max(60),
-      sets: z.number().int().min(1).max(10),
-      reps: z.string().min(1).max(20),
-      rest_sec: z.number().int().min(20).max(600),
-      tempo: z.string().max(20).optional(),
-      note: z.string().max(160).optional(),
-    })).min(1).max(12),
-  })).min(1).max(7),
+      name: cut(60).pipe(z.string().min(1)),
+      sets: clampInt(1, 10, 3),
+      reps: cut(20).catch('8-12'),
+      rest_sec: clampInt(20, 600, 90),
+      tempo: cut(20).optional().catch(undefined),
+      note: cut(160).optional().catch(undefined),
+    })).transform(a => a.slice(0, 12)).refine(a => a.length > 0),
+  })).transform(d => d.slice(0, 7)).refine(a => a.length > 0),
 })
 export type GeneratedPlan = z.infer<typeof GeneratedPlan>
 

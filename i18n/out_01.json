@@ -1,0 +1,902 @@
+[
+  {
+    "en": "Auto (from RPE)",
+    "new_en": "Auto (from RPE)",
+    "hi": "Auto (RPE से)",
+    "mr": "Auto (RPE वरून)"
+  },
+  {
+    "en": "Avg calories",
+    "new_en": "Avg calories",
+    "hi": "औसत calories",
+    "mr": "सरासरी calories"
+  },
+  {
+    "en": "Avg daily steps",
+    "new_en": "Avg daily steps",
+    "hi": "औसत रोज़ाना steps",
+    "mr": "रोजचे सरासरी steps"
+  },
+  {
+    "en": "Avg protein",
+    "new_en": "Avg protein",
+    "hi": "औसत protein",
+    "mr": "सरासरी protein"
+  },
+  {
+    "en": "Avg steps",
+    "new_en": "Avg steps",
+    "hi": "औसत steps",
+    "mr": "सरासरी steps"
+  },
+  {
+    "en": "BW",
+    "new_en": "BW",
+    "hi": "BW",
+    "mr": "BW"
+  },
+  {
+    "en": "Back",
+    "new_en": "Back",
+    "hi": "Back",
+    "mr": "Back"
+  },
+  {
+    "en": "Back Squat",
+    "new_en": "Back Squat",
+    "hi": "Back Squat",
+    "mr": "Back Squat"
+  },
+  {
+    "en": "Back to the planned order",
+    "new_en": "Back to planned order",
+    "hi": "तय क्रम पर वापस जाएं",
+    "mr": "ठरविक क्रमावर परत जा"
+  },
+  {
+    "en": "Back to today",
+    "new_en": "Back to today",
+    "hi": "आज पर वापस जाएं",
+    "mr": "आजवर परत जा"
+  },
+  {
+    "en": "Back to today →",
+    "new_en": "Back to today →",
+    "hi": "आज पर वापस जाएं →",
+    "mr": "आजवर परत जा →"
+  },
+  {
+    "en": "Backend",
+    "new_en": "Backend",
+    "hi": "Backend",
+    "mr": "Backend"
+  },
+  {
+    "en": "Bar weight (kg)",
+    "new_en": "Bar weight (kg)",
+    "hi": "Bar weight (kg)",
+    "mr": "Bar weight (kg)"
+  },
+  {
+    "en": "Barbell Row",
+    "new_en": "Barbell Row",
+    "hi": "Barbell Row",
+    "mr": "Barbell Row"
+  },
+  {
+    "en": "Barbell step",
+    "new_en": "Barbell step",
+    "hi": "Barbell step",
+    "mr": "Barbell step"
+  },
+  {
+    "en": "Barcode number",
+    "new_en": "Barcode number",
+    "hi": "Barcode नंबर",
+    "mr": "Barcode नंबर"
+  },
+  {
+    "en": "Bebinca",
+    "new_en": "Bebinca",
+    "hi": "Bebinca",
+    "mr": "Bebinca"
+  },
+  {
+    "en": "Beginner",
+    "new_en": "Beginner",
+    "hi": "Beginner",
+    "mr": "Beginner"
+  },
+  {
+    "en": "Bench Press",
+    "new_en": "Bench Press",
+    "hi": "Bench Press",
+    "mr": "Bench Press"
+  },
+  {
+    "en": "Best",
+    "new_en": "Best",
+    "hi": "Best",
+    "mr": "Best"
+  },
+  {
+    "en": "Best estimated 1RM",
+    "new_en": "Best estimated 1RM",
+    "hi": "Best अनुमानित 1RM",
+    "mr": "Best अंदाजे 1RM"
+  },
+  {
+    "en": "Biceps",
+    "new_en": "Biceps",
+    "hi": "Biceps",
+    "mr": "Biceps"
+  },
+  {
+    "en": "Bigger portion",
+    "new_en": "Bigger portion",
+    "hi": "बड़ा portion",
+    "mr": "मोठा portion"
+  },
+  {
+    "en": "Biggest jump per session",
+    "new_en": "Biggest jump per session",
+    "hi": "प्रति session सबसे बड़ा jump",
+    "mr": "प्रत्येक session मध्ये सर्वात मोठा jump"
+  },
+  {
+    "en": "Bihar",
+    "new_en": "Bihar",
+    "hi": "Bihar",
+    "mr": "Bihar"
+  },
+  {
+    "en": "Body",
+    "new_en": "Body",
+    "hi": "Body",
+    "mr": "Body"
+  },
+  {
+    "en": "Body composition — estimate",
+    "new_en": "Body composition — estimate",
+    "hi": "Body composition — अनुमान",
+    "mr": "Body composition — अंदाज"
+  },
+  {
+    "en": "Body part",
+    "new_en": "Body part",
+    "hi": "Body part",
+    "mr": "Body part"
+  },
+  {
+    "en": "Bodyweight",
+    "new_en": "Bodyweight",
+    "hi": "Bodyweight",
+    "mr": "Bodyweight"
+  },
+  {
+    "en": "Bodyweight lift → progress reps, not load",
+    "new_en": "Bodyweight lift → progress reps, not load",
+    "hi": "Bodyweight lift → reps बढ़ाएं, वज़न नहीं",
+    "mr": "Bodyweight lift → reps वाढवा, वजन नाही"
+  },
+  {
+    "en": "Bodyweight reps",
+    "new_en": "Bodyweight reps",
+    "hi": "Bodyweight reps",
+    "mr": "Bodyweight reps"
+  },
+  {
+    "en": "Bottle (ml)",
+    "new_en": "Bottle (ml)",
+    "hi": "Bottle (ml)",
+    "mr": "Bottle (ml)"
+  },
+  {
+    "en": "Brand",
+    "new_en": "Brand",
+    "hi": "Brand",
+    "mr": "Brand"
+  },
+  {
+    "en": "Brand (optional)",
+    "new_en": "Brand (optional)",
+    "hi": "Brand (वैकल्पिक)",
+    "mr": "Brand (पर्यायी)"
+  },
+  {
+    "en": "Brown Bread",
+    "new_en": "Brown Bread",
+    "hi": "Brown Bread",
+    "mr": "Brown Bread"
+  },
+  {
+    "en": "Brown Rice, cooked",
+    "new_en": "Brown Rice, cooked",
+    "hi": "Brown Rice, cooked",
+    "mr": "Brown Rice, cooked"
+  },
+  {
+    "en": "Browse by state",
+    "new_en": "Browse by state",
+    "hi": "राज्य अनुसार देखें",
+    "mr": "राज्यानुसार पहा"
+  },
+  {
+    "en": "Build a different plan",
+    "new_en": "Build a different plan",
+    "hi": "दूसरा plan बनाएं",
+    "mr": "दुसरा plan बनवा"
+  },
+  {
+    "en": "Build a plan",
+    "new_en": "Build a plan",
+    "hi": "Plan बनाएं",
+    "mr": "Plan बनवा"
+  },
+  {
+    "en": "Build size",
+    "new_en": "Build size",
+    "hi": "Size बढ़ाएं",
+    "mr": "Size वाढवा"
+  },
+  {
+    "en": "Building your plan",
+    "new_en": "Building your plan",
+    "hi": "आपका plan बन रहा है",
+    "mr": "तुमचा plan तयार होत आहे"
+  },
+  {
+    "en": "Built-in foods come from USDA FoodData Central (public domain). Dishes marked as estimates are computed from their ingredients — edit any of them into your own copy if your recipe differs.",
+    "new_en": "Built-in foods come from USDA FoodData Central (public domain). Dishes marked as estimates are calculated from ingredients — edit any dish to match your recipe.",
+    "hi": "Built-in foods USDA FoodData Central (public domain) से हैं। अनुमानित dishes सामग्री के आधार पर तय हैं — अपनी recipe अनुसार बदलाव करके copy बना लें।",
+    "mr": "Built-in foods USDA FoodData Central (public domain) मधील आहेत. अंदाजे dishes घटकांवरून काढल्या आहेत — तुमच्या recipe नुसार बदलून स्वतःची copy बनवा."
+  },
+  {
+    "en": "Bulk selected but target weight is below current weight.",
+    "new_en": "Bulk selected but target weight is below current weight.",
+    "hi": "Bulk चुना है, लेकिन target weight मौजूदा वज़न से कम है।",
+    "mr": "Bulk निवडले आहे, पण target weight सध्याच्या वजनापेक्षा कमी आहे."
+  },
+  {
+    "en": "CARBS",
+    "new_en": "Carbs",
+    "hi": "Carbs",
+    "mr": "Carbs"
+  },
+  {
+    "en": "Cable Bicep Curl",
+    "new_en": "Cable Bicep Curl",
+    "hi": "Cable Bicep Curl",
+    "mr": "Cable Bicep Curl"
+  },
+  {
+    "en": "Cable Crunch",
+    "new_en": "Cable Crunch",
+    "hi": "Cable Crunch",
+    "mr": "Cable Crunch"
+  },
+  {
+    "en": "Cable Kickback",
+    "new_en": "Cable Kickback",
+    "hi": "Cable Kickback",
+    "mr": "Cable Kickback"
+  },
+  {
+    "en": "Cable Lateral Raise",
+    "new_en": "Cable Lateral Raise",
+    "hi": "Cable Lateral Raise",
+    "mr": "Cable Lateral Raise"
+  },
+  {
+    "en": "Cable Lower-Chest Fly",
+    "new_en": "Cable Lower-Chest Fly",
+    "hi": "Cable Lower-Chest Fly",
+    "mr": "Cable Lower-Chest Fly"
+  },
+  {
+    "en": "Cable Rear Delt Fly",
+    "new_en": "Cable Rear Delt Fly",
+    "hi": "Cable Rear Delt Fly",
+    "mr": "Cable Rear Delt Fly"
+  },
+  {
+    "en": "Cable Tricep Pushdown",
+    "new_en": "Cable Tricep Pushdown",
+    "hi": "Cable Tricep Pushdown",
+    "mr": "Cable Tricep Pushdown"
+  },
+  {
+    "en": "Calculate nutrition target →",
+    "new_en": "Calculate nutrition target →",
+    "hi": "Nutrition target कैलकुलेट करें →",
+    "mr": "Nutrition target मोजा →"
+  },
+  {
+    "en": "Calculated from your goal, weight and training frequency.",
+    "new_en": "Calculated from your goal, weight and training frequency.",
+    "hi": "आपके goal, वज़न और training frequency के आधार पर तय।",
+    "mr": "तुमचे goal, वजन आणि training frequency यांवरून ठरवले आहे."
+  },
+  {
+    "en": "Calculated roadmap",
+    "new_en": "Calculated roadmap",
+    "hi": "Calculated roadmap",
+    "mr": "Calculated roadmap"
+  },
+  {
+    "en": "Calculator",
+    "new_en": "Calculator",
+    "hi": "Calculator",
+    "mr": "Calculator"
+  },
+  {
+    "en": "Calf Raise",
+    "new_en": "Calf Raise",
+    "hi": "Calf Raise",
+    "mr": "Calf Raise"
+  },
+  {
+    "en": "Calorie target that learns from you",
+    "new_en": "Calorie target that learns from you",
+    "hi": "Calorie target जो आपके अनुसार ढलता है",
+    "mr": "Calorie target जे तुमच्यानुसार शिकते"
+  },
+  {
+    "en": "Calories",
+    "new_en": "Calories",
+    "hi": "Calories",
+    "mr": "Calories"
+  },
+  {
+    "en": "Calves",
+    "new_en": "Calves",
+    "hi": "Calves",
+    "mr": "Calves"
+  },
+  {
+    "en": "Camera permission denied",
+    "new_en": "Camera permission denied",
+    "hi": "Camera की अनुमति नहीं मिली",
+    "mr": "Camera परवानगी नाकारली"
+  },
+  {
+    "en": "Camera unavailable. Type the barcode number instead.",
+    "new_en": "Camera unavailable. Type the barcode number instead.",
+    "hi": "Camera उपलब्ध नहीं है। Barcode नंबर टाइप करें।",
+    "mr": "Camera उपलब्ध नाही. त्याऐवजी barcode नंबर टाइप करा."
+  },
+  {
+    "en": "Can I try it without signing up?",
+    "new_en": "Can I try it without signing up?",
+    "hi": "क्या मैं बिना sign up किए आज़मा सकता हूँ?",
+    "mr": "मी sign up न करता वापरून पाहू शकतो का?"
+  },
+  {
+    "en": "Cancel",
+    "new_en": "Cancel",
+    "hi": "रद्द करें",
+    "mr": "रद्द करा"
+  },
+  {
+    "en": "Captured meal",
+    "new_en": "Captured meal",
+    "hi": "Captured meal",
+    "mr": "Captured meal"
+  },
+  {
+    "en": "Carbs",
+    "new_en": "Carbs",
+    "hi": "Carbs",
+    "mr": "Carbs"
+  },
+  {
+    "en": "Carbs (g)",
+    "new_en": "Carbs (g)",
+    "hi": "Carbs (g)",
+    "mr": "Carbs (g)"
+  },
+  {
+    "en": "Cardio (time + distance)",
+    "new_en": "Cardio (time + distance)",
+    "hi": "Cardio (समय + दूरी)",
+    "mr": "Cardio (वेळ + अंतर)"
+  },
+  {
+    "en": "Category",
+    "new_en": "Category",
+    "hi": "Category",
+    "mr": "Category"
+  },
+  {
+    "en": "Change glass / bottle size",
+    "new_en": "Change glass / bottle size",
+    "hi": "Glass / bottle का साइज़ बदलें",
+    "mr": "Glass / bottle चा आकार बदला"
+  },
+  {
+    "en": "Changes since last check-in",
+    "new_en": "Changes since last check-in",
+    "hi": "पिछली check-in के बाद से बदलाव",
+    "mr": "मागील check-in नंतरचे बदल"
+  },
+  {
+    "en": "Changing or replacing a plan never touches your workout history — past sessions are stored separately.",
+    "new_en": "Changing a plan never affects workout history — past sessions are stored separately.",
+    "hi": "Plan बदलने से workout history पर कोई असर नहीं पड़ता — पिछले sessions अलग से सुरक्षित रहते हैं।",
+    "mr": "Plan बदलल्याने workout history वर परिणाम होत नाही — मागील sessions वेगळे सेव्ह केले जातात."
+  },
+  {
+    "en": "Check backends",
+    "new_en": "Check backends",
+    "hi": "Backends जांचें",
+    "mr": "Backends तपासा"
+  },
+  {
+    "en": "Check for updates",
+    "new_en": "Check for updates",
+    "hi": "Updates जांचें",
+    "mr": "Updates तपासा"
+  },
+  {
+    "en": "Check in with photos every few weeks. FORGE tracks observable changes over time and turns them into training priorities, a plan and a nutrition strategy — all of which you approve before anything changes.",
+    "new_en": "Check in with photos every few weeks. FORGE tracks changes over time to update your training priorities, plan, and nutrition strategy — and you approve every change.",
+    "hi": "हर कुछ हफ़्तों में फ़ोटो के साथ check in करें। FORGE बदलावों को track करके आपकी training priorities, plan और nutrition strategy तय करता है — और आपकी मंज़ूरी पर ही बदलाव लागू होते हैं।",
+    "mr": "दर काही आठवड्यांनी फोटोंसह check in करा. FORGE बदलांचा मागोवा घेऊन तुमचे training priorities, plan आणि nutrition strategy तयार करते — आणि तुमच्या मान्यतेनंतरच बदल लागू होतात."
+  },
+  {
+    "en": "Check the weights: the target does not match the selected goal mode, or is out of range.",
+    "new_en": "Check weights: target does not match your goal or is out of range.",
+    "hi": "वज़न जांचें: target आपके goal से मेल नहीं खाता या सीमा से बाहर है।",
+    "mr": "वजन तपासा: target तुमच्या goal शी जुळत नाही किंवा मर्यादेबाहेर आहे."
+  },
+  {
+    "en": "Check your email to confirm the account, then sign in.",
+    "new_en": "Check your email to confirm the account, then sign in.",
+    "hi": "Account कन्फर्म करने के लिए अपना ईमेल देखें, फिर sign in करें।",
+    "mr": "Account कन्फर्म करण्यासाठी ईमेल तपासा, नंतर sign in करा."
+  },
+  {
+    "en": "Checking keys with Google…",
+    "new_en": "Checking keys with Google…",
+    "hi": "Google से keys जांची जा रही हैं…",
+    "mr": "Google सह keys तपासत आहे…"
+  },
+  {
+    "en": "Checking session",
+    "new_en": "Checking session",
+    "hi": "Session जांची जा रही है",
+    "mr": "Session तपासत आहे"
+  },
+  {
+    "en": "Checking with Google…",
+    "new_en": "Checking with Google…",
+    "hi": "Google से जांच जारी है…",
+    "mr": "Google सह तपासत आहे…"
+  },
+  {
+    "en": "Checking…",
+    "new_en": "Checking…",
+    "hi": "जांच जारी है…",
+    "mr": "तपासत आहे…"
+  },
+  {
+    "en": "Cheese Slice",
+    "new_en": "Cheese Slice",
+    "hi": "Cheese Slice",
+    "mr": "Cheese Slice"
+  },
+  {
+    "en": "Chest",
+    "new_en": "Chest",
+    "hi": "Chest",
+    "mr": "Chest"
+  },
+  {
+    "en": "Chicken Breast",
+    "new_en": "Chicken Breast",
+    "hi": "Chicken Breast",
+    "mr": "Chicken Breast"
+  },
+  {
+    "en": "Chicken Rice Bowl",
+    "new_en": "Chicken Rice Bowl",
+    "hi": "Chicken Rice Bowl",
+    "mr": "Chicken Rice Bowl"
+  },
+  {
+    "en": "Chole bhature",
+    "new_en": "Chole bhature",
+    "hi": "Chole bhature",
+    "mr": "Chole bhature"
+  },
+  {
+    "en": "Citrus",
+    "new_en": "Citrus",
+    "hi": "Citrus",
+    "mr": "Citrus"
+  },
+  {
+    "en": "Clear",
+    "new_en": "Clear",
+    "hi": "साफ़ करें",
+    "mr": "साफ करा"
+  },
+  {
+    "en": "Coach",
+    "new_en": "Coach",
+    "hi": "Coach",
+    "mr": "Coach"
+  },
+  {
+    "en": "Coach & training settings",
+    "new_en": "Coach & training settings",
+    "hi": "Coach और training सेटिंग्स",
+    "mr": "Coach आणि training सेटिंग्ज"
+  },
+  {
+    "en": "Coach check",
+    "new_en": "Coach check",
+    "hi": "Coach check",
+    "mr": "Coach check"
+  },
+  {
+    "en": "Coach is thinking…",
+    "new_en": "Coach is thinking…",
+    "hi": "Coach सोच रहा है…",
+    "mr": "Coach विचार करत आहे…"
+  },
+  {
+    "en": "Coach is unavailable right now.",
+    "new_en": "Coach is unavailable right now.",
+    "hi": "Coach अभी उपलब्ध नहीं है।",
+    "mr": "Coach सध्या उपलब्ध नाही."
+  },
+  {
+    "en": "Coach requires an account with Gemini keys.",
+    "new_en": "Coach requires an account with Gemini keys.",
+    "hi": "Coach के लिए Gemini keys वाला account चाहिए।",
+    "mr": "Coach साठी Gemini keys असलेले account आवश्यक आहे."
+  },
+  {
+    "en": "Code scanner unavailable. Type the barcode number below.",
+    "new_en": "Scanner unavailable. Type the barcode number below.",
+    "hi": "Scanner उपलब्ध नहीं है। नीचे barcode नंबर टाइप करें।",
+    "mr": "Scanner उपलब्ध नाही. खाली barcode नंबर टाइप करा."
+  },
+  {
+    "en": "Complete set",
+    "new_en": "Complete set",
+    "hi": "Set पूरा करें",
+    "mr": "Set पूर्ण करा"
+  },
+  {
+    "en": "Confirm password",
+    "new_en": "Confirm password",
+    "hi": "Password कन्फर्म करें",
+    "mr": "Password कन्फर्म करा"
+  },
+  {
+    "en": "Connection",
+    "new_en": "Connection",
+    "hi": "Connection",
+    "mr": "Connection"
+  },
+  {
+    "en": "Consistency",
+    "new_en": "Consistency",
+    "hi": "Consistency",
+    "mr": "Consistency"
+  },
+  {
+    "en": "Consistent progressive overload across all major movements",
+    "new_en": "Consistent progressive overload across all major movements",
+    "hi": "सभी मुख्य movements पर लगातार progressive overload",
+    "mr": "सर्व मुख्य movements वर सातत्यपूर्ण progressive overload"
+  },
+  {
+    "en": "Continue",
+    "new_en": "Continue",
+    "hi": "आगे बढ़ें",
+    "mr": "पुढे जा"
+  },
+  {
+    "en": "Continue without account",
+    "new_en": "Continue without account",
+    "hi": "Account के बिना आगे बढ़ें",
+    "mr": "Account शिवाय पुढे जा"
+  },
+  {
+    "en": "Continue workout",
+    "new_en": "Continue workout",
+    "hi": "Workout जारी रखें",
+    "mr": "Workout चालू ठेवा"
+  },
+  {
+    "en": "Controlled surplus so gains skew toward muscle rather than fat.",
+    "new_en": "Controlled surplus so gains build muscle rather than fat.",
+    "hi": "Controlled surplus ताकि fat के बजाय muscle बढ़े।",
+    "mr": "Controlled surplus जेणेकरून fat ऐवजी muscle वाढेल."
+  },
+  {
+    "en": "Cooked in ghee",
+    "new_en": "Cooked in ghee",
+    "hi": "Ghee में बना",
+    "mr": "Ghee मध्ये बनवलेले"
+  },
+  {
+    "en": "Could not analyse that. Enter it manually.",
+    "new_en": "Could not analyze that. Enter it manually.",
+    "hi": "Analyze नहीं हो सका। इसे manually दर्ज करें।",
+    "mr": "Analyze करता आले नाही. हे manually टाका."
+  },
+  {
+    "en": "Could not analyse those photos. Showing the calculated roadmap instead.",
+    "new_en": "Could not analyze photos. Showing calculated roadmap instead.",
+    "hi": "फ़ोटो analyze नहीं हो सकीं। Calculated roadmap दिखाया जा रहा है।",
+    "mr": "फोटो analyze करता आले नाहीत. Calculated roadmap दाखवत आहोत."
+  },
+  {
+    "en": "Could not decode that image.",
+    "new_en": "Could not decode that image.",
+    "hi": "फ़ोटो decode नहीं हो सकी।",
+    "mr": "फोटो decode करता आला नाही."
+  },
+  {
+    "en": "Could not delete keys.",
+    "new_en": "Could not delete keys.",
+    "hi": "Keys हटाई नहीं जा सकीं।",
+    "mr": "Keys डिलीट करता आल्या नाहीत."
+  },
+  {
+    "en": "Could not generate insights right now.",
+    "new_en": "Could not generate insights right now.",
+    "hi": "अभी insights तैयार नहीं हो सके।",
+    "mr": "सध्या insights तयार करता आले नाहीत."
+  },
+  {
+    "en": "Could not load the food database. Your own foods still work.",
+    "new_en": "Could not load food database. Your own foods still work.",
+    "hi": "Food database लोड नहीं हो सका। आपके foods काम करते रहेंगे।",
+    "mr": "Food database लोड करता आला नाही. तुमचे foods सुरू राहतील."
+  },
+  {
+    "en": "Could not load your data.",
+    "new_en": "Could not load your data.",
+    "hi": "आपका data लोड नहीं हो सका।",
+    "mr": "तुमचा data लोड करता आला नाही."
+  },
+  {
+    "en": "Could not reach FORGE. Check your connection.",
+    "new_en": "Could not reach FORGE. Check your connection.",
+    "hi": "FORGE से कनेक्ट नहीं हो सका। Connection जांचें।",
+    "mr": "FORGE शी कनेक्ट होता आले नाही. Connection तपासा."
+  },
+  {
+    "en": "Could not read that file.",
+    "new_en": "Could not read that file.",
+    "hi": "फ़ाइल पढ़ी नहीं जा सकी।",
+    "mr": "फाइल वाचता आली नाही."
+  },
+  {
+    "en": "Could not read that image.",
+    "new_en": "Could not read that image.",
+    "hi": "फ़ोटो पढ़ी नहीं जा सकी।",
+    "mr": "फोटो वाचता आला नाही."
+  },
+  {
+    "en": "Could not read that image. Try another photo.",
+    "new_en": "Could not read image. Try another photo.",
+    "hi": "फ़ोटो पढ़ी नहीं जा सकी। दूसरी फ़ोटो आज़माएं।",
+    "mr": "फोटो वाचता आला नाही. दुसरा फोटो वापरून पहा."
+  },
+  {
+    "en": "Could not remove that key.",
+    "new_en": "Could not remove that key.",
+    "hi": "Key हटाई नहीं जा सकी।",
+    "mr": "Key काढता आली नाही."
+  },
+  {
+    "en": "Could not save keys.",
+    "new_en": "Could not save keys.",
+    "hi": "Keys सेव नहीं हो सकीं।",
+    "mr": "Keys सेव्ह करता आल्या नाहीत."
+  },
+  {
+    "en": "Couldn't match those foods. Try simpler names, or use Search.",
+    "new_en": "Couldn't match those foods. Try simpler names or use search.",
+    "hi": "Foods मैच नहीं हुए। आसान नाम आज़माएं या Search इस्तेमाल करें।",
+    "mr": "Foods जुळले नाहीत. सोपी नावे वापरा किंवा Search वापरा."
+  },
+  {
+    "en": "Count steps automatically",
+    "new_en": "Count steps automatically",
+    "hi": "Steps अपने आप गिनें",
+    "mr": "Steps आपोआप मोजा"
+  },
+  {
+    "en": "Create a plan, or train freestyle and pick exercises as you go.",
+    "new_en": "Create a plan, or train freestyle and pick exercises as you go.",
+    "hi": "Plan बनाएं, या freestyle ट्रेनिंग करके मनमुताबिक exercises चुनें।",
+    "mr": "Plan बनवा, किंवा freestyle ट्रेनिंग करून हव्या त्या exercises निवडा."
+  },
+  {
+    "en": "Create account",
+    "new_en": "Create account",
+    "hi": "Account बनाएं",
+    "mr": "Account बनवा"
+  },
+  {
+    "en": "Create template plan",
+    "new_en": "Create template plan",
+    "hi": "Template plan बनाएं",
+    "mr": "Template plan बनवा"
+  },
+  {
+    "en": "Creating account",
+    "new_en": "Creating account",
+    "hi": "Account बन रहा है",
+    "mr": "Account तयार होत आहे"
+  },
+  {
+    "en": "Current",
+    "new_en": "Current",
+    "hi": "मौजूदा",
+    "mr": "सध्याचे"
+  },
+  {
+    "en": "Current weight (kg)",
+    "new_en": "Current weight (kg)",
+    "hi": "मौजूदा वज़न (kg)",
+    "mr": "सध्याचे वजन (kg)"
+  },
+  {
+    "en": "Curry Sauce",
+    "new_en": "Curry Sauce",
+    "hi": "Curry Sauce",
+    "mr": "Curry Sauce"
+  },
+  {
+    "en": "Custom",
+    "new_en": "Custom",
+    "hi": "Custom",
+    "mr": "Custom"
+  },
+  {
+    "en": "Cut selected but target weight is above current weight.",
+    "new_en": "Cut selected but target weight is above current weight.",
+    "hi": "Cut चुना है, लेकिन target weight मौजूदा वज़न से ज़्यादा है।",
+    "mr": "Cut निवडले आहे, पण target weight सध्याच्या वजनापेक्षा जास्त आहे."
+  },
+  {
+    "en": "Cut · Maintain · Bulk",
+    "new_en": "Cut · Maintain · Bulk",
+    "hi": "Cut · Maintain · Bulk",
+    "mr": "Cut · Maintain · Bulk"
+  },
+  {
+    "en": "DB Bicep Curl",
+    "new_en": "DB Bicep Curl",
+    "hi": "DB Bicep Curl",
+    "mr": "DB Bicep Curl"
+  },
+  {
+    "en": "DB Hammer Curl",
+    "new_en": "DB Hammer Curl",
+    "hi": "DB Hammer Curl",
+    "mr": "DB Hammer Curl"
+  },
+  {
+    "en": "DB Hip Thrust",
+    "new_en": "DB Hip Thrust",
+    "hi": "DB Hip Thrust",
+    "mr": "DB Hip Thrust"
+  },
+  {
+    "en": "DB Reverse Lunge",
+    "new_en": "DB Reverse Lunge",
+    "hi": "DB Reverse Lunge",
+    "mr": "DB Reverse Lunge"
+  },
+  {
+    "en": "DB Shoulder Press",
+    "new_en": "DB Shoulder Press",
+    "hi": "DB Shoulder Press",
+    "mr": "DB Shoulder Press"
+  },
+  {
+    "en": "DETAILS →",
+    "new_en": "Details →",
+    "hi": "Details →",
+    "mr": "Details →"
+  },
+  {
+    "en": "Dadra and Nagar Haveli and Daman and Diu",
+    "new_en": "Dadra and Nagar Haveli and Daman and Diu",
+    "hi": "Dadra and Nagar Haveli and Daman and Diu",
+    "mr": "Dadra and Nagar Haveli and Daman and Diu"
+  },
+  {
+    "en": "Daily step goal",
+    "new_en": "Daily step goal",
+    "hi": "रोज़ाना step goal",
+    "mr": "रोजचे step goal"
+  },
+  {
+    "en": "Daily target",
+    "new_en": "Daily target",
+    "hi": "रोज़ाना target",
+    "mr": "रोजचे target"
+  },
+  {
+    "en": "Dal baati",
+    "new_en": "Dal baati",
+    "hi": "Dal baati",
+    "mr": "Dal baati"
+  },
+  {
+    "en": "Dal, cooked",
+    "new_en": "Dal, cooked",
+    "hi": "Dal, cooked",
+    "mr": "Dal, cooked"
+  },
+  {
+    "en": "Dark",
+    "new_en": "Dark",
+    "hi": "Dark",
+    "mr": "Dark"
+  },
+  {
+    "en": "Dark Chocolate 70%",
+    "new_en": "Dark Chocolate 70%",
+    "hi": "Dark Chocolate 70%",
+    "mr": "Dark Chocolate 70%"
+  },
+  {
+    "en": "Data",
+    "new_en": "Data",
+    "hi": "Data",
+    "mr": "Data"
+  },
+  {
+    "en": "Data & backup",
+    "new_en": "Data & backup",
+    "hi": "Data और backup",
+    "mr": "Data आणि backup"
+  },
+  {
+    "en": "Data, backup & import",
+    "new_en": "Data, backup & import",
+    "hi": "Data, backup और import",
+    "mr": "Data, backup आणि import"
+  },
+  {
+    "en": "Data: local mode",
+    "new_en": "Data: local mode",
+    "hi": "Data: local mode",
+    "mr": "Data: local mode"
+  },
+  {
+    "en": "Date",
+    "new_en": "Date",
+    "hi": "तारीख",
+    "mr": "तारीख"
+  },
+  {
+    "en": "Day & training",
+    "new_en": "Day & training",
+    "hi": "दिन और training",
+    "mr": "दिवस आणि training"
+  },
+  {
+    "en": "Day 1",
+    "new_en": "Day 1",
+    "hi": "Day 1",
+    "mr": "Day 1"
+  },
+  {
+    "en": "Day 1 — Upper Strength",
+    "new_en": "Day 1 — Upper Strength",
+    "hi": "Day 1 — Upper Strength",
+    "mr": "Day 1 — Upper Strength"
+  }
+]

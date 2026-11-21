@@ -1,0 +1,902 @@
+[
+  {
+    "en": "%,d foods",
+    "new_en": "%,d foods",
+    "hi": "%,d foods",
+    "mr": "%,d foods"
+  },
+  {
+    "en": "('ai_insights'), db.list",
+    "new_en": "('ai_insights'), db.list",
+    "hi": "('ai_insights'), db.list",
+    "mr": "('ai_insights'), db.list"
+  },
+  {
+    "en": "('food_logs'), db.list",
+    "new_en": "('food_logs'), db.list",
+    "hi": "('food_logs'), db.list",
+    "mr": "('food_logs'), db.list"
+  },
+  {
+    "en": "('foods'), db.list",
+    "new_en": "('foods'), db.list",
+    "hi": "('foods'), db.list",
+    "mr": "('foods'), db.list"
+  },
+  {
+    "en": "('goals'), db.list",
+    "new_en": "('goals'), db.list",
+    "hi": "('goals'), db.list",
+    "mr": "('goals'), db.list"
+  },
+  {
+    "en": "('meal_types'), db.list",
+    "new_en": "('meal_types'), db.list",
+    "hi": "('meal_types'), db.list",
+    "mr": "('meal_types'), db.list"
+  },
+  {
+    "en": "('nutrition_targets'), db.list",
+    "new_en": "('nutrition_targets'), db.list",
+    "hi": "('nutrition_targets'), db.list",
+    "mr": "('nutrition_targets'), db.list"
+  },
+  {
+    "en": "('physique_checkins'), optional(db.list",
+    "new_en": "('physique_checkins'), optional(db.list",
+    "hi": "('physique_checkins'), optional(db.list",
+    "mr": "('physique_checkins'), optional(db.list"
+  },
+  {
+    "en": "('recipes'), db.list",
+    "new_en": "('recipes'), db.list",
+    "hi": "('recipes'), db.list",
+    "mr": "('recipes'), db.list"
+  },
+  {
+    "en": "('settings'), db.list",
+    "new_en": "('settings'), db.list",
+    "hi": "('settings'), db.list",
+    "mr": "('settings'), db.list"
+  },
+  {
+    "en": "('step_logs'), db.list",
+    "new_en": "('step_logs'), db.list",
+    "hi": "('step_logs'), db.list",
+    "mr": "('step_logs'), db.list"
+  },
+  {
+    "en": "('water_logs')), optional(db.list",
+    "new_en": "('water_logs')), optional(db.list",
+    "hi": "('water_logs')), optional(db.list",
+    "mr": "('water_logs')), optional(db.list"
+  },
+  {
+    "en": "('weight_logs'), db.list",
+    "new_en": "('weight_logs'), db.list",
+    "hi": "('weight_logs'), db.list",
+    "mr": "('weight_logs'), db.list"
+  },
+  {
+    "en": "('workout_plans'), db.list",
+    "new_en": "('workout_plans'), db.list",
+    "hi": "('workout_plans'), db.list",
+    "mr": "('workout_plans'), db.list"
+  },
+  {
+    "en": "('workout_sessions'), db.list",
+    "new_en": "('workout_sessions'), db.list",
+    "hi": "('workout_sessions'), db.list",
+    "mr": "('workout_sessions'), db.list"
+  },
+  {
+    "en": "(p: Promise",
+    "new_en": "(p: Promise",
+    "hi": "(p: Promise",
+    "mr": "(p: Promise"
+  },
+  {
+    "en": "+ Add",
+    "new_en": "+ Add",
+    "hi": "+ जोड़ें",
+    "mr": "+ जोडा"
+  },
+  {
+    "en": "+ Add another key",
+    "new_en": "+ Add another key",
+    "hi": "+ दूसरी key जोड़ें",
+    "mr": "+ आणखी एक key जोडा"
+  },
+  {
+    "en": "+ Add day",
+    "new_en": "+ Add day",
+    "hi": "+ दिन जोड़ें",
+    "mr": "+ दिवस जोडा"
+  },
+  {
+    "en": "+ Add exercise",
+    "new_en": "+ Add exercise",
+    "hi": "+ Exercise जोड़ें",
+    "mr": "+ Exercise जोडा"
+  },
+  {
+    "en": "+ Add food",
+    "new_en": "+ Add food",
+    "hi": "+ Food जोड़ें",
+    "mr": "+ Food जोडा"
+  },
+  {
+    "en": "+ Add meal",
+    "new_en": "+ Add meal",
+    "hi": "+ Meal जोड़ें",
+    "mr": "+ Meal जोडा"
+  },
+  {
+    "en": "+ Add set",
+    "new_en": "+ Add set",
+    "hi": "+ Set जोड़ें",
+    "mr": "+ Set जोडा"
+  },
+  {
+    "en": "+ Mine",
+    "new_en": "+ Mine",
+    "hi": "+ खुद की",
+    "mr": "+ स्वतःची"
+  },
+  {
+    "en": "+ New quick meal",
+    "new_en": "+ New quick meal",
+    "hi": "+ नया quick meal",
+    "mr": "+ नवीन quick meal"
+  },
+  {
+    "en": "+20–25 kg",
+    "new_en": "+20–25 kg",
+    "hi": "+20–25 kg",
+    "mr": "+20–25 kg"
+  },
+  {
+    "en": "+250 ml and more",
+    "new_en": "+250 ml and more",
+    "hi": "+250 ml और ज़्यादा",
+    "mr": "+250 ml आणि अधिक"
+  },
+  {
+    "en": "0 hides fasting",
+    "new_en": "0 hides fasting",
+    "hi": "0 से fasting छिप जाएगी",
+    "mr": "0 केल्यास fasting लपवले जाईल"
+  },
+  {
+    "en": "0 hides the fasting card.",
+    "new_en": "0 hides the fasting card.",
+    "hi": "0 से fasting card छिप जाएगा.",
+    "mr": "0 केल्यास fasting card दिसणार नाही."
+  },
+  {
+    "en": "0–3 months",
+    "new_en": "0–3 months",
+    "hi": "0–3 महीने",
+    "mr": "0–3 महिने"
+  },
+  {
+    "en": "1 cup · 90 kcal",
+    "new_en": "1 cup · 90 kcal",
+    "hi": "1 cup · 90 kcal",
+    "mr": "1 cup · 90 kcal"
+  },
+  {
+    "en": "1 katori dal",
+    "new_en": "1 katori dal",
+    "hi": "1 katori dal",
+    "mr": "1 katori dal"
+  },
+  {
+    "en": "1 piece / 1 plate",
+    "new_en": "1 piece / 1 plate",
+    "hi": "1 piece / 1 plate",
+    "mr": "1 piece / 1 plate"
+  },
+  {
+    "en": "1 plate · 270 kcal",
+    "new_en": "1 plate · 270 kcal",
+    "hi": "1 plate · 270 kcal",
+    "mr": "1 plate · 270 kcal"
+  },
+  {
+    "en": "1 plate · 520 kcal",
+    "new_en": "1 plate · 520 kcal",
+    "hi": "1 plate · 520 kcal",
+    "mr": "1 plate · 520 kcal"
+  },
+  {
+    "en": "1 serving",
+    "new_en": "1 serving",
+    "hi": "1 serving",
+    "mr": "1 serving"
+  },
+  {
+    "en": "1 week",
+    "new_en": "1 week",
+    "hi": "1 हफ़्ता",
+    "mr": "1 आठवडा"
+  },
+  {
+    "en": "1,324 exercises",
+    "new_en": "1,324 exercises",
+    "hi": "1,324 exercises",
+    "mr": "1,324 exercises"
+  },
+  {
+    "en": "1.5px solid transparent",
+    "new_en": "1.5px solid transparent",
+    "hi": "1.5px solid transparent",
+    "mr": "1.5px solid transparent"
+  },
+  {
+    "en": "10 / leg",
+    "new_en": "10 / leg",
+    "hi": "10 / leg",
+    "mr": "10 / leg"
+  },
+  {
+    "en": "100 kg day:",
+    "new_en": "100 kg day:",
+    "hi": "100 kg day:",
+    "mr": "100 kg day:"
+  },
+  {
+    "en": "12+ months",
+    "new_en": "12+ months",
+    "hi": "12+ महीने",
+    "mr": "12+ महिने"
+  },
+  {
+    "en": "14–18 kg / hand",
+    "new_en": "14–18 kg / hand",
+    "hi": "14–18 kg / hand",
+    "mr": "14–18 kg / hand"
+  },
+  {
+    "en": "2 roti, 1 katori dal tadka, 1 vada pav",
+    "new_en": "2 roti, 1 katori dal tadka, 1 vada pav",
+    "hi": "2 roti, 1 katori dal tadka, 1 vada pav",
+    "mr": "2 roti, 1 katori dal tadka, 1 vada pav"
+  },
+  {
+    "en": "2 rotis",
+    "new_en": "2 rotis",
+    "hi": "2 rotis",
+    "mr": "2 rotis"
+  },
+  {
+    "en": "3 months",
+    "new_en": "3 months",
+    "hi": "3 महीने",
+    "mr": "3 महिने"
+  },
+  {
+    "en": "3–6 months",
+    "new_en": "3–6 months",
+    "hi": "3–6 महीने",
+    "mr": "3–6 महिने"
+  },
+  {
+    "en": "4 Eggs + Toast",
+    "new_en": "4 eggs + toast",
+    "hi": "4 eggs + toast",
+    "mr": "4 eggs + toast"
+  },
+  {
+    "en": "4 weeks",
+    "new_en": "4 weeks",
+    "hi": "4 हफ़्ते",
+    "mr": "4 आठवडे"
+  },
+  {
+    "en": "400 || g.target_weight_kg",
+    "new_en": "400 || g.target_weight_kg",
+    "hi": "400 || g.target_weight_kg",
+    "mr": "400 || g.target_weight_kg"
+  },
+  {
+    "en": "45 sec",
+    "new_en": "45 sec",
+    "hi": "45 sec",
+    "mr": "45 sec"
+  },
+  {
+    "en": "58–60 kg",
+    "new_en": "58–60 kg",
+    "hi": "58–60 kg",
+    "mr": "58–60 kg"
+  },
+  {
+    "en": "6–12 months",
+    "new_en": "6–12 months",
+    "hi": "6–12 महीने",
+    "mr": "6–12 महिने"
+  },
+  {
+    "en": "70–75 kg, build to 85+",
+    "new_en": "70–75 kg, build to 85+",
+    "hi": "70–75 kg, 85+ तक बढ़ाएं",
+    "mr": "70–75 kg, 85+ पर्यंत वाढवा"
+  },
+  {
+    "en": "70–80 kg",
+    "new_en": "70–80 kg",
+    "hi": "70–80 kg",
+    "mr": "70–80 kg"
+  },
+  {
+    "en": "8 training situations · 2 rounds",
+    "new_en": "8 training situations · 2 rounds",
+    "hi": "8 ट्रेनिंग situations · 2 rounds",
+    "mr": "8 ट्रेनिंग situations · 2 rounds"
+  },
+  {
+    "en": "A newer version is ready. It keeps all your data.",
+    "new_en": "A newer version is ready. It keeps all your data.",
+    "hi": "नया version तैयार है. आपका सारा data सुरक्षित रहेगा.",
+    "mr": "नवीन version तयार आहे. तुमचा सर्व data सुरक्षित राहील."
+  },
+  {
+    "en": "A reference is an aspirational visual direction, not a promised outcome — skeletal structure, insertions and proportions differ between people. FORGE translates it into training objectives.",
+    "new_en": "A reference is a visual target, not a guaranteed result — bone structure, insertions, and proportions differ. FORGE turns it into training goals.",
+    "hi": "रेफ़रेंस सिर्फ़ एक विज़ुअल लक्ष्य है, गारंटी नहीं — हर किसी का बॉडी स्ट्रक्चर, insertions और अनुपात अलग होते हैं. FORGE इसे ट्रेनिंग लक्ष्यों में बदलता है.",
+    "mr": "रेफरन्स ही फक्त एक व्हिज्युअल दिशा आहे, खात्रीशीर निकाल नाही — प्रत्येकाचे बॉडी स्ट्रक्चर, insertions आणि प्रमाण वेगळे असते. FORGE याचे ट्रेनिंग उद्दिष्टांमध्ये रूपांतर करते."
+  },
+  {
+    "en": "AI",
+    "new_en": "AI",
+    "hi": "AI",
+    "mr": "AI"
+  },
+  {
+    "en": "AI analysis requires Gemini keys. Use Search or Barcode in offline mode.",
+    "new_en": "AI analysis needs Gemini keys. Use Search or Barcode offline.",
+    "hi": "AI analysis के लिए Gemini keys चाहिए. ऑफ़लाइन में Search या Barcode इस्तेमाल करें.",
+    "mr": "AI analysis साठी Gemini keys आवश्यक आहेत. ऑफलाइन मोडमध्ये Search किंवा Barcode वापरा."
+  },
+  {
+    "en": "AI assistant",
+    "new_en": "AI assistant",
+    "hi": "AI असिस्टेंट",
+    "mr": "AI असिस्टंट"
+  },
+  {
+    "en": "AI coach",
+    "new_en": "AI coach",
+    "hi": "AI कोच",
+    "mr": "AI कोच"
+  },
+  {
+    "en": "AI coach (locked)",
+    "new_en": "AI coach (locked)",
+    "hi": "AI कोच (लॉक्ड)",
+    "mr": "AI कोच (लॉक्ड)"
+  },
+  {
+    "en": "AI describe",
+    "new_en": "AI describe",
+    "hi": "AI से बताएं",
+    "mr": "AI ने सांगा"
+  },
+  {
+    "en": "AI estimate",
+    "new_en": "AI estimate",
+    "hi": "AI अनुमान",
+    "mr": "AI अंदाज"
+  },
+  {
+    "en": "AI estimate from photos — review before acting on it. Not a measurement and not medical advice.",
+    "new_en": "AI estimate from photos — review before using. Not a measurement or medical advice.",
+    "hi": "फ़ोटो से AI अनुमान — इस्तेमाल से पहले जांच लें. यह कोई मेडिकल सलाह या सटीक नाप नहीं है.",
+    "mr": "फोटोवरून AI अंदाज — वापरण्यापूर्वी तपासा. हा अचूक मोजमाप किंवा वैद्यकीय सल्ला नाही."
+  },
+  {
+    "en": "AI food camera",
+    "new_en": "AI food camera",
+    "hi": "AI Food कैमरा",
+    "mr": "AI Food कॅमेरा"
+  },
+  {
+    "en": "AI insight",
+    "new_en": "AI insight",
+    "hi": "AI इनसाइट",
+    "mr": "AI इनसाइट"
+  },
+  {
+    "en": "AI insights appear here once Gemini is configured and you have a few days of data.",
+    "new_en": "AI insights appear here once Gemini is set up and you log a few days of data.",
+    "hi": "Gemini सेट करने और कुछ दिनों का data होने के बाद AI insights यहां दिखेंगे.",
+    "mr": "Gemini सेट केल्यानंतर आणि काही दिवसांचा data जमा झाल्यावर AI insights येथे दिसतील."
+  },
+  {
+    "en": "AI is not configured — the template plan below still works.",
+    "new_en": "AI is not set up — the template plan below still works.",
+    "hi": "AI सेट नहीं है — नीचे दिया गया template प्लान फिर भी काम करेगा.",
+    "mr": "AI सेट केलेले नाही — खालील template प्लॅन तरीही काम करेल."
+  },
+  {
+    "en": "AI is not configured — you will still get a calculated roadmap and a generated plan.",
+    "new_en": "AI is not set up — you will still get a calculated roadmap and plan.",
+    "hi": "AI सेट नहीं है — फिर भी आपको तय roadmap और प्लान मिलेगा.",
+    "mr": "AI सेट केलेले नाही — तरीही तुम्हाला ठरवलेला roadmap आणि प्लॅन मिळेल."
+  },
+  {
+    "en": "AI is not configured, so photos were not analysed. This roadmap is calculated from your goal and training frequency.",
+    "new_en": "AI is not set up, so photos were not analysed. This roadmap is based on your goal and workout days.",
+    "hi": "AI सेट नहीं है, इसलिए फ़ोटो analyse नहीं हुईं. यह roadmap आपके लक्ष्य और वर्कआउट दिनों पर आधारित है.",
+    "mr": "AI सेट केलेले नाही, त्यामुळे फोटो analyse झाले नाहीत. हा roadmap तुमचे ध्येय आणि वर्कआउटच्या दिवसांवर आधारित आहे."
+  },
+  {
+    "en": "AI is not configured, so this plan comes from the built-in templates.",
+    "new_en": "AI is not set up, so this plan uses built-in templates.",
+    "hi": "AI सेट नहीं है, इसलिए यह प्लान इन-बिल्ट templates से बना है.",
+    "mr": "AI सेट केलेले नाही, त्यामुळे हा प्लॅन इन-बिल्ट templates वरून घेतला आहे."
+  },
+  {
+    "en": "AI is not configured. The calculated target above still works.",
+    "new_en": "AI is not set up. The target above still works.",
+    "hi": "AI सेट नहीं है. ऊपर दिया गया टारगेट फिर भी काम करेगा.",
+    "mr": "AI सेट केलेले नाही. वरील टारगेट तरीही काम करेल."
+  },
+  {
+    "en": "AI is on. New keys are added to these.",
+    "new_en": "AI is on. New keys are added to these.",
+    "hi": "AI चालू है. नई keys इनमें जुड़ेंगी.",
+    "mr": "AI सुरू आहे. नवीन keys यात जोडल्या जातील."
+  },
+  {
+    "en": "AI is unavailable right now.",
+    "new_en": "AI is unavailable right now.",
+    "hi": "AI अभी उपलब्ध नहीं है.",
+    "mr": "AI सध्या उपलब्ध नाही."
+  },
+  {
+    "en": "AI keys",
+    "new_en": "AI keys",
+    "hi": "AI keys",
+    "mr": "AI keys"
+  },
+  {
+    "en": "AI needs an account — sign in to use your own Gemini keys.",
+    "new_en": "AI needs an account — sign in to use your Gemini keys.",
+    "hi": "AI के लिए अकाउंट चाहिए — अपनी Gemini keys इस्तेमाल करने के लिए साइन इन करें.",
+    "mr": "AI साठी अकाउंट आवश्यक आहे — तुमच्या Gemini keys वापरण्यासाठी साइन इन करा."
+  },
+  {
+    "en": "AI personalisation",
+    "new_en": "AI personalisation",
+    "hi": "AI पर्सनलाइज़ेशन",
+    "mr": "AI पर्सनलायझेशन"
+  },
+  {
+    "en": "AI physique analysis",
+    "new_en": "AI physique analysis",
+    "hi": "AI physique analysis",
+    "mr": "AI physique analysis"
+  },
+  {
+    "en": "AI physique coach",
+    "new_en": "AI physique coach",
+    "hi": "AI physique कोच",
+    "mr": "AI physique कोच"
+  },
+  {
+    "en": "AI plan — review before activating",
+    "new_en": "AI plan — review before activating",
+    "hi": "AI प्लान — चालू करने से पहले देख लें",
+    "mr": "AI प्लॅन — सुरू करण्यापूर्वी तपासून घ्या"
+  },
+  {
+    "en": "AI-generated estimate",
+    "new_en": "AI-generated estimate",
+    "hi": "AI से बना अनुमान",
+    "mr": "AI द्वारे तयार केलेला अंदाज"
+  },
+  {
+    "en": "AI: not configured",
+    "new_en": "AI: not configured",
+    "hi": "AI: सेट नहीं है",
+    "mr": "AI: सेट केलेले नाही"
+  },
+  {
+    "en": "About me:",
+    "new_en": "About me:",
+    "hi": "मेरे बारे में:",
+    "mr": "माझ्याबद्दल:"
+  },
+  {
+    "en": "Abs",
+    "new_en": "Abs",
+    "hi": "Abs",
+    "mr": "Abs"
+  },
+  {
+    "en": "Accent colour",
+    "new_en": "Accent colour",
+    "hi": "Accent colour",
+    "mr": "Accent colour"
+  },
+  {
+    "en": "Accept target",
+    "new_en": "Accept target",
+    "hi": "टारगेट स्वीकारें",
+    "mr": "टारगेट स्वीकारा"
+  },
+  {
+    "en": "Account",
+    "new_en": "Account",
+    "hi": "अकाउंट",
+    "mr": "अकाउंट"
+  },
+  {
+    "en": "Activate this plan",
+    "new_en": "Activate this plan",
+    "hi": "यह प्लान चालू करें",
+    "mr": "हा प्लॅन सुरू करा"
+  },
+  {
+    "en": "Active plan",
+    "new_en": "Active plan",
+    "hi": "सक्रिय प्लान",
+    "mr": "सक्रिय प्लॅन"
+  },
+  {
+    "en": "Activity",
+    "new_en": "Activity",
+    "hi": "ऐक्टिविटी",
+    "mr": "ऍक्टिव्हिटी"
+  },
+  {
+    "en": "Activity level",
+    "new_en": "Activity level",
+    "hi": "ऐक्टिविटी लेवल",
+    "mr": "ऍक्टिव्हिटी लेव्हल"
+  },
+  {
+    "en": "Adaptive maintenance",
+    "new_en": "Adaptive maintenance",
+    "hi": "Adaptive maintenance",
+    "mr": "Adaptive maintenance"
+  },
+  {
+    "en": "Add all",
+    "new_en": "Add all",
+    "hi": "सभी जोड़ें",
+    "mr": "सर्व जोडा"
+  },
+  {
+    "en": "Add at least 2 Gemini API keys (up to 5).",
+    "new_en": "Add at least 2 Gemini API keys (up to 5).",
+    "hi": "कम से कम 2 Gemini API keys जोड़ें (अधिकतम 5).",
+    "mr": "किमान 2 Gemini API keys जोडा (जास्तीत जास्त 5)."
+  },
+  {
+    "en": "Add at least 2 keys in total.",
+    "new_en": "Add at least 2 keys in total.",
+    "hi": "कुल मिलाकर कम से कम 2 keys जोड़ें.",
+    "mr": "एकूण किमान 2 keys जोडा."
+  },
+  {
+    "en": "Add exercise",
+    "new_en": "Add exercise",
+    "hi": "Exercise जोड़ें",
+    "mr": "Exercise जोडा"
+  },
+  {
+    "en": "Add exercises as you go — each one pre-fills from the last time you did it.",
+    "new_en": "Add exercises as you go — each pre-fills from your last workout.",
+    "hi": "वर्कआउट के साथ exercises जोड़ें — पिछली बार का विवरण अपने आप भर जाएगा.",
+    "mr": "वर्कआउट करताना exercises जोडा — मागच्या वेळचा तपशील आपोआप भरला जाईल."
+  },
+  {
+    "en": "Add food",
+    "new_en": "Add food",
+    "hi": "Food जोड़ें",
+    "mr": "Food जोडा"
+  },
+  {
+    "en": "Add more keys",
+    "new_en": "Add more keys",
+    "hi": "और keys जोड़ें",
+    "mr": "आणखी keys जोडा"
+  },
+  {
+    "en": "Add my details",
+    "new_en": "Add my details",
+    "hi": "मेरी जानकारी जोड़ें",
+    "mr": "माझी माहिती जोडा"
+  },
+  {
+    "en": "Add one more to switch AI on.",
+    "new_en": "Add one more to turn AI on.",
+    "hi": "AI चालू करने के लिए एक और जोड़ें.",
+    "mr": "AI सुरू करण्यासाठी आणखी एक जोडा."
+  },
+  {
+    "en": "Add past workout",
+    "new_en": "Add past workout",
+    "hi": "पिछला workout जोड़ें",
+    "mr": "मागील workout जोडा"
+  },
+  {
+    "en": "Add these keys",
+    "new_en": "Add these keys",
+    "hi": "ये keys जोड़ें",
+    "mr": "ह्या keys जोडा"
+  },
+  {
+    "en": "Add to Home Screen",
+    "new_en": "Add to home screen",
+    "hi": "Home Screen पर जोड़ें",
+    "mr": "Home Screen वर जोडा"
+  },
+  {
+    "en": "Add to favourites",
+    "new_en": "Add to favourites",
+    "hi": "पसंदीदा में जोड़ें",
+    "mr": "आवडीच्या यादीत जोडा"
+  },
+  {
+    "en": "Add to meal",
+    "new_en": "Add to meal",
+    "hi": "Meal में जोड़ें",
+    "mr": "Meal मध्ये जोडा"
+  },
+  {
+    "en": "Add to today",
+    "new_en": "Add to today",
+    "hi": "आज में जोड़ें",
+    "mr": "आजमध्ये जोडा"
+  },
+  {
+    "en": "Add your Gemini keys",
+    "new_en": "Add your Gemini keys",
+    "hi": "अपनी Gemini keys जोड़ें",
+    "mr": "तुमच्या Gemini keys जोडा"
+  },
+  {
+    "en": "Adding…",
+    "new_en": "Adding…",
+    "hi": "जोड़ा जा रहा है…",
+    "mr": "जोडत आहे…"
+  },
+  {
+    "en": "Adductors",
+    "new_en": "Adductors",
+    "hi": "Adductors",
+    "mr": "Adductors"
+  },
+  {
+    "en": "Adequate sleep and recovery.",
+    "new_en": "Adequate sleep and recovery.",
+    "hi": "अच्छी नींद और रिकवरी.",
+    "mr": "पुरेशी झोप आणि रिकव्हरी."
+  },
+  {
+    "en": "Adherence",
+    "new_en": "Adherence",
+    "hi": "नियमितता",
+    "mr": "नियमितपणा"
+  },
+  {
+    "en": "Adjust it first",
+    "new_en": "Adjust it first",
+    "hi": "पहले इसे ठीक करें",
+    "mr": "आधी हे नीट करा"
+  },
+  {
+    "en": "Advanced",
+    "new_en": "Advanced",
+    "hi": "एडवांस्ड",
+    "mr": "ॲडव्हान्स्ड"
+  },
+  {
+    "en": "Aesthetics",
+    "new_en": "Aesthetics",
+    "hi": "Aesthetics",
+    "mr": "Aesthetics"
+  },
+  {
+    "en": "Age",
+    "new_en": "Age",
+    "hi": "उम्र",
+    "mr": "वय"
+  },
+  {
+    "en": "All exercises",
+    "new_en": "All exercises",
+    "hi": "सभी exercises",
+    "mr": "सर्व exercises"
+  },
+  {
+    "en": "Allow from this source",
+    "new_en": "Allow from this source",
+    "hi": "इस सोर्स से अनुमति दें",
+    "mr": "या स्त्रोतावरून परवानगी द्या"
+  },
+  {
+    "en": "Already in your plans",
+    "new_en": "Already in your plans",
+    "hi": "पहले से आपके प्लान में है",
+    "mr": "आधीच तुमच्या प्लॅनमध्ये आहे"
+  },
+  {
+    "en": "Already strong",
+    "new_en": "Already strong",
+    "hi": "पहले से मज़बूत",
+    "mr": "आधीच मजबूत"
+  },
+  {
+    "en": "Analyse check-in",
+    "new_en": "Analyse check-in",
+    "hi": "Check-in analyse करें",
+    "mr": "Check-in analyse करा"
+  },
+  {
+    "en": "Analyse meal",
+    "new_en": "Analyse meal",
+    "hi": "Meal analyse करें",
+    "mr": "Meal analyse करा"
+  },
+  {
+    "en": "Analyse with AI",
+    "new_en": "Analyse with AI",
+    "hi": "AI से analyse करें",
+    "mr": "AI ने analyse करा"
+  },
+  {
+    "en": "Analysing",
+    "new_en": "Analysing",
+    "hi": "Analyse हो रहा है",
+    "mr": "Analyse होत आहे"
+  },
+  {
+    "en": "Analysing…",
+    "new_en": "Analysing…",
+    "hi": "Analyse हो रहा है…",
+    "mr": "Analyse होत आहे…"
+  },
+  {
+    "en": "Analytics",
+    "new_en": "Analytics",
+    "hi": "एनालिटिक्स",
+    "mr": "ॲनालिटिक्स"
+  },
+  {
+    "en": "Andaman and Nicobar Islands",
+    "new_en": "Andaman and Nicobar Islands",
+    "hi": "Andaman and Nicobar Islands",
+    "mr": "Andaman and Nicobar Islands"
+  },
+  {
+    "en": "Andhra",
+    "new_en": "Andhra",
+    "hi": "Andhra",
+    "mr": "Andhra"
+  },
+  {
+    "en": "Andhra Pradesh",
+    "new_en": "Andhra Pradesh",
+    "hi": "Andhra Pradesh",
+    "mr": "Andhra Pradesh"
+  },
+  {
+    "en": "Android is careful with apps from outside the Play Store. When it asks, tap",
+    "new_en": "Android is careful with apps outside the Play Store. When asked, tap",
+    "hi": "Play Store के बाहर के ऐप्स पर Android सावधानी बरतता है. पूछे जाने पर tap करें",
+    "mr": "Play Store बाहेरील apps बाबत Android काळजी घेते. विचारल्यावर tap करा"
+  },
+  {
+    "en": "Android says it can't install the app. What do I do?",
+    "new_en": "Android can't install the app. What do I do?",
+    "hi": "Android ऐप इंस्टॉल नहीं कर पा रहा. क्या करूं?",
+    "mr": "Android app इन्स्टॉल होत नाहीये. काय करू?"
+  },
+  {
+    "en": "Anything logged before this hour counts toward the previous day — for late gym sessions and midnight snacks.",
+    "new_en": "Anything logged before this hour counts toward the previous day — for late workouts and midnight snacks.",
+    "hi": "इस समय से पहले log की गई चीज़ें पिछले दिन में जुड़ेंगी — देर रात के workouts और स्नैक्स के लिए.",
+    "mr": "या वेळेपूर्वी log केलेल्या गोष्टी मागच्या दिवसात मोजल्या जातील — रात्री उशिराचे workouts आणि स्नॅक्ससाठी."
+  },
+  {
+    "en": "Anything the photo can't show? (optional)",
+    "new_en": "Anything the photo can't show? (optional)",
+    "hi": "कुछ ऐसा जो फ़ोटो में नहीं दिख रहा? (वैकल्पिक)",
+    "mr": "फोटोत न दिसण्यासारखे काही आहे का? (ऐच्छिक)"
+  },
+  {
+    "en": "App updates",
+    "new_en": "App updates",
+    "hi": "ऐप अपडेट्स",
+    "mr": "अ‍ॅप अपडेट्स"
+  },
+  {
+    "en": "Appam",
+    "new_en": "Appam",
+    "hi": "Appam",
+    "mr": "Appam"
+  },
+  {
+    "en": "Applies to FORGE and the AI",
+    "new_en": "Applies to FORGE and the AI",
+    "hi": "FORGE और AI दोनों पर लागू होता है",
+    "mr": "FORGE आणि AI दोघांना लागू होते"
+  },
+  {
+    "en": "Apply nutrition target",
+    "new_en": "Apply nutrition target",
+    "hi": "Nutrition टारगेट लागू करें",
+    "mr": "Nutrition टारगेट लागू करा"
+  },
+  {
+    "en": "Arms & Weak Points",
+    "new_en": "Arms & weak points",
+    "hi": "Arms & weak points",
+    "mr": "Arms & weak points"
+  },
+  {
+    "en": "Arunachal Pradesh",
+    "new_en": "Arunachal Pradesh",
+    "hi": "Arunachal Pradesh",
+    "mr": "Arunachal Pradesh"
+  },
+  {
+    "en": "Ask anything about training or food.",
+    "new_en": "Ask anything about training or food.",
+    "hi": "ट्रेनिंग या खाने के बारे में कुछ भी पूछें.",
+    "mr": "ट्रेनिंग किंवा आहाराबद्दल काहीही विचारा."
+  },
+  {
+    "en": "Ask coach",
+    "new_en": "Ask coach",
+    "hi": "कोच से पूछें",
+    "mr": "कोचला विचारा"
+  },
+  {
+    "en": "Ask the coach (AI)",
+    "new_en": "Ask the coach (AI)",
+    "hi": "कोच (AI) से पूछें",
+    "mr": "कोचला (AI) विचारा"
+  },
+  {
+    "en": "Ask the coach…",
+    "new_en": "Ask the coach…",
+    "hi": "कोच से पूछें…",
+    "mr": "कोचला विचारा…"
+  },
+  {
+    "en": "Asking AI",
+    "new_en": "Asking AI",
+    "hi": "AI से पूछ रहे हैं",
+    "mr": "AI ला विचारत आहे"
+  },
+  {
+    "en": "Assam",
+    "new_en": "Assam",
+    "hi": "Assam",
+    "mr": "Assam"
+  },
+  {
+    "en": "Assault Bike Intervals",
+    "new_en": "Assault Bike Intervals",
+    "hi": "Assault Bike Intervals",
+    "mr": "Assault Bike Intervals"
+  },
+  {
+    "en": "Athlete",
+    "new_en": "Athlete",
+    "hi": "एथलीट",
+    "mr": "ॲथलीट"
+  },
+  {
+    "en": "Athletic / Performance",
+    "new_en": "Athletic / performance",
+    "hi": "एथलेटिक / परफ़ॉर्मेंस",
+    "mr": "ॲथलेटिक / परफॉर्मन्स"
+  }
+]

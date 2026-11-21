@@ -18,7 +18,7 @@ export default function Diet() {
   const remaining = t ? Math.max(0, t.calories - totals.calories) : 0
 
   return (
-    <Screen title="Diet" sub={date}>
+    <Screen title="Diet" sub={new Date(date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}>
       <Card paper>
         <div className="eyebrow">Calories</div>
         <div className="mt-1 flex items-baseline gap-2">

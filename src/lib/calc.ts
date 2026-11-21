@@ -7,15 +7,21 @@ export const ACTIVITY_FACTOR: Record<ActivityLevel, number> = {
   sedentary: 1.2, light: 1.375, moderate: 1.55, high: 1.725, athlete: 1.9,
 }
 
+/** Daily steps each activity level already accounts for. */
+export const LEVEL_STEPS: Record<ActivityLevel, number> = {
+  sedentary: 5000, light: 7500, moderate: 10000, high: 12500, athlete: 15000,
+}
+
 /** Mifflin-St Jeor. */
 export function bmr(sex: Sex, weightKg: number, heightCm: number, age: number): number {
-  const base = 10 * weightKg + 6.25 * heightCm - 5 * age
+  const base = 10 * weightKg + 6.25 * heightCm - 5 * Math.min(90, Math.max(13, age))
   return Math.round(sex === 'male' ? base + 5 : base - 161)
 }
 
 export function tdee(sex: Sex, weightKg: number, heightCm: number, age: number, activity: ActivityLevel, avgSteps = 0): number {
-  // Steps beyond the level's implied baseline add ~0.04 kcal/kg per 1000 steps.
-  const stepBonus = Math.max(0, avgSteps - 5000) / 1000 * 0.04 * weightKg * 10
+  // The activity level already includes everyday walking. Only steps beyond what that level implies
+  // add calories: about 0.4 kcal per kg of body weight per 1,000 steps.
+  const stepBonus = Math.max(0, avgSteps - LEVEL_STEPS[activity]) / 1000 * 0.4 * weightKg
   return Math.round(bmr(sex, weightKg, heightCm, age) * ACTIVITY_FACTOR[activity] + stepBonus)
 }
 
@@ -144,6 +150,8 @@ export function dayAdherence(args: {
   session: WorkoutSession | null
   steps: number | null
   settings: Settings
+  /** Finished a workout on one of the two days before. Used only when no rest days are set. */
+  trainedRecently?: boolean
 }): DayAdherence {
   const { settings, target, totals, session, steps } = args
   const tol = settings.diet_tolerance ?? 0.1
@@ -159,7 +167,9 @@ export function dayAdherence(args: {
   }
 
   const dow = new Date(args.date + 'T00:00:00').getDay()
-  const isRest = settings.rest_days.includes(dow)
+  // No rest days chosen: a day off within two days of a workout counts as rest, so a 3-5 day plan
+  // does not break the streak every weekend.
+  const isRest = settings.rest_days.length ? settings.rest_days.includes(dow) : !!args.trainedRecently
   let workout: Component
   if (session?.finished_at) workout = 'complete'
   else if (session) workout = 'partial'
@@ -248,4 +258,28 @@ export function trend(points: { date: ISODate; weight_kg: number }[], alpha = 0.
     ema = ema == null ? p.weight_kg : alpha * p.weight_kg + (1 - alpha) * ema
     return { ...p, trend: Math.round(ema * 100) / 100 }
   })
+}
+
+/**
+ * Adaptive maintenance estimate (energy balance): average logged intake minus the energy implied by the
+ * weight-trend change over the same window (7700 kcal per kg). Needs >=14 days with food logged and
+ * >=2 weigh-ins; returns null otherwise. Under-logging biases it low, so callers present it as an estimate.
+ */
+export function adaptiveTdee(
+  weights: { date: ISODate; weight_kg: number }[],
+  dailyKcal: Record<ISODate, number>,
+  days = 21,
+  end: ISODate = today(),
+): { tdee: number; loggedDays: number; trendDeltaKg: number } | null {
+  const window = daysBack(days, end)
+  const logged = window.filter(d => (dailyKcal[d] ?? 0) > 0)
+  const w = [...weights].filter(x => x.date >= window[0] && x.date <= end).sort((a, b) => a.date.localeCompare(b.date))
+  if (logged.length < 14 || w.length < 2) return null
+  const tr = trend(w)
+  const spanDays = (Date.parse(w[w.length - 1].date) - Date.parse(w[0].date)) / 86_400_000
+  if (spanDays < 7) return null
+  const delta = tr[tr.length - 1].trend - tr[0].trend
+  const avgIntake = logged.reduce((a, d) => a + dailyKcal[d], 0) / logged.length
+  const tdee = Math.round(avgIntake - (delta * 7700) / spanDays)
+  return { tdee: clamp(tdee, 1000, 6000), loggedDays: logged.length, trendDeltaKg: Math.round(delta * 100) / 100 }
 }

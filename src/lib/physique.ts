@@ -46,8 +46,8 @@ export function localRoadmap(args: {
       ],
       milestones: [
         { window: '0–3 months', expectation: 'Technique and consistency established; early strength gains; small visible change.' },
-        { window: '3–6 months', expectation: 'Measurable strength progression and the first clear changes in the prioritised areas.' },
-        { window: '6–12 months', expectation: 'Noticeable shift in proportions if training and nutrition stayed consistent.' },
+        { window: '3–6 months', expectation: 'Measurable strength gains and clear changes in target areas.' },
+        { window: '6–12 months', expectation: 'Noticeable change in physique with consistent training and diet.' },
         { window: '12+ months', expectation: 'Compounding development; priorities usually need to be re-evaluated by now.' },
       ],
     },

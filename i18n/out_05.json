@@ -1,0 +1,902 @@
+[
+  {
+    "en": "Questions",
+    "new_en": "Questions",
+    "hi": "सवाल",
+    "mr": "प्रश्न"
+  },
+  {
+    "en": "Quick add",
+    "new_en": "Quick add",
+    "hi": "तुरंत जोड़ें",
+    "mr": "पटकन जोडा"
+  },
+  {
+    "en": "Quick meals",
+    "new_en": "Quick meals",
+    "hi": "Quick meals",
+    "mr": "Quick meals"
+  },
+  {
+    "en": "REPS",
+    "new_en": "Reps",
+    "hi": "Reps",
+    "mr": "Reps"
+  },
+  {
+    "en": "REST",
+    "new_en": "Rest",
+    "hi": "Rest",
+    "mr": "Rest"
+  },
+  {
+    "en": "RIR",
+    "new_en": "RIR",
+    "hi": "RIR",
+    "mr": "RIR"
+  },
+  {
+    "en": "RIR (reps in reserve)",
+    "new_en": "RIR (reps in reserve)",
+    "hi": "RIR (reps in reserve)",
+    "mr": "RIR (reps in reserve)"
+  },
+  {
+    "en": "RPE",
+    "new_en": "RPE",
+    "hi": "RPE",
+    "mr": "RPE"
+  },
+  {
+    "en": "RPE (6–10)",
+    "new_en": "RPE (6–10)",
+    "hi": "RPE (6–10)",
+    "mr": "RPE (6–10)"
+  },
+  {
+    "en": "RPE drift from short rest → not a stall",
+    "new_en": "RPE drift from short rest → not a stall",
+    "hi": "कम rest से RPE बढ़ना → stall नहीं",
+    "mr": "कमी rest मुळे RPE वाढणे → stall नाही"
+  },
+  {
+    "en": "Rajasthan",
+    "new_en": "Rajasthan",
+    "hi": "Rajasthan",
+    "mr": "Rajasthan"
+  },
+  {
+    "en": "Rajma chawal",
+    "new_en": "Rajma chawal",
+    "hi": "Rajma chawal",
+    "mr": "Rajma chawal"
+  },
+  {
+    "en": "Ramp",
+    "new_en": "Ramp",
+    "hi": "Ramp",
+    "mr": "Ramp"
+  },
+  {
+    "en": "Rate",
+    "new_en": "Rate",
+    "hi": "दर",
+    "mr": "दर"
+  },
+  {
+    "en": "Rate (kg / week)",
+    "new_en": "Rate (kg / week)",
+    "hi": "दर (kg / week)",
+    "mr": "दर (kg / week)"
+  },
+  {
+    "en": "Re-analyse with this",
+    "new_en": "Re-analyse with this",
+    "hi": "इससे दोबारा analyze करें",
+    "mr": "याने पुन्हा analyze करा"
+  },
+  {
+    "en": "Reading your meal",
+    "new_en": "Reading your meal",
+    "hi": "आपका meal पढ़ा जा रहा है",
+    "mr": "तुमचे meal वाचले जात आहे"
+  },
+  {
+    "en": "Ready when you are.",
+    "new_en": "Ready when you are.",
+    "hi": "जब आप तैयार हों।",
+    "mr": "तुम्ही तयार असाल तेव्हा."
+  },
+  {
+    "en": "Recent",
+    "new_en": "Recent",
+    "hi": "हाल ही के",
+    "mr": "अलीकडील"
+  },
+  {
+    "en": "Recent sessions",
+    "new_en": "Recent sessions",
+    "hi": "हाल के sessions",
+    "mr": "अलीकडील sessions"
+  },
+  {
+    "en": "Recommended training",
+    "new_en": "Recommended training",
+    "hi": "सुझाई गई training",
+    "mr": "शिफारस केलेली training"
+  },
+  {
+    "en": "Recovery is training too. Trained anyway? Start a freestyle session.",
+    "new_en": "Recovery is training too. Trained anyway? Start a freestyle session.",
+    "hi": "Recovery भी training का हिस्सा है। फिर भी workout किया? Freestyle session शुरू करें।",
+    "mr": "Recovery हा सुद्धा training चा भाग आहे. तरीही workout केला? Freestyle session सुरू करा."
+  },
+  {
+    "en": "Reference",
+    "new_en": "Reference",
+    "hi": "Reference",
+    "mr": "Reference"
+  },
+  {
+    "en": "Reference physique (optional)",
+    "new_en": "Reference physique (optional)",
+    "hi": "Reference physique (वैकल्पिक)",
+    "mr": "Reference physique (पर्यायी)"
+  },
+  {
+    "en": "Remove",
+    "new_en": "Remove",
+    "hi": "हटाएं",
+    "mr": "काढून टाका"
+  },
+  {
+    "en": "Remove all keys",
+    "new_en": "Remove all keys",
+    "hi": "सभी keys हटाएं",
+    "mr": "सर्व keys काढून टाका"
+  },
+  {
+    "en": "Remove exercise",
+    "new_en": "Remove exercise",
+    "hi": "Exercise हटाएं",
+    "mr": "Exercise काढून टाका"
+  },
+  {
+    "en": "Remove from superset",
+    "new_en": "Remove from superset",
+    "hi": "Superset से हटाएं",
+    "mr": "Superset मधून काढून टाका"
+  },
+  {
+    "en": "Remove ingredient",
+    "new_en": "Remove ingredient",
+    "hi": "Ingredient हटाएं",
+    "mr": "Ingredient काढून टाका"
+  },
+  {
+    "en": "Remove last",
+    "new_en": "Remove last",
+    "hi": "आखिरी हटाएं",
+    "mr": "शेवटचे काढून टाका"
+  },
+  {
+    "en": "Reopen",
+    "new_en": "Reopen",
+    "hi": "फिर खोलें",
+    "mr": "पुन्हा उघडा"
+  },
+  {
+    "en": "Replace / new plan",
+    "new_en": "Replace / new plan",
+    "hi": "बदलें / नया plan",
+    "mr": "बदला / नवीन plan"
+  },
+  {
+    "en": "Reps",
+    "new_en": "Reps",
+    "hi": "Reps",
+    "mr": "Reps"
+  },
+  {
+    "en": "Reset to FORGE defaults",
+    "new_en": "Reset to FORGE defaults",
+    "hi": "FORGE defaults पर reset करें",
+    "mr": "FORGE defaults वर reset करा"
+  },
+  {
+    "en": "Reset to calculated",
+    "new_en": "Reset to calculated",
+    "hi": "Calculated पर reset करें",
+    "mr": "Calculated वर reset करा"
+  },
+  {
+    "en": "Rest (sec)",
+    "new_en": "Rest (sec)",
+    "hi": "Rest (sec)",
+    "mr": "Rest (sec)"
+  },
+  {
+    "en": "Rest day",
+    "new_en": "Rest day",
+    "hi": "Rest day",
+    "mr": "Rest day"
+  },
+  {
+    "en": "Rest day.",
+    "new_en": "Rest day.",
+    "hi": "Rest day.",
+    "mr": "Rest day."
+  },
+  {
+    "en": "Rest days",
+    "new_en": "Rest days",
+    "hi": "Rest days",
+    "mr": "Rest days"
+  },
+  {
+    "en": "Rest days never count as a failed workout.",
+    "new_en": "Rest days never count as a failed workout.",
+    "hi": "Rest days कभी भी छूटे हुए workout नहीं माने जाते।",
+    "mr": "Rest days कधीही चुकलेला workout मानले जात नाहीत."
+  },
+  {
+    "en": "Rest for this exercise (seconds)",
+    "new_en": "Rest for this exercise (seconds)",
+    "hi": "इस exercise के लिए rest (seconds)",
+    "mr": "या exercise साठी rest (seconds)"
+  },
+  {
+    "en": "Rest over",
+    "new_en": "Rest over",
+    "hi": "Rest खत्म",
+    "mr": "Rest संपला"
+  },
+  {
+    "en": "Rest timer that buzzes",
+    "new_en": "Rest timer that buzzes",
+    "hi": "Buzz करने वाला rest timer",
+    "mr": "Buzz होणारा rest timer"
+  },
+  {
+    "en": "Rest today instead",
+    "new_en": "Rest today instead",
+    "hi": "इसके बजाय आज rest करें",
+    "mr": "त्याऐवजी आज rest करा"
+  },
+  {
+    "en": "Restart cycle this week (week 1)",
+    "new_en": "Restart cycle this week (week 1)",
+    "hi": "इस हफ़्ते cycle फिर शुरू करें (week 1)",
+    "mr": "या आठवड्यात cycle पुन्हा सुरू करा (week 1)"
+  },
+  {
+    "en": "Retake",
+    "new_en": "Retake",
+    "hi": "फिर से लें",
+    "mr": "पुन्हा घ्या"
+  },
+  {
+    "en": "Review & activate this plan",
+    "new_en": "Review & activate this plan",
+    "hi": "Review करें और plan चालू करें",
+    "mr": "Review करा आणि plan सुरू करा"
+  },
+  {
+    "en": "Review again",
+    "new_en": "Review again",
+    "hi": "दोबारा review करें",
+    "mr": "पुन्हा review करा"
+  },
+  {
+    "en": "Review and adjust before accepting.",
+    "new_en": "Review and adjust before accepting.",
+    "hi": "स्वीकार करने से पहले review करें और बदलें।",
+    "mr": "स्वीकारण्यापूर्वी review करा आणि बदल करा."
+  },
+  {
+    "en": "Review my training",
+    "new_en": "Review my training",
+    "hi": "मेरी training का review करें",
+    "mr": "माझ्या training चे review करा"
+  },
+  {
+    "en": "Review target",
+    "new_en": "Review target",
+    "hi": "Target review करें",
+    "mr": "Target review करा"
+  },
+  {
+    "en": "Review training",
+    "new_en": "Review training",
+    "hi": "Training review करें",
+    "mr": "Training review करा"
+  },
+  {
+    "en": "Reviewing your check-in",
+    "new_en": "Reviewing your check-in",
+    "hi": "आपका check-in देखा जा रहा है",
+    "mr": "तुमचे check-in तपासत आहे"
+  },
+  {
+    "en": "Reviewing your training",
+    "new_en": "Reviewing your training",
+    "hi": "आपकी training देखी जा रही है",
+    "mr": "तुमची training तपासत आहे"
+  },
+  {
+    "en": "Rogan josh",
+    "new_en": "Rogan josh",
+    "hi": "Rogan josh",
+    "mr": "Rogan josh"
+  },
+  {
+    "en": "Romanian Deadlift — DB",
+    "new_en": "Romanian Deadlift — DB",
+    "hi": "Romanian Deadlift — DB",
+    "mr": "Romanian Deadlift — DB"
+  },
+  {
+    "en": "Rose quartz",
+    "new_en": "Rose quartz",
+    "hi": "Rose quartz",
+    "mr": "Rose quartz"
+  },
+  {
+    "en": "Roti / Chapati",
+    "new_en": "Roti / Chapati",
+    "hi": "Roti / Chapati",
+    "mr": "Roti / Chapati"
+  },
+  {
+    "en": "Rowing Intervals",
+    "new_en": "Rowing Intervals",
+    "hi": "Rowing Intervals",
+    "mr": "Rowing Intervals"
+  },
+  {
+    "en": "Run again",
+    "new_en": "Run again",
+    "hi": "फिर से चलाएं",
+    "mr": "पुन्हा चालवा"
+  },
+  {
+    "en": "Run coach check",
+    "new_en": "Run coach check",
+    "hi": "Coach check चलाएं",
+    "mr": "Coach check चालवा"
+  },
+  {
+    "en": "Running on this device only. Add Supabase credentials to sync across devices.",
+    "new_en": "Runs on this device only. Add Supabase credentials to sync across devices.",
+    "hi": "सिर्फ इस डिवाइस पर चल रहा है। डिवाइसों में sync करने के लिए Supabase credentials जोड़ें।",
+    "mr": "फक्त या डिव्हाइसवर चालू आहे. डिव्हाइसेसमध्ये sync करण्यासाठी Supabase credentials जोडा."
+  },
+  {
+    "en": "SEC",
+    "new_en": "Sec",
+    "hi": "sec",
+    "mr": "sec"
+  },
+  {
+    "en": "SET",
+    "new_en": "Set",
+    "hi": "Set",
+    "mr": "Set"
+  },
+  {
+    "en": "Saffron dusk",
+    "new_en": "Saffron dusk",
+    "hi": "Saffron dusk",
+    "mr": "Saffron dusk"
+  },
+  {
+    "en": "Salad Bowl",
+    "new_en": "Salad Bowl",
+    "hi": "Salad Bowl",
+    "mr": "Salad Bowl"
+  },
+  {
+    "en": "Same as last time",
+    "new_en": "Same as last time",
+    "hi": "पिछली बार जैसा",
+    "mr": "मागच्या वेळेसारखे"
+  },
+  {
+    "en": "Sarson ka saag",
+    "new_en": "Sarson ka saag",
+    "hi": "Sarson ka saag",
+    "mr": "Sarson ka saag"
+  },
+  {
+    "en": "Save a combination you eat often and log it in one tap.",
+    "new_en": "Save a combination you eat often and log it in one tap.",
+    "hi": "अक्सर खाई जाने वाली चीज़ें save करें और एक tap में log करें।",
+    "mr": "नेहमी खाल्ले जाणारे पदार्थ save करा आणि एका tap मध्ये log करा."
+  },
+  {
+    "en": "Save exercise",
+    "new_en": "Save exercise",
+    "hi": "Exercise save करें",
+    "mr": "Exercise save करा"
+  },
+  {
+    "en": "Save failed. Your entry was not stored.",
+    "new_en": "Save failed. Your entry was not saved.",
+    "hi": "Save नहीं हुआ। आपकी entry सुरक्षित नहीं हुई।",
+    "mr": "Save अयशस्वी. तुमची entry सेव्ह झाली नाही."
+  },
+  {
+    "en": "Save food",
+    "new_en": "Save food",
+    "hi": "Food save करें",
+    "mr": "Food save करा"
+  },
+  {
+    "en": "Save goal",
+    "new_en": "Save goal",
+    "hi": "Goal save करें",
+    "mr": "Goal save करा"
+  },
+  {
+    "en": "Save keys",
+    "new_en": "Save keys",
+    "hi": "Keys save करें",
+    "mr": "Keys save करा"
+  },
+  {
+    "en": "Save recipe",
+    "new_en": "Save recipe",
+    "hi": "Recipe save करें",
+    "mr": "Recipe save करा"
+  },
+  {
+    "en": "Save steps",
+    "new_en": "Save steps",
+    "hi": "Steps save करें",
+    "mr": "Steps save करा"
+  },
+  {
+    "en": "Save this meal as a quick meal",
+    "new_en": "Save this meal as a quick meal",
+    "hi": "इस meal को quick meal के रूप में save करें",
+    "mr": "हे meal quick meal म्हणून save करा"
+  },
+  {
+    "en": "Save to my foods",
+    "new_en": "Save to my foods",
+    "hi": "मेरे foods में save करें",
+    "mr": "माझ्या foods मध्ये save करा"
+  },
+  {
+    "en": "Save weight",
+    "new_en": "Save weight",
+    "hi": "Weight save करें",
+    "mr": "Weight save करा"
+  },
+  {
+    "en": "Saved plates",
+    "new_en": "Saved plates",
+    "hi": "Saved plates",
+    "mr": "Saved plates"
+  },
+  {
+    "en": "Saved recipes",
+    "new_en": "Saved recipes",
+    "hi": "Saved recipes",
+    "mr": "Saved recipes"
+  },
+  {
+    "en": "Saved. Your next session pre-fills these weights (with warm-ups). Type a lower weight any time if a set feels too heavy.",
+    "new_en": "Saved. Your next session pre-fills these weights (with warm-ups). Type a lower weight any time if a set feels too heavy.",
+    "hi": "Save हो गया। अगला session यह weight (warm-up के साथ) पहले से भर देगा। Set भारी लगे, तो कभी भी कम weight डाल सकते हैं।",
+    "mr": "Save झाले. पुढील session हे weight (warm-up सह) आपोआप भरेल. Set जड वाटल्यास कधीही कमी weight टाकू शकता."
+  },
+  {
+    "en": "Saving…",
+    "new_en": "Saving…",
+    "hi": "Save हो रहा है…",
+    "mr": "Save होत आहे…"
+  },
+  {
+    "en": "Say what you ate, e.g. \"2 roti and dal tadka\"",
+    "new_en": "Say what you ate, e.g. \"2 roti and dal tadka\"",
+    "hi": "बोलें आपने क्या खाया, जैसे \"2 roti and dal tadka\"",
+    "mr": "तुम्ही काय खाल्ले ते सांगा, उदा. \"2 roti and dal tadka\""
+  },
+  {
+    "en": "Scan barcode",
+    "new_en": "Scan barcode",
+    "hi": "Barcode scan करें",
+    "mr": "Barcode scan करा"
+  },
+  {
+    "en": "Scan food",
+    "new_en": "Scan food",
+    "hi": "Food scan करें",
+    "mr": "Food scan करा"
+  },
+  {
+    "en": "Scan meal",
+    "new_en": "Scan meal",
+    "hi": "Meal scan करें",
+    "mr": "Meal scan करा"
+  },
+  {
+    "en": "Scan result",
+    "new_en": "Scan result",
+    "hi": "Scan result",
+    "mr": "Scan result"
+  },
+  {
+    "en": "Search 1,324 exercises",
+    "new_en": "Search 1,324 exercises",
+    "hi": "1,324 exercises खोजें",
+    "mr": "1,324 exercises शोधा"
+  },
+  {
+    "en": "Search 16,000 foods",
+    "new_en": "Search 16,000 foods",
+    "hi": "16,000 foods खोजें",
+    "mr": "16,000 foods शोधा"
+  },
+  {
+    "en": "Search a food to add",
+    "new_en": "Search a food to add",
+    "hi": "जोड़ने के लिए food खोजें",
+    "mr": "जोडण्यासाठी food शोधा"
+  },
+  {
+    "en": "Search exercises",
+    "new_en": "Search exercises",
+    "hi": "Exercises खोजें",
+    "mr": "Exercises शोधा"
+  },
+  {
+    "en": "Search foods",
+    "new_en": "Search foods",
+    "hi": "Foods खोजें",
+    "mr": "Foods शोधा"
+  },
+  {
+    "en": "Search foods and dishes",
+    "new_en": "Search foods and dishes",
+    "hi": "Foods और dishes खोजें",
+    "mr": "Foods आणि dishes शोधा"
+  },
+  {
+    "en": "Search “poha”, “rajma chawal” or “dosa” and tap. FORGE knows Indian portions, so you never weigh anything.",
+    "new_en": "Search “poha”, “rajma chawal” or “dosa” and tap. FORGE knows Indian portions, so you never weigh anything.",
+    "hi": "“poha”, “rajma chawal” या “dosa” खोजकर tap करें। FORGE भारतीय portions जानता है, इसलिए कुछ भी तौलना नहीं पड़ता।",
+    "mr": "“poha”, “rajma chawal” किंवा “dosa” शोधून tap करा. FORGE ला भारतीय portions माहिती आहेत, त्यामुळे काहीही मोजण्याची गरज नाही."
+  },
+  {
+    "en": "Seated Cable Row",
+    "new_en": "Seated Cable Row",
+    "hi": "Seated Cable Row",
+    "mr": "Seated Cable Row"
+  },
+  {
+    "en": "Sections",
+    "new_en": "Sections",
+    "hi": "Sections",
+    "mr": "Sections"
+  },
+  {
+    "en": "See progress",
+    "new_en": "See progress",
+    "hi": "Progress देखें",
+    "mr": "Progress पहा"
+  },
+  {
+    "en": "Servings",
+    "new_en": "Servings",
+    "hi": "Servings",
+    "mr": "Servings"
+  },
+  {
+    "en": "Session length (min)",
+    "new_en": "Session length (min)",
+    "hi": "Session का समय (min)",
+    "mr": "Session चा वेळ (min)"
+  },
+  {
+    "en": "Sessions",
+    "new_en": "Sessions",
+    "hi": "Sessions",
+    "mr": "Sessions"
+  },
+  {
+    "en": "Sessions in a row below your reps",
+    "new_en": "Sessions in a row below your reps",
+    "hi": "Reps से कम रहे लगातार sessions",
+    "mr": "Reps पेक्षा कमी झालेले सलग sessions"
+  },
+  {
+    "en": "Set",
+    "new_en": "Set",
+    "hi": "Set",
+    "mr": "Set"
+  },
+  {
+    "en": "Set a goal weight to sharpen this estimate.",
+    "new_en": "Set a goal weight to improve this estimate.",
+    "hi": "इस अनुमान को सटीक बनाने के लिए goal weight सेट करें।",
+    "mr": "हा अंदाज अचूक करण्यासाठी goal weight सेट करा."
+  },
+  {
+    "en": "Set a target to track remaining calories",
+    "new_en": "Set a target to track remaining calories",
+    "hi": "बची हुई calories track करने के लिए target सेट करें",
+    "mr": "उर्वरित calories track करण्यासाठी target सेट करा"
+  },
+  {
+    "en": "Set your goal and body details first.",
+    "new_en": "Set your goal and body details first.",
+    "hi": "पहले अपना goal और शरीर का विवरण सेट करें।",
+    "mr": "प्रथम तुमचे goal आणि शरीराचे तपशील सेट करा."
+  },
+  {
+    "en": "Set your goal to get targets",
+    "new_en": "Set your goal to get targets",
+    "hi": "Targets पाने के लिए अपना goal सेट करें",
+    "mr": "Targets मिळवण्यासाठी तुमचे goal सेट करा"
+  },
+  {
+    "en": "Set your target →",
+    "new_en": "Set your target →",
+    "hi": "अपना target सेट करें →",
+    "mr": "तुमचे target सेट करा →"
+  },
+  {
+    "en": "Sets",
+    "new_en": "Sets",
+    "hi": "Sets",
+    "mr": "Sets"
+  },
+  {
+    "en": "Sets your calorie maths and the body on your muscle map.",
+    "new_en": "Sets your calorie math and muscle map body.",
+    "hi": "यह आपकी calorie गणना और muscle map तय करता है।",
+    "mr": "हे तुमचे calorie गणित आणि muscle map ठरवते."
+  },
+  {
+    "en": "Settings",
+    "new_en": "Settings",
+    "hi": "Settings",
+    "mr": "Settings"
+  },
+  {
+    "en": "Settings, theme & export",
+    "new_en": "Settings, theme & export",
+    "hi": "Settings, theme और export",
+    "mr": "Settings, theme आणि export"
+  },
+  {
+    "en": "Sex",
+    "new_en": "Sex",
+    "hi": "लिंग",
+    "mr": "लिंग"
+  },
+  {
+    "en": "Share JSON (Share Sheet)",
+    "new_en": "Share JSON (Share Sheet)",
+    "hi": "JSON शेयर करें (Share Sheet)",
+    "mr": "JSON शेअर करा (Share Sheet)"
+  },
+  {
+    "en": "Share your meals, workouts and weight with the FORGE team, without your name or email, so we can make the AI and plans better.",
+    "new_en": "Share your meals, workouts and weight with the FORGE team, without your name or email, so we can improve the AI and plans.",
+    "hi": "बिना नाम या ईमेल के अपने meals, workouts और वजन FORGE टीम से शेयर करें, ताकि हम AI और plans बेहतर बना सकें।",
+    "mr": "नाव किंवा ईमेल न देता आपले meals, workouts आणि वजन FORGE टीमसोबत शेअर करा, जेणेकरून आम्ही AI आणि plans सुधारू शकू."
+  },
+  {
+    "en": "Shins",
+    "new_en": "Shins",
+    "hi": "Shins",
+    "mr": "Shins"
+  },
+  {
+    "en": "Shoulders",
+    "new_en": "Shoulders",
+    "hi": "Shoulders",
+    "mr": "Shoulders"
+  },
+  {
+    "en": "Show",
+    "new_en": "Show",
+    "hi": "दिखाएं",
+    "mr": "दाखवा"
+  },
+  {
+    "en": "Sign in",
+    "new_en": "Sign in",
+    "hi": "Sign in",
+    "mr": "Sign in"
+  },
+  {
+    "en": "Sign in first.",
+    "new_en": "Sign in first.",
+    "hi": "पहले sign in करें।",
+    "mr": "प्रथम sign in करा."
+  },
+  {
+    "en": "Sign in or create an account",
+    "new_en": "Sign in or create an account",
+    "hi": "Sign in करें या नया account बनाएं",
+    "mr": "Sign in करा किंवा नवीन account तयार करा"
+  },
+  {
+    "en": "Sign out",
+    "new_en": "Sign out",
+    "hi": "Sign out",
+    "mr": "Sign out"
+  },
+  {
+    "en": "Sign up",
+    "new_en": "Sign up",
+    "hi": "Sign up",
+    "mr": "Sign up"
+  },
+  {
+    "en": "Signing in",
+    "new_en": "Signing in",
+    "hi": "Sign in हो रहा है",
+    "mr": "Sign in होत आहे"
+  },
+  {
+    "en": "Sikkim",
+    "new_en": "Sikkim",
+    "hi": "Sikkim",
+    "mr": "Sikkim"
+  },
+  {
+    "en": "Six gradients. Even the icon changes.",
+    "new_en": "Six gradients. Even the icon changes.",
+    "hi": "छह gradients। ऐप icon भी बदलता है।",
+    "mr": "सहा gradients. ॲप icon देखील बदलतो."
+  },
+  {
+    "en": "Skip warm-ups for light work",
+    "new_en": "Skip warm-ups for light work",
+    "hi": "हल्के sets के लिए warm-up छोड़ें",
+    "mr": "हलक्या sets साठी warm-up वगळा"
+  },
+  {
+    "en": "Skip »",
+    "new_en": "Skip »",
+    "hi": "Skip »",
+    "mr": "Skip »"
+  },
+  {
+    "en": "Skipped:",
+    "new_en": "Skipped:",
+    "hi": "Skipped:",
+    "mr": "Skipped:"
+  },
+  {
+    "en": "Smaller portion",
+    "new_en": "Smaller portion",
+    "hi": "छोटा portion",
+    "mr": "लहान portion"
+  },
+  {
+    "en": "Smallest plate change",
+    "new_en": "Smallest plate change",
+    "hi": "सबसे छोटा plate बदलाव",
+    "mr": "सर्वात लहान plate बदल"
+  },
+  {
+    "en": "Snap a photo or scan a barcode",
+    "new_en": "Snap a photo or scan a barcode",
+    "hi": "फ़ोटो खींचें या barcode scan करें",
+    "mr": "फोटो काढा किंवा barcode scan करा"
+  },
+  {
+    "en": "Sodium (mg)",
+    "new_en": "Sodium (mg)",
+    "hi": "Sodium (mg)",
+    "mr": "Sodium (mg)"
+  },
+  {
+    "en": "Speak your meal",
+    "new_en": "Speak your meal",
+    "hi": "बोलकर meal दर्ज करें",
+    "mr": "बोलून meal नोंदवा"
+  },
+  {
+    "en": "Specific priorities",
+    "new_en": "Specific priorities",
+    "hi": "खास प्राथमिकताएं",
+    "mr": "विशिष्ट प्राधान्ये"
+  },
+  {
+    "en": "Squat, Rack — Full Depth",
+    "new_en": "Squat, Rack — Full Depth",
+    "hi": "Squat, Rack — Full Depth",
+    "mr": "Squat, Rack — Full Depth"
+  },
+  {
+    "en": "Stalls & deloads",
+    "new_en": "Stalls & deloads",
+    "hi": "Stalls और deloads",
+    "mr": "Stalls आणि deloads"
+  },
+  {
+    "en": "Standing Calf Raise",
+    "new_en": "Standing Calf Raise",
+    "hi": "Standing Calf Raise",
+    "mr": "Standing Calf Raise"
+  },
+  {
+    "en": "Start",
+    "new_en": "Start",
+    "hi": "शुरू करें",
+    "mr": "सुरू करा"
+  },
+  {
+    "en": "Start a workout",
+    "new_en": "Start a workout",
+    "hi": "Workout शुरू करें",
+    "mr": "Workout सुरू करा"
+  },
+  {
+    "en": "Start camera",
+    "new_en": "Start camera",
+    "hi": "Camera चालू करें",
+    "mr": "Camera सुरू करा"
+  },
+  {
+    "en": "Start from an empty plan",
+    "new_en": "Start from an empty plan",
+    "hi": "खाली plan से शुरू करें",
+    "mr": "रिकाम्या plan पासून सुरू करा"
+  },
+  {
+    "en": "Start in 3 steps",
+    "new_en": "Start in 3 steps",
+    "hi": "3 steps में शुरू करें",
+    "mr": "3 steps मध्ये सुरू करा"
+  },
+  {
+    "en": "Start workout",
+    "new_en": "Start workout",
+    "hi": "Workout शुरू करें",
+    "mr": "Workout सुरू करा"
+  },
+  {
+    "en": "Stated priorities",
+    "new_en": "Stated priorities",
+    "hi": "तय प्राथमिकताएं",
+    "mr": "ठरवलेली प्राधान्ये"
+  },
+  {
+    "en": "Step 1 · Photos",
+    "new_en": "Step 1 · Photos",
+    "hi": "Step 1 · Photos",
+    "mr": "Step 1 · Photos"
+  },
+  {
+    "en": "Step 2 · Objective",
+    "new_en": "Step 2 · Objective",
+    "hi": "Step 2 · Objective",
+    "mr": "Step 2 · Objective"
+  },
+  {
+    "en": "Steps",
+    "new_en": "Steps",
+    "hi": "Steps",
+    "mr": "Steps"
+  },
+  {
+    "en": "Steps & adherence",
+    "new_en": "Steps & adherence",
+    "hi": "Steps और adherence",
+    "mr": "Steps आणि adherence"
+  },
+  {
+    "en": "Steps goal",
+    "new_en": "Steps goal",
+    "hi": "Steps goal",
+    "mr": "Steps goal"
+  }
+]

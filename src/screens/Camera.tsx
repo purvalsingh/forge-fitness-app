@@ -77,7 +77,7 @@ export default function Camera() {
     try {
       const res = await ai.analyzePhoto(preview.base64, preview.mime, hint.trim() || undefined)
       if (res.items.length === 0) {
-        setErr('No food recognised. Try a clearer, top-down shot of the plate, or search manually.')
+        setErr('No food recognized. Try a clear top-down photo, or search manually.')
         setStage('capture'); return
       }
       const catalog = await loadCatalog().catch(() => null)
@@ -122,7 +122,7 @@ export default function Camera() {
                 </div>
               )}
           {live === 'on' && !preview && (
-            <div className="pointer-events-none absolute inset-6 rounded-2xl border-2" style={{ borderColor: 'rgba(255,107,44,.7)' }} />
+            <div className="pointer-events-none absolute inset-6 rounded-2xl border-2" style={{ borderColor: 'color-mix(in srgb, var(--accent) 70%, transparent)' }} />
           )}
           {flash && <div className="anim-fade absolute inset-0 bg-white" />}
           {stage === 'analysing' && (

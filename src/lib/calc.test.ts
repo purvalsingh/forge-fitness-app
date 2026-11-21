@@ -111,7 +111,7 @@ describe('daily adherence', () => {
   it('never counts a rest day as a failed workout', () => {
     // 2026-09-06 is a Sunday, a configured rest day.
     const a = dayAdherence({
-      date: '2026-09-06', target, totals: on, hasFoodLogs: true, session: null, steps: 10500, settings,
+      date: '2026-09-06', target, totals: on, hasFoodLogs: true, session: null, steps: 10500, settings: { ...settings, rest_days: [0] },
     })
     expect(a.workout).toBe('na')
     expect(a.score).toBe(1) // remaining weights are redistributed
@@ -278,8 +278,10 @@ describe('food catalog search', () => {
     expect(searchFoods(catalog, 'golgappa').length).toBe(0) // not in this fixture, but must not throw
     expect(searchFoods(catalog, 'curd').length).toBeGreaterThanOrEqual(0)
   })
-  it('ranks the dish above the raw ingredient', () => {
-    expect(searchFoods(catalog, 'rice')[0].name).not.toBe('Rice, white, cooked')
+  it('puts the plain food first when you type a plain food name', () => {
+    // Audit: "banana" showed banana cake first. Typing "rice" means rice, not rice pudding.
+    expect(searchFoods(catalog, 'rice')[0].name).toBe('Rice, white, cooked')
+    expect(searchFoods(catalog, 'biryani')[0].name).toBe('Biryani with chicken')
   })
   it('matches on an exact name first', () => {
     expect(searchFoods(catalog, 'Rice, white, cooked')[0].name).toBe('Rice, white, cooked')
@@ -346,5 +348,31 @@ describe('saving a catalog food', () => {
 
   it('marks a catalog food as not user-created', () => {
     expect(toFoodRow(dish).custom).toBe(false)
+  })
+})
+
+import { adaptiveTdee as _adaptive } from './calc'
+describe('adaptiveTdee', () => {
+  it('maintenance equals intake when weight is flat, lower when losing', () => {
+    const end = '2026-03-21'
+    const kcal: Record<string, number> = {}
+    for (let i = 0; i < 21; i++) kcal[`2026-03-${String(i + 1).padStart(2, '0')}`] = 2200
+    const flat = _adaptive([{ date: '2026-03-01', weight_kg: 80 }, { date: '2026-03-21', weight_kg: 80 }], kcal, 21, end)
+    expect(flat?.tdee).toBe(2200)
+    const losing = _adaptive(Array.from({ length: 21 }, (_, i) => ({ date: `2026-03-${String(i + 1).padStart(2, '0')}`, weight_kg: 80 - i * 0.05 })), kcal, 21, end)
+    expect(losing!.tdee).toBeGreaterThan(2200)
+    expect(_adaptive([], kcal, 21, end)).toBeNull()
+  })
+})
+
+describe('audit fixes 3.8.1', () => {
+  it('a day off right after a workout keeps the streak when no rest days are set', () => {
+    const base = { date: '2026-11-21' as const, target: null, totals: sumTotals([]), hasFoodLogs: false, session: null, steps: null, settings: { ...SEED_SETTINGS, rest_days: [] } }
+    expect(dayAdherence({ ...base, trainedRecently: true }).workout).toBe('na')
+    expect(dayAdherence({ ...base, trainedRecently: false }).workout).toBe('incomplete')
+  })
+  it('steps the activity level already covers add no calories', () => {
+    expect(tdee('male', 70, 175, 30, 'moderate', 10000)).toBe(tdee('male', 70, 175, 30, 'moderate', 0))
+    expect(tdee('male', 70, 175, 30, 'moderate', 12000) - tdee('male', 70, 175, 30, 'moderate', 10000)).toBe(56)
   })
 })

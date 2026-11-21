@@ -26,7 +26,7 @@ export default function Progress() {
     const sess = s.sessions.find(x => x.date === d && x.finished_at)
     const adh = adherenceFor(src, d)
     return {
-      date: d.slice(5),
+      date: shortDay(d),
       calories: Math.round(t.calories) || null,
       protein: Math.round(t.protein_g) || null,
       steps: s.steps.find(x => x.date === d)?.steps ?? null,
@@ -95,16 +95,17 @@ export default function Progress() {
         {weightPoints.length < 2 ? <Empty title="Not enough weight data" body="Log your weight to see the trend." />
           : (
             <ResponsiveContainer width="100%" height={170}>
-              <LineChart data={weightPoints.map(p => ({ ...p, date: p.date.slice(5) }))} margin={{ left: -18, right: 6, top: 6 }}>
+              <LineChart data={weightPoints.map(p => ({ ...p, date: shortDay(p.date) }))} margin={{ left: -18, right: 6, top: 6 }}>
                 <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
                 <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={24} />
                 <YAxis tick={tick} tickLine={false} axisLine={false} domain={['dataMin - 1', 'dataMax + 1']} width={38} />
-                <Tooltip contentStyle={tooltip} />
+                <Tooltip contentStyle={tooltip} formatter={fmtTip('kg')} cursor={cursor} />
                 <Line dataKey="weight_kg" name="Measured" stroke="var(--accent)" dot={{ r: 2 }} strokeWidth={1} />
-                <Line dataKey="trend" name="Trend" stroke="var(--accent-strong)" dot={false} strokeWidth={2.5} />
+                <Line dataKey="trend" name="Trend" stroke="var(--accent-strong)" dot={false} strokeWidth={2.5} activeDot={{ r: 5 }} />
               </LineChart>
             </ResponsiveContainer>
           )}
+        <Peak data={weightPoints.map(p => ({ date: shortDay(p.date), v: p.weight_kg }))} unit="kg" />
       </ChartCard>
 
       <ChartCard title="Calories">
@@ -113,23 +114,37 @@ export default function Progress() {
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} />
-            <Tooltip contentStyle={tooltip} />
-            <Area dataKey="calories" stroke="var(--accent)" fill="rgba(169,93,112,0.16)" strokeWidth={2} connectNulls />
+            <Tooltip contentStyle={tooltip} formatter={fmtTip('kcal')} cursor={cursor} />
+            <Area dataKey="calories" name="Calories" stroke="var(--accent)" fill="rgba(169,93,112,0.16)" strokeWidth={2} connectNulls activeDot={{ r: 5 }} />
           </AreaChart>
         </ResponsiveContainer>
+        <Peak data={series.map(x => ({ date: x.date, v: x.calories }))} unit="kcal" />
       </ChartCard>
 
-      <ChartCard title="Protein & steps">
+      <ChartCard title="Protein">
         <ResponsiveContainer width="100%" height={160}>
           <LineChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} />
-            <Tooltip contentStyle={tooltip} />
-            <Line dataKey="protein" stroke="var(--accent)" dot={false} strokeWidth={2} connectNulls />
-            <Line dataKey="steps" stroke="var(--accent)" dot={false} strokeWidth={1.5} connectNulls yAxisId={0} />
+            <Tooltip contentStyle={tooltip} formatter={fmtTip('g')} cursor={cursor} />
+            <Line dataKey="protein" name="Protein" stroke="var(--accent)" dot={false} strokeWidth={2} connectNulls activeDot={{ r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
+        <Peak data={series.map(x => ({ date: x.date, v: x.protein }))} unit="g" />
+      </ChartCard>
+
+      <ChartCard title="Steps">
+        <ResponsiveContainer width="100%" height={160}>
+          <BarChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
+            <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
+            <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
+            <YAxis tick={tick} tickLine={false} axisLine={false} width={38} />
+            <Tooltip contentStyle={tooltip} formatter={fmtTip('steps')} cursor={cursor} />
+            <RBar dataKey="steps" name="Steps" fill="var(--accent)" radius={[3, 3, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+        <Peak data={series.map(x => ({ date: x.date, v: x.steps }))} unit="steps" />
       </ChartCard>
 
       <ChartCard title="Adherence">
@@ -138,10 +153,11 @@ export default function Progress() {
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} domain={[0, 100]} />
-            <Tooltip contentStyle={tooltip} />
-            <RBar dataKey="adherence" fill="var(--accent-strong)" radius={[3, 3, 0, 0]} />
+            <Tooltip contentStyle={tooltip} formatter={fmtTip('%')} cursor={cursor} />
+            <RBar dataKey="adherence" name="Adherence" fill="var(--accent-strong)" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+        <Peak data={series.map(x => ({ date: x.date, v: x.adherence || null }))} unit="%" />
       </ChartCard>
 
       <ChartCard title={`Training volume · ${trained} sessions`}>
@@ -150,10 +166,11 @@ export default function Progress() {
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
             <XAxis dataKey="date" tick={tick} tickLine={false} axisLine={false} minTickGap={28} />
             <YAxis tick={tick} tickLine={false} axisLine={false} width={38} />
-            <Tooltip contentStyle={tooltip} />
-            <RBar dataKey="volume" fill="var(--accent)" radius={[3, 3, 0, 0]} />
+            <Tooltip contentStyle={tooltip} formatter={fmtTip('kg')} cursor={cursor} />
+            <RBar dataKey="volume" name="Volume" fill="var(--accent)" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+        <Peak data={series.map(x => ({ date: x.date, v: x.volume }))} unit="kg" />
       </ChartCard>
 
       <div className="mt-3 grid gap-2">
@@ -218,4 +235,17 @@ export function WeightSheet({ open, onClose, date }: { open: boolean; onClose: (
       </div>
     </Sheet>
   )
+}
+
+const shortDay = (iso: string) => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+const exact = (v: number) => (v >= 100 || Number.isInteger(v) ? Math.round(v).toLocaleString('en-IN') : v.toFixed(1))
+const cursor = { stroke: 'var(--line)', strokeWidth: 1, fill: 'rgba(127,127,127,0.08)' }
+/** Tooltip shows the exact value with its unit; the day appears as the tooltip title. */
+const fmtTip = (unit: string) => (v: unknown, name: unknown) => [typeof v === 'number' ? `${exact(v)} ${unit}` : String(v ?? '—'), String(name)]
+
+/** "Highest: 2,340 kcal on 12 Nov", so the peak is readable without tapping. */
+function Peak({ data, unit }: { data: { date: string; v: number | null | undefined }[]; unit: string }) {
+  const best = data.filter(d => d.v != null).reduce<{ date: string; v: number } | null>((b, d) => (!b || d.v! > b.v ? { date: d.date, v: d.v! } : b), null)
+  if (!best) return null
+  return <p className="mt-2 text-[12px]" style={{ color: 'var(--text-dim)' }}>Highest: {exact(best.v)} {unit} on {best.date}. Tap the chart to see any day.</p>
 }

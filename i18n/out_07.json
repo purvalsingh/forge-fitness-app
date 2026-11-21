@@ -1,0 +1,578 @@
+[
+  {
+    "en": "Your first check-in becomes the baseline everything else is compared against.",
+    "new_en": "Your first check-in is the baseline for all comparisons.",
+    "hi": "आपका पहला check-in बाकी सब की तुलना के लिए बेसलाइन है।",
+    "mr": "तुमचा पहिला check-in पुढील सर्व तुलनेसाठी बेसलाइन आहे."
+  },
+  {
+    "en": "Your gym and your thali, in one app.",
+    "new_en": "Your gym and your thali, in one app.",
+    "hi": "आपका gym और आपकी thali, एक ही app में।",
+    "mr": "तुमचा gym आणि तुमची thali, एकाच app मध्ये."
+  },
+  {
+    "en": "Your meal",
+    "new_en": "Your meal",
+    "hi": "आपका meal",
+    "mr": "तुमचे meal"
+  },
+  {
+    "en": "Your name",
+    "new_en": "Your name",
+    "hi": "आपका नाम",
+    "mr": "तुमचे नाव"
+  },
+  {
+    "en": "Your own exercise",
+    "new_en": "Your own exercise",
+    "hi": "आपकी अपनी exercise",
+    "mr": "तुमची स्वतःची exercise"
+  },
+  {
+    "en": "Your photos stay on this device. They are sent to the AI only when you run an analysis, and are deleted with the check-in.",
+    "new_en": "Your photos stay on this device. They are sent to the AI only for analysis and deleted with the check-in.",
+    "hi": "आपके photos इसी डिवाइस पर रहते हैं। वे केवल एनालिसिस के लिए AI को भेजे जाते हैं और check-in के साथ डिलीट कर दिए जाते हैं।",
+    "mr": "तुमचे photos याच डिव्हाइसवर राहतात. ते फक्त ॲनालिसिससाठी AI कडे पाठवले जातात आणि check-in सोबत डिलीट केले जातात."
+  },
+  {
+    "en": "Your plan",
+    "new_en": "Your plan",
+    "hi": "आपका plan",
+    "mr": "तुमचा plan"
+  },
+  {
+    "en": "Your roadmap",
+    "new_en": "Your roadmap",
+    "hi": "आपका roadmap",
+    "mr": "तुमचा roadmap"
+  },
+  {
+    "en": "Your session expired. Please sign in again.",
+    "new_en": "Your session expired. Please sign in again.",
+    "hi": "आपका session समाप्त हो गया। कृपया फिर से sign in करें।",
+    "mr": "तुमचे session संपले आहे. कृपया पुन्हा sign in करा."
+  },
+  {
+    "en": "Your target — edit anything",
+    "new_en": "Your target — edit anything",
+    "hi": "आपका target — कुछ भी बदलें",
+    "mr": "तुमचे target — काहीही बदला"
+  },
+  {
+    "en": "adductor|groin|inner thigh",
+    "new_en": "adductor|groin|inner thigh",
+    "hi": "adductor|groin|inner thigh",
+    "mr": "adductor|groin|inner thigh"
+  },
+  {
+    "en": "all-out, no reps left",
+    "new_en": "All-out, no reps left",
+    "hi": "पूरी ताकत, कोई reps बाकी नहीं",
+    "mr": "पूर्ण ताकदीने, एकही reps शिल्लक नाही"
+  },
+  {
+    "en": "aloo paratha",
+    "new_en": "aloo paratha",
+    "hi": "aloo paratha",
+    "mr": "aloo paratha"
+  },
+  {
+    "en": "anything you love or hate. Your age, height, weight and goal from your profile are added automatically.",
+    "new_en": "Anything you love or hate. Your age, height, weight and goal from your profile are added automatically.",
+    "hi": "जो भी आपको पसंद या नापसंद हो। आपकी उम्र, कद, वजन और goal आपकी प्रोफाइल से अपने आप जुड़ जाएंगे।",
+    "mr": "तुम्हाला आवडणाऱ्या किंवा न आवडणाऱ्या गोष्टी. तुमचे वय, उंची, वजन आणि goal तुमच्या प्रोफाइलमधून आपोआप जोडले जातील."
+  },
+  {
+    "en": "barbell|smith|ez bar|trap bar",
+    "new_en": "barbell|smith|ez bar|trap bar",
+    "hi": "barbell|smith|ez bar|trap bar",
+    "mr": "barbell|smith|ez bar|trap bar"
+  },
+  {
+    "en": "bitter gourd",
+    "new_en": "bitter gourd",
+    "hi": "bitter gourd",
+    "mr": "bitter gourd"
+  },
+  {
+    "en": "chole bhature",
+    "new_en": "chole bhature",
+    "hi": "chole bhature",
+    "mr": "chole bhature"
+  },
+  {
+    "en": "d MMM",
+    "new_en": "d MMM",
+    "hi": "d MMM",
+    "mr": "d MMM"
+  },
+  {
+    "en": "dahi vada",
+    "new_en": "dahi vada",
+    "hi": "dahi vada",
+    "mr": "dahi vada"
+  },
+  {
+    "en": "dataMax + 1",
+    "new_en": "dataMax + 1",
+    "hi": "dataMax + 1",
+    "mr": "dataMax + 1"
+  },
+  {
+    "en": "dataMin - 1",
+    "new_en": "dataMin - 1",
+    "hi": "dataMin - 1",
+    "mr": "dataMin - 1"
+  },
+  {
+    "en": "e.g. It's chilli chicken, not baby corn. About 8 pieces.",
+    "new_en": "e.g. It's chilli chicken, not baby corn. About 8 pieces.",
+    "hi": "e.g. chilli chicken है, baby corn नहीं। लगभग 8 pieces।",
+    "mr": "e.g. chilli chicken आहे, baby corn नाही. साधारण 8 pieces."
+  },
+  {
+    "en": "e.g. “made with ghee”, “2 rotis under the sabzi”, “half eaten”",
+    "new_en": "e.g. “made with ghee”, “2 rotis under the sabzi”, “half eaten”",
+    "hi": "e.g. “ghee में बना”, “sabzi के नीचे 2 rotis”, “आधा खाया”",
+    "mr": "e.g. “ghee मध्ये बनवलेले”, “sabzi खाली 2 rotis”, “अर्धे खाल्ले”"
+  },
+  {
+    "en": "else if (a.reps !in 3..6)",
+    "new_en": "else if (a.reps !in 3..6)",
+    "hi": "else if (a.reps !in 3..6)",
+    "mr": "else if (a.reps !in 3..6)"
+  },
+  {
+    "en": "else null,",
+    "new_en": "else null,",
+    "hi": "else null,",
+    "mr": "else null,"
+  },
+  {
+    "en": "exercise name",
+    "new_en": "Exercise name",
+    "hi": "exercise का नाम",
+    "mr": "exercise चे नाव"
+  },
+  {
+    "en": "exercises with guides",
+    "new_en": "Exercises with guides",
+    "hi": "गाइड के साथ exercises",
+    "mr": "मार्गदर्शनासह exercises"
+  },
+  {
+    "en": "ez bar",
+    "new_en": "ez bar",
+    "hi": "ez bar",
+    "mr": "ez bar"
+  },
+  {
+    "en": "ez barbell",
+    "new_en": "ez barbell",
+    "hi": "ez barbell",
+    "mr": "ez barbell"
+  },
+  {
+    "en": "fill .3s ease",
+    "new_en": "fill .3s ease",
+    "hi": "fill .3s ease",
+    "mr": "fill .3s ease"
+  },
+  {
+    "en": "hit today",
+    "new_en": "Hit today",
+    "hi": "आज पूरा हुआ",
+    "mr": "आज पूर्ण झाले"
+  },
+  {
+    "en": "if (!session) return",
+    "new_en": "if (!session) return",
+    "hi": "if (!session) return",
+    "mr": "if (!session) return"
+  },
+  {
+    "en": "if (!sex) return",
+    "new_en": "if (!sex) return",
+    "hi": "if (!sex) return",
+    "mr": "if (!sex) return"
+  },
+  {
+    "en": "if (checking) return",
+    "new_en": "if (checking) return",
+    "hi": "if (checking) return",
+    "mr": "if (checking) return"
+  },
+  {
+    "en": "kcal / day",
+    "new_en": "kcal / day",
+    "hi": "kcal / day",
+    "mr": "kcal / day"
+  },
+  {
+    "en": "kerala fish curry",
+    "new_en": "kerala fish curry",
+    "hi": "kerala fish curry",
+    "mr": "kerala fish curry"
+  },
+  {
+    "en": "last 3 months",
+    "new_en": "Last 3 months",
+    "hi": "पिछले 3 महीने",
+    "mr": "मागील 3 महिने"
+  },
+  {
+    "en": "last 4 weeks",
+    "new_en": "Last 4 weeks",
+    "hi": "पिछले 4 हफ्ते",
+    "mr": "मागील 4 आठवडे"
+  },
+  {
+    "en": "last week",
+    "new_en": "Last week",
+    "hi": "पिछला हफ्ता",
+    "mr": "मागील आठवडा"
+  },
+  {
+    "en": "lower arms",
+    "new_en": "Lower arms",
+    "hi": "हाथ का निचला हिस्सा",
+    "mr": "हाताचा खालचा भाग"
+  },
+  {
+    "en": "lower legs",
+    "new_en": "Lower legs",
+    "hi": "पैर का निचला हिस्सा",
+    "mr": "पायाचा खालचा भाग"
+  },
+  {
+    "en": "macher jhol",
+    "new_en": "macher jhol",
+    "hi": "macher jhol",
+    "mr": "macher jhol"
+  },
+  {
+    "en": "matki usal",
+    "new_en": "matki usal",
+    "hi": "matki usal",
+    "mr": "matki usal"
+  },
+  {
+    "en": "mishti doi",
+    "new_en": "mishti doi",
+    "hi": "mishti doi",
+    "mr": "mishti doi"
+  },
+  {
+    "en": "mustard greens",
+    "new_en": "mustard greens",
+    "hi": "mustard greens",
+    "mr": "mustard greens"
+  },
+  {
+    "en": "no answer",
+    "new_en": "No answer",
+    "hi": "कोई जवाब नहीं",
+    "mr": "कोणतेही उत्तर नाही"
+  },
+  {
+    "en": "not trained",
+    "new_en": "Not trained",
+    "hi": "ट्रेन नहीं किया",
+    "mr": "ट्रेन केले नाही"
+  },
+  {
+    "en": "overhead press",
+    "new_en": "overhead press",
+    "hi": "overhead press",
+    "mr": "overhead press"
+  },
+  {
+    "en": "pani puri",
+    "new_en": "pani puri",
+    "hi": "pani puri",
+    "mr": "pani puri"
+  },
+  {
+    "en": "pav bhaji",
+    "new_en": "pav bhaji",
+    "hi": "pav bhaji",
+    "mr": "pav bhaji"
+  },
+  {
+    "en": "per day",
+    "new_en": "Per day",
+    "hi": "प्रति दिन",
+    "mr": "दररोज"
+  },
+  {
+    "en": "repeat(7, 10px)",
+    "new_en": "repeat(7, 10px)",
+    "hi": "repeat(7, 10px)",
+    "mr": "repeat(7, 10px)"
+  },
+  {
+    "en": "romanian deadlift",
+    "new_en": "romanian deadlift",
+    "hi": "romanian deadlift",
+    "mr": "romanian deadlift"
+  },
+  {
+    "en": "s forge\" :",
+    "new_en": "s forge\" :",
+    "hi": "s forge\" :",
+    "mr": "s forge\" :"
+  },
+  {
+    "en": "smith machine",
+    "new_en": "smith machine",
+    "hi": "smith machine",
+    "mr": "smith machine"
+  },
+  {
+    "en": "spine|lower back|erector",
+    "new_en": "spine|lower back|erector",
+    "hi": "spine|lower back|erector",
+    "mr": "spine|lower back|erector"
+  },
+  {
+    "en": "states & UTs covered",
+    "new_en": "States & UTs covered",
+    "hi": "शामिल राज्य और UTs",
+    "mr": "समाविष्ट राज्ये आणि UTs"
+  },
+  {
+    "en": "stroke-dasharray .25s linear",
+    "new_en": "stroke-dasharray .25s linear",
+    "hi": "stroke-dasharray .25s linear",
+    "mr": "stroke-dasharray .25s linear"
+  },
+  {
+    "en": "stroke-dasharray .4s ease",
+    "new_en": "stroke-dasharray .4s ease",
+    "hi": "stroke-dasharray .4s ease",
+    "mr": "stroke-dasharray .4s ease"
+  },
+  {
+    "en": "stroke-dasharray .5s ease",
+    "new_en": "stroke-dasharray .5s ease",
+    "hi": "stroke-dasharray .5s ease",
+    "mr": "stroke-dasharray .5s ease"
+  },
+  {
+    "en": "sweet potato",
+    "new_en": "sweet potato",
+    "hi": "sweet potato",
+    "mr": "sweet potato"
+  },
+  {
+    "en": "t match.",
+    "new_en": "t match.",
+    "hi": "t match.",
+    "mr": "t match."
+  },
+  {
+    "en": "text-left active:scale-[0.995] transition-transform",
+    "new_en": "text-left active:scale-[0.995] transition-transform",
+    "hi": "text-left active:scale-[0.995] transition-transform",
+    "mr": "text-left active:scale-[0.995] transition-transform"
+  },
+  {
+    "en": "the last 3 months",
+    "new_en": "Last 3 months",
+    "hi": "पिछले 3 महीने",
+    "mr": "मागील 3 महिने"
+  },
+  {
+    "en": "the last 4 weeks",
+    "new_en": "Last 4 weeks",
+    "hi": "पिछले 4 हफ्ते",
+    "mr": "मागील 4 आठवडे"
+  },
+  {
+    "en": "the week of",
+    "new_en": "Week of",
+    "hi": "का हफ्ता",
+    "mr": "चा आठवडा"
+  },
+  {
+    "en": "this week",
+    "new_en": "This week",
+    "hi": "इस हफ्ते",
+    "mr": "या आठवड्यात"
+  },
+  {
+    "en": "to use, forever",
+    "new_en": "To use, forever",
+    "hi": "इस्तेमाल के लिए, हमेशा",
+    "mr": "वापरासाठी, कायमचे"
+  },
+  {
+    "en": "upper arms",
+    "new_en": "Upper arms",
+    "hi": "हाथ का ऊपरी हिस्सा",
+    "mr": "हाताचा वरचा भाग"
+  },
+  {
+    "en": "upper legs",
+    "new_en": "Upper legs",
+    "hi": "पैर का ऊपरी हिस्सा",
+    "mr": "पायाचा वरचा भाग"
+  },
+  {
+    "en": "useStore must be used inside StoreProvider",
+    "new_en": "useStore must be used inside StoreProvider",
+    "hi": "useStore must be used inside StoreProvider",
+    "mr": "useStore must be used inside StoreProvider"
+  },
+  {
+    "en": "vada pav",
+    "new_en": "vada pav",
+    "hi": "vada pav",
+    "mr": "vada pav"
+  },
+  {
+    "en": "week of",
+    "new_en": "Week of",
+    "hi": "का हफ्ता",
+    "mr": "चा आठवडा"
+  },
+  {
+    "en": "weight (kg)",
+    "new_en": "Weight (kg)",
+    "hi": "वजन (kg)",
+    "mr": "वजन (kg)"
+  },
+  {
+    "en": "wheat flour",
+    "new_en": "wheat flour",
+    "hi": "wheat flour",
+    "mr": "wheat flour"
+  },
+  {
+    "en": "wheat flour, white",
+    "new_en": "wheat flour, white",
+    "hi": "wheat flour, white",
+    "mr": "wheat flour, white"
+  },
+  {
+    "en": "width .4s ease",
+    "new_en": "width .4s ease",
+    "hi": "width .4s ease",
+    "mr": "width .4s ease"
+  },
+  {
+    "en": "workout apps? Export your workouts there as a CSV file and pick it here — every set comes across.",
+    "new_en": "Workout apps? Export your workouts as a CSV file and select it here — every set comes across.",
+    "hi": "अन्य workout apps? वहां से अपने workouts CSV फाइल में export करें और यहां चुनें — हर set आ जाएगा।",
+    "mr": "इतर workout apps? तिथून तुमचे workouts CSV फाइल म्हणून export करा आणि इथे निवडा — प्रत्येक set येईल."
+  },
+  {
+    "en": "workout name",
+    "new_en": "Workout name",
+    "hi": "workout का नाम",
+    "mr": "workout चे नाव"
+  },
+  {
+    "en": "yyyy-MM-dd",
+    "new_en": "yyyy-MM-dd",
+    "hi": "yyyy-MM-dd",
+    "mr": "yyyy-MM-dd"
+  },
+  {
+    "en": "yyyy-MM-dd HH:mm:ss",
+    "new_en": "yyyy-MM-dd HH:mm:ss",
+    "hi": "yyyy-MM-dd HH:mm:ss",
+    "mr": "yyyy-MM-dd HH:mm:ss"
+  },
+  {
+    "en": "· AI",
+    "new_en": "· AI",
+    "hi": "· AI",
+    "mr": "· AI"
+  },
+  {
+    "en": "· added later",
+    "new_en": "· Added later",
+    "hi": "· बाद में जोड़ा गया",
+    "mr": "· नंतर जोडले"
+  },
+  {
+    "en": "· deload",
+    "new_en": "· deload",
+    "hi": "· deload",
+    "mr": "· deload"
+  },
+  {
+    "en": "· matched FORGE database",
+    "new_en": "· Matched FORGE database",
+    "hi": "· FORGE डेटाबेस से मिला",
+    "mr": "· FORGE डेटाबेसशी जुळले"
+  },
+  {
+    "en": "· mine",
+    "new_en": "· Mine",
+    "hi": "· मेरा",
+    "mr": "· माझे"
+  },
+  {
+    "en": "· per side",
+    "new_en": "· Per side",
+    "hi": "· प्रति साइड",
+    "mr": "· प्रत्येक बाजूला"
+  },
+  {
+    "en": "· review target adjustment",
+    "new_en": "· Review target adjustment",
+    "hi": "· target बदलाव की समीक्षा करें",
+    "mr": "· target बदलाची समीक्षा करा"
+  },
+  {
+    "en": "· superset",
+    "new_en": "· superset",
+    "hi": "· superset",
+    "mr": "· superset"
+  },
+  {
+    "en": "· ★ PR",
+    "new_en": "· ★ PR",
+    "hi": "· ★ PR",
+    "mr": "· ★ PR"
+  },
+  {
+    "en": "— food, workouts and steps go to this day.",
+    "new_en": "— Food, workouts and steps go to this day.",
+    "hi": "— खाना, workouts और steps इस दिन में जाएंगे।",
+    "mr": "— अन्न, workouts आणि steps या दिवसात जातील."
+  },
+  {
+    "en": "— that differs from the calorie target.",
+    "new_en": "— That differs from the calorie target.",
+    "hi": "— यह calorie target से अलग है।",
+    "mr": "— हे calorie target पेक्षा वेगळे आहे."
+  },
+  {
+    "en": "— use different Google projects for more free quota.",
+    "new_en": "— Use different Google projects for more free quota.",
+    "hi": "— अधिक फ्री कोटा के लिए अलग Google projects का इस्तेमाल करें।",
+    "mr": "— अधिक मोफत कोट्यासाठी वेगळे Google projects वापरा."
+  },
+  {
+    "en": "“2 roti, dal, vada pav”",
+    "new_en": "“2 roti, dal, vada pav”",
+    "hi": "“2 roti, dal, vada pav”",
+    "mr": "“2 roti, dal, vada pav”"
+  },
+  {
+    "en": "− Remove set",
+    "new_en": "− Remove set",
+    "hi": "− set हटाएं",
+    "mr": "− set काढा"
+  },
+  {
+    "en": "✦ Target",
+    "new_en": "✦ Target",
+    "hi": "✦ Target",
+    "mr": "✦ Target"
+  }
+]

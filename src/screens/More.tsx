@@ -34,6 +34,7 @@ const GROUPS: { title: string; items: { to: string; label: string; icon: string 
     items: [
       { to: '/more/keys', label: 'My Gemini AI keys', icon: 'key' },
       { to: '/more/settings', label: 'Settings, theme & export', icon: 'gear' },
+      { to: '/more/feedback', label: 'Send feedback', icon: 'bolt' },
     ],
   },
 ]

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FORGE Design Drafts</title>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@500;700&family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDE8DF}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);font-family:Figtree,sans-serif;color:#1B1A17;padding:40px 24px 80px}
+h1{font-family:"Young Serif",serif;font-weight:400;font-size:40px;text-align:center}
+.sub{text-align:center;color:#5C5750;margin:8px 0 36px}
+.grid{display:flex;flex-wrap:wrap;gap:36px;justify-content:center}
+.col{width:360px}
+.label{display:flex;gap:10px;align-items:baseline;margin:0 4px 12px}
+.label b{font-size:13px;color:#E5482B;letter-spacing:.1em}
+.label h2{font-family:"Young Serif",serif;font-weight:400;font-size:22px}
+.note{font-size:13px;color:#5C5750;margin:12px 4px 0;line-height:1.5}
+svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.phone{position:relative;width:360px;height:760px;border-radius:44px;overflow:hidden;padding:18px 16px 0;box-shadow:0 40px 80px -30px rgba(0,0,0,.45),0 0 0 9px #111,0 0 0 10px #333}
+.stat{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:14px;opacity:.8}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.hd small{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.65;font-weight:700}
+.hd h3{font-size:30px;line-height:1.05}
+.av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800}
+.hero{border-radius:28px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden}
+.kcal{display:flex;align-items:center;justify-content:space-between}
+.big{font-size:46px;line-height:1;font-weight:800;letter-spacing:-.03em}
+.big span{font-size:14px;font-weight:600;opacity:.6;letter-spacing:0}
+.ring{width:92px;height:92px}
+.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.m{border-radius:16px;padding:10px}
+.m small{font-size:10px;font-weight:800;letter-spacing:.1em}
+.m b{display:block;font-size:17px;margin:2px 0 6px}
+.bar{height:5px;border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.t{border-radius:20px;padding:12px;position:relative;overflow:hidden}
+.t .ic{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;margin-bottom:10px}
+.t .ic svg{width:17px;height:17px}
+.t b{display:block;font-size:22px;line-height:1}
+.t span{font-size:11px;opacity:.7;font-weight:600}
+.work{border-radius:24px;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.work small{font-size:10px;letter-spacing:.14em;font-weight:800;text-transform:uppercase}
+.work h4{font-size:20px;margin:4px 0 2px}
+.work p{font-size:12px;opacity:.7}
+.go{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none}
+.nav{position:absolute;left:12px;right:12px;bottom:14px;height:66px;border-radius:24px;display:flex;justify-content:space-around;align-items:center}
+.nav a{display:grid;place-items:center;gap:2px;font-size:10px;font-weight:700;width:52px;opacity:.55}
+.nav a.on{opacity:1}
+.nav .plus{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;opacity:1}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;mix-blend-mode:overlay;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* 1 FROSTED SAFFRON: glass on a warm mesh */
+.d1{background:radial-gradient(60% 40% at 15% 10%,#FFB45C 0,transparent 70%),radial-gradient(55% 45% at 90% 30%,#FF6F7D 0,transparent 70%),radial-gradient(70% 50% at 40% 95%,#FFD36E 0,transparent 70%),#FBE3CF;color:#2A1A12}
+.d1 .glass{background:rgba(255,255,255,.38);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border:1px solid rgba(255,255,255,.65);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 12px 30px -16px rgba(120,50,20,.35)}
+.d1 .hd h3{font-family:Fraunces,serif;font-weight:700}
+.d1 .av{background:linear-gradient(135deg,#FF8A3D,#FF4F6D);color:#fff}
+.d1 .m{background:rgba(255,255,255,.45)}
+.d1 .bar{background:rgba(42,26,18,.1)}
+.d1 .t .ic{background:rgba(255,255,255,.7)}
+.d1 .go{background:linear-gradient(135deg,#FF8A3D,#FF4F6D);color:#fff;box-shadow:0 10px 20px -8px #FF4F6D}
+.d1 .nav .plus{background:linear-gradient(135deg,#FF8A3D,#FF4F6D);color:#fff}
+
+/* 2 MIDNIGHT THALI: dark glass, glowing lime + coral, grain */
+.d2{background:radial-gradient(70% 40% at 80% 0%,rgba(198,255,94,.18),transparent 70%),radial-gradient(60% 40% at 0% 60%,rgba(255,110,90,.16),transparent 70%),#0B0D12;color:#EEF0F4}
+.d2 .glass{background:rgba(255,255,255,.05);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.d2 .hd h3{font-family:"Space Grotesk",sans-serif;font-weight:700}
+.d2 .av{background:#C6FF5E;color:#0B0D12}
+.d2 .big{font-family:"Space Grotesk";color:#C6FF5E;text-shadow:0 0 30px rgba(198,255,94,.45)}
+.d2 .m{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.d2 .bar{background:rgba(255,255,255,.08)}
+.d2 .t .ic{background:rgba(198,255,94,.12);color:#C6FF5E}
+.d2 .go{background:#C6FF5E;color:#0B0D12;box-shadow:0 0 24px rgba(198,255,94,.6)}
+.d2 .nav .plus{background:#FF6E5A;color:#fff;box-shadow:0 0 24px rgba(255,110,90,.6)}
+
+/* 3 CLAY & COPPER: soft embossed clay, copper metal, paper grain */
+.d3{background:#E9D9C8;color:#3B2618}
+.d3 .clay{background:#EBDCCB;box-shadow:8px 8px 18px #C9B6A2,-8px -8px 18px #FBF0E3;border:0}
+.d3 .hd h3{font-family:"Instrument Serif",serif;font-size:36px;font-weight:400;font-style:italic}
+.d3 .av{background:linear-gradient(145deg,#D98C5F,#A9552D);color:#FFF4E8;box-shadow:inset 2px 2px 4px rgba(255,255,255,.4),4px 4px 10px #C9B6A2}
+.d3 .big{font-family:"Instrument Serif";font-weight:400;font-size:56px}
+.d3 .m{background:#E9D9C8;box-shadow:inset 4px 4px 8px #CDB9A5,inset -4px -4px 8px #FBF0E3}
+.d3 .bar{background:#D8C6B2;box-shadow:inset 1px 1px 2px #B9A38D}
+.d3 .t .ic{background:linear-gradient(145deg,#E3A57C,#B5653B);color:#FFF4E8;box-shadow:2px 2px 6px #C9B6A2}
+.d3 .go{background:linear-gradient(145deg,#D98C5F,#A9552D);color:#FFF4E8;box-shadow:6px 6px 14px #C2AD98,-4px -4px 10px #FBF0E3}
+.d3 .nav{background:#EBDCCB;box-shadow:8px 8px 18px #C9B6A2,-8px -8px 18px #FBF0E3}
+.d3 .nav .plus{background:linear-gradient(145deg,#D98C5F,#A9552D);color:#FFF4E8}
+
+/* 4 MONSOON: sea-glass liquid gradients, water wave widget */
+.d4{background:linear-gradient(165deg,#D7F3EE 0%,#B9E3F2 45%,#C9C6F5 100%);color:#0F2A3A}
+.d4 .glass{background:rgba(255,255,255,.42);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);border:1px solid rgba(255,255,255,.7);box-shadow:0 20px 40px -22px rgba(20,70,110,.45),inset 0 1px 0 #fff}
+.d4 .hd h3{font-family:"DM Sans";font-weight:700;letter-spacing:-.03em}
+.d4 .av{background:linear-gradient(135deg,#2BB3A3,#4C6FFF);color:#fff}
+.d4 .big{font-family:"DM Sans"}
+.d4 .m{background:rgba(255,255,255,.5)}
+.d4 .bar{background:rgba(15,42,58,.1)}
+.d4 .t .ic{background:rgba(255,255,255,.75);color:#2B7FB3}
+.d4 .wave{position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(180deg,rgba(76,140,255,.35),rgba(43,179,163,.55));border-radius:40% 45% 0 0/18px 22px 0 0}
+.d4 .go{background:linear-gradient(135deg,#2BB3A3,#4C6FFF);color:#fff;box-shadow:0 12px 24px -10px #4C6FFF}
+.d4 .nav .plus{background:linear-gradient(135deg,#2BB3A3,#4C6FFF);color:#fff}
+
+/* 5 BENTO STICKER: bold bento, sticker colours, chunky type */
+.d5{background:#FFF7EA;color:#141414}
+.d5 .box{border:2.5px solid #141414;box-shadow:4px 4px 0 #141414}
+.d5 .hd h3{font-family:"Archivo Black";font-size:32px;text-transform:uppercase;letter-spacing:-.02em}
+.d5 .av{background:#FF5A36;color:#fff;border:2.5px solid #141414;box-shadow:3px 3px 0 #141414}
+.d5 .hero{background:#FFD23F}
+.d5 .big{font-family:"Archivo Black";font-weight:400}
+.d5 .m{background:#fff;border:2px solid #141414}
+.d5 .bar{background:#eee;border:1.5px solid #141414}
+.d5 .t1{background:#7BE0AD}.d5 .t2{background:#7CC4FF}.d5 .t3{background:#FF8FB1}
+.d5 .t .ic{background:#fff;border:2px solid #141414}
+.d5 .work{background:#141414;color:#FFF7EA}
+.d5 .go{background:#FF5A36;color:#fff;border:2.5px solid #FFF7EA}
+.d5 .nav{background:#fff}
+.d5 .nav .plus{background:#FF5A36;color:#fff;border:2.5px solid #141414;box-shadow:3px 3px 0 #141414}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+ <symbol id="home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+ <symbol id="bowl" viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 0 1-18 0Z"/><path d="M8 7c0-1.5 1-2 1-3.5M12 7c0-1.5 1-2 1-3.5M16 7c0-1.5 1-2 1-3.5"/></symbol>
+ <symbol id="dumb" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></symbol>
+ <symbol id="chart" viewBox="0 0 24 24"><path d="M3 20h18M6 16l4-5 3 3 5-7"/></symbol>
+ <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+ <symbol id="shoe" viewBox="0 0 24 24"><path d="M3 17h16a2 2 0 0 0 2-2c0-1.5-1.5-2.3-3-2.6l-4-.9-2-4H7L3 12z"/><path d="M3 20h18"/></symbol>
+ <symbol id="drop" viewBox="0 0 24 24"><path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z"/></symbol>
+ <symbol id="flame" viewBox="0 0 24 24"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.5 2-5 1 1 1.5 2 1.5 3 1.5-1.5 1.5-5 1.5-8Z"/></symbol>
+ <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<h1>FORGE: 5 design directions</h1>
+<p class="sub">Same Today screen, same data, five genuinely different looks. Pick one (or mix parts) and I'll apply it to the app.</p>
+
+<div class="grid" id="grid"></div>
+
+<template id="screen">
+ <div class="phone">
+  <div class="stat"><span>9:41</span><span>●●● 5G</span></div>
+  <div class="hd"><div><small>Sun, 16 Nov</small><h3>Today</h3></div><div class="av">A</div></div>
+  <div class="hero S-panel">
+   <div class="kcal"><div><small style="font-size:11px;font-weight:800;letter-spacing:.14em;opacity:.7">EATEN TODAY</small><div class="big">1,110 <span>/ 2,150 kcal</span></div><div style="font-size:12px;margin-top:6px;opacity:.75;font-weight:600">1,040 kcal left · on track</div></div>
+    <svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-opacity=".12" stroke-width="10"/><circle cx="50" cy="50" r="40" fill="none" stroke="url(#gS)" stroke-width="10" stroke-linecap="round" stroke-dasharray="131 252" transform="rotate(-90 50 50)"/><text x="50" y="56" text-anchor="middle" font-size="18" font-weight="800" fill="currentColor">52%</text><defs><linearGradient id="gS"><stop offset="0" stop-color="var(--a1)"/><stop offset="1" stop-color="var(--a2)"/></linearGradient></defs></svg></div>
+   <div class="macros">
+    <div class="m"><small style="color:var(--p)">PROTEIN</small><b>41<span style="font-size:11px;opacity:.6"> /160g</span></b><div class="bar"><i style="width:26%;background:var(--p)"></i></div></div>
+    <div class="m"><small style="color:var(--c)">CARBS</small><b>178<span style="font-size:11px;opacity:.6"> /220g</span></b><div class="bar"><i style="width:81%;background:var(--c)"></i></div></div>
+    <div class="m"><small style="color:var(--f)">FAT</small><b>25<span style="font-size:11px;opacity:.6"> /65g</span></b><div class="bar"><i style="width:38%;background:var(--f)"></i></div></div>
+   </div>
+  </div>
+  <div class="tiles">
+   <div class="t t1 S-panel"><div class="ic"><svg class="i"><use href="#shoe"/></svg></div><b>6,240</b><span>steps · auto</span></div>
+   <div class="t t2 S-panel"><div class="wave S-wave"></div><div class="ic" style="position:relative"><svg class="i"><use href="#drop"/></svg></div><b style="position:relative">1.5 L</b><span style="position:relative">of 2.5 L</span></div>
+   <div class="t t3 S-panel"><div class="ic"><svg class="i"><use href="#flame"/></svg></div><b>7</b><span>day streak</span></div>
+  </div>
+  <div class="work S-panel"><div><small style="color:var(--a1)">Today's workout</small><h4>Upper Strength</h4><p>6 exercises · ~55 min</p></div><div class="go"><svg class="i"><use href="#arrow"/></svg></div></div>
+  <div class="nav S-panel">
+   <a class="on" style="color:var(--a1)"><svg class="i"><use href="#home"/></svg>Today</a><a><svg class="i"><use href="#bowl"/></svg>Food</a>
+   <span class="plus"><svg class="i"><use href="#plus"/></svg></span>
+   <a><svg class="i"><use href="#dumb"/></svg>Train</a><a><svg class="i"><use href="#chart"/></svg>Progress</a>
+  </div>
+ </div>
+</template>
+
+<script>
+const D = [
+ {n:'01',t:'Frosted Saffron',cls:'d1',panel:'glass',v:'--a1:#FF6A3D;--a2:#FF4F6D;--p:#3F6FD8;--c:#D98A10;--f:#E04867',note:'Glassmorphism on a warm saffron-to-rose mesh. Frosted cards with a bright inner edge, gradient ring and buttons. Friendly, premium, very "Indian sunset".'},
+ {n:'02',t:'Midnight Thali',cls:'d2 grain',panel:'glass',v:'--a1:#C6FF5E;--a2:#5EFFC8;--p:#7AA7FF;--c:#FFC85E;--f:#FF6E5A',note:'Dark smoked glass with glowing lime and coral, film-grain texture. Numbers glow like a dashboard at night. Best for gym-first users.'},
+ {n:'03',t:'Clay & Copper',cls:'d3 grain',panel:'clay',v:'--a1:#B5653B;--a2:#E3A57C;--p:#4F6FA8;--c:#C98A2E;--f:#B5483B',note:'Soft embossed clay (neumorphism) with brushed-copper buttons and a paper-grain finish. Tactile and calm, like a kitchen counter.'},
+ {n:'04',t:'Monsoon',cls:'d4',panel:'glass',v:'--a1:#2B9FB3;--a2:#4C6FFF;--p:#4C6FFF;--c:#E3A12E;--f:#E0577C',note:'Sea-glass gradients and liquid glass. The water tile literally fills with a wave. Fresh, light and airy.'},
+ {n:'05',t:'Bento Sticker',cls:'d5',panel:'box',v:'--a1:#FF5A36;--a2:#FFD23F;--p:#2D6BFF;--c:#E89B00;--f:#FF3D7F',note:'Bold bento grid, hard outlines and offset shadows, sticker colours (mango, mint, sky, pink). Loud, fun, young and instantly readable.'},
+]
+const tpl = document.getElementById('screen').innerHTML
+document.getElementById('grid').innerHTML = D.map((d, k) => `<div class="col"><div class="label"><b>${d.n}</b><h2>${d.t}</h2></div>` +
+ tpl.replace('class="phone"', `class="phone ${d.cls}" style="${d.v}"`).replaceAll('S-panel', d.panel).replaceAll('gS', 'g' + k)
+   .replace('S-wave', d.cls === 'd4' ? 'wave' : 'hidden') + `<p class="note">${d.note}</p></div>`).join('')
+document.querySelectorAll('.hidden').forEach(e => e.remove())
+document.querySelectorAll('.d1 .nav,.d2 .nav,.d4 .nav').forEach(n => n.classList.add('glass'))
+</script>
+</body>
+</html>

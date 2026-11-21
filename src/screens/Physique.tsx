@@ -97,13 +97,21 @@ export default function Physique() {
   if (step === 'analysing') {
     return <Screen title="Physique Lab" sub="Analysing" back={() => setStep('goal')}>
       <Spinner label="Reviewing your check-in" />
-      <Notice>Photos are sent once for this analysis and are never stored outside this device.</Notice>
+      <Notice>Your photos are sent once to Google Gemini, using your own key, for this analysis. FORGE does not save them anywhere except this phone. With free Gemini keys, Google may use what you send to improve its products.</Notice>
     </Screen>
   }
 
   if (step === 'result' && analysis) {
     return <Result analysis={analysis} aiUsed={aiUsed} err={err} goal={goal} priorities={priorities} days={days}
       checkinId={pendingId} onDone={() => { setStep('timeline'); setPics({}); setReference(null); setAnalysis(null) }} />
+  }
+
+  if (step === 'upload' && (s.profile?.age ?? 18) < 18) {
+    return (
+      <Screen title="New check-in" back={() => setStep('timeline')}>
+        <Notice>Physique check-ins are for people 18 and over. You can still track training, food and weight.</Notice>
+      </Screen>
+    )
   }
 
   if (step === 'upload') {
@@ -156,7 +164,7 @@ export default function Physique() {
               <input type="number" min={3} max={6} value={days} onChange={e => setDays(Number(e.target.value))} />
             </Field>
           </Card>
-          {!ai.configured && <Notice tone="warn">AI is not configured — you will still get a calculated roadmap and a generated plan.</Notice>}
+          {!ai.configured && <Notice tone="warn">AI is not set up — you will still get a calculated roadmap and plan.</Notice>}
           <Button onClick={analyse}>Analyse check-in</Button>
         </div>
       </Screen>
@@ -180,7 +188,7 @@ export default function Physique() {
       </Card>
 
       {s.checkins.length === 0
-        ? <div className="mt-3"><Empty title="No check-ins yet" body="Your first check-in becomes the baseline everything else is compared against." /></div>
+        ? <div className="mt-3"><Empty title="No check-ins yet" body="Your first check-in is the baseline for all comparisons." /></div>
         : <div className="mt-3 grid gap-3">{s.checkins.map(c => <CheckinCard key={c.id} checkin={c} />)}</div>}
 
       <Card className="mt-3">

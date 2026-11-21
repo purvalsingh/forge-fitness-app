@@ -53,6 +53,24 @@ function applyTheme(t: 'dark' | 'light') {
   localStorage.setItem('forge:theme', t)
 }
 
+export const ACCENTS = {
+  ember: ['#FF6B2C', '#C4461A', '#1A0A03'],
+  lime: ['#B8E54A', '#7FA32A', '#121A03'],
+  sky: ['#6E9BFF', '#3A64C8', '#03081A'],
+  violet: ['#A78BFA', '#6D4FD6', '#0E061A'],
+  rose: ['#FF5C8A', '#C42D5A', '#1A030A'],
+} as const
+export type Accent = keyof typeof ACCENTS
+
+export function applyAccent(a: Accent) {
+  const [main, deep, ink] = ACCENTS[a] ?? ACCENTS.ember
+  const r = document.documentElement.style
+  r.setProperty('--accent', main); r.setProperty('--accent-strong', main)
+  r.setProperty('--accent-deep', deep); r.setProperty('--accent-ink', ink)
+  try { localStorage.setItem('forge:accent', a) } catch { /* private mode */ }
+}
+try { applyAccent((localStorage.getItem('forge:accent') as Accent) || 'ember') } catch { /* no storage */ }
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<State>(EMPTY)
   const [theme, setThemeState] = useState<'dark' | 'light'>(
@@ -70,6 +88,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const reload = useCallback(async () => {
     try {
+      await db.flushOutbox().catch(() => 0) // queued offline saves go first, so the reload includes them
       // First run for this account/device: plant the seed data so the UI is meaningful.
       const mealTypes = await db.list<MealType>('meal_types')
       if (mealTypes.length === 0) {
@@ -117,6 +136,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => { void reload() }, [reload])
+  // Offline saves upload as soon as the connection is back, then the screen refreshes from the server.
+  useEffect(() => {
+    const back = () => { void db.flushOutbox().then(() => reload()) }
+    window.addEventListener('online', back)
+    return () => window.removeEventListener('online', back)
+  }, [reload])
 
   /**
    * Optimistic writes: the UI updates in the same frame, the network write follows. A failed write

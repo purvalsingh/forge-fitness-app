@@ -103,7 +103,7 @@ function Heatmap({ minutes, today }: { minutes: Record<string, number>; today: s
     const iso = d.toISOString().slice(0, 10)
     cells.push({ d: iso, m: iso > today ? -1 : minutes[iso] ?? 0 })
   }
-  const level = (m: number) => (m < 0 ? 'transparent' : m === 0 ? 'var(--surface-high)' : m < 30 ? 'rgba(255,107,44,.35)' : m < 60 ? 'rgba(255,107,44,.65)' : 'var(--accent)')
+  const level = (m: number) => (m < 0 ? 'transparent' : m === 0 ? 'var(--surface-high)' : m < 30 ? 'color-mix(in srgb, var(--accent) 35%, transparent)' : m < 60 ? 'color-mix(in srgb, var(--accent) 65%, transparent)' : 'var(--accent)')
   return (
     <div className="no-scrollbar overflow-x-auto">
       <div className="grid w-max grid-flow-col gap-[3px]" style={{ gridTemplateRows: 'repeat(7, 10px)' }} role="img" aria-label="Training days over the last year">

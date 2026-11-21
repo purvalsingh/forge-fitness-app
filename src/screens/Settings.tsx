@@ -1,6 +1,8 @@
+import { forgetDevice } from '../lib/db'
+import { LANGS, currentLang, setLang } from '../lib/i18n'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useStore } from '../store'
+import { useStore, ACCENTS, applyAccent, type Accent } from '../store'
 import { exportAll, toCSV, uid } from '../lib/db'
 import { supabase, supabaseConfigured } from '../lib/supabase'
 import { ai, AIUnavailable, API_BASE } from '../lib/ai'
@@ -50,6 +52,8 @@ function ConnectionStatus() {
 export default function SettingsScreen() {
   const s = useStore()
   const nav = useNavigate()
+  const [lang, setLangState] = useState(currentLang)
+  const [accent, setAccent] = useState<Accent>(() => (localStorage.getItem('forge:accent') as Accent) || 'ember')
   const [msg, setMsg] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -71,7 +75,7 @@ export default function SettingsScreen() {
               onCommit={v => s.profile && s.save('profiles', { ...s.profile, display_name: v } as never)} />
           </Field>
           <div className="mt-2">
-            <Field label="Gender" hint="Sets your calorie maths and the body on your muscle map.">
+            <Field label="Gender" hint="Sets your calorie math and muscle map body.">
               <div className="grid grid-cols-2 gap-2">
                 {(['male', 'female'] as const).map(g => (
                   <button key={g} className="chip press !min-h-[44px] justify-center" aria-pressed={s.profile?.sex === g}
@@ -83,10 +87,27 @@ export default function SettingsScreen() {
         </Card>
 
         <Card>
+          <div className="eyebrow mb-2">Language</div>
+          <div className="grid grid-cols-3 gap-2" data-no-i18n>
+            {LANGS.map(([code, name]) => (
+              <Button key={code} variant={lang === code ? 'primary' : 'ghost'} onClick={() => { setLangState(code); void setLang(code) }}>{name}</Button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
           <div className="eyebrow mb-2">Theme</div>
           <div className="grid grid-cols-2 gap-2">
             <Button variant={s.theme === 'dark' ? 'primary' : 'ghost'} onClick={() => s.setTheme('dark')}>Dark</Button>
             <Button variant={s.theme === 'light' ? 'primary' : 'ghost'} onClick={() => s.setTheme('light')}>Light</Button>
+          </div>
+          <div className="eyebrow mb-2 mt-3">Accent colour</div>
+          <div className="flex flex-wrap gap-2">
+            {(Object.keys(ACCENTS) as Accent[]).map(a => (
+              <button key={a} aria-label={`${a} accent`} aria-pressed={accent === a} className="press grid h-11 w-11 place-items-center rounded-full"
+                style={{ background: ACCENTS[a][0], outline: accent === a ? '2px solid var(--text)' : 'none', outlineOffset: 3 }}
+                onClick={() => { applyAccent(a); setAccent(a) }} />
+            ))}
           </div>
         </Card>
 
@@ -126,53 +147,49 @@ export default function SettingsScreen() {
 
         <Card>
           <div className="eyebrow mb-2">Day & training</div>
-          <div className="grid gap-3">
-            <Field label="My day ends at" hint="Anything logged before this hour counts toward the previous day — for late gym sessions and midnight snacks.">
+          <div className="divide-y" style={{ borderColor: 'var(--line)' }}>
+            <Row label="My day ends at" hint="Food and workouts logged before this time count for the day before.">
               <select value={s.settings.day_start_hour ?? 4} onChange={e => s.save('settings', { ...s.settings, day_start_hour: Number(e.target.value) } as never)}>
-                {[0, 1, 2, 3, 4, 5, 6].map(h => <option key={h} value={h}>{h === 0 ? 'Midnight (12:00 AM)' : `${h}:00 AM`}</option>)}
+                {[0, 1, 2, 3, 4, 5, 6].map(h => <option key={h} value={h}>{h === 0 ? '12 AM' : `${h} AM`}</option>)}
               </select>
-            </Field>
-            <div className="grid grid-cols-2 gap-2">
-              <Field label="Units">
-                <select value={s.settings.units ?? 'kg'} onChange={e => s.save('settings', { ...s.settings, units: e.target.value } as never)}>
-                  <option value="kg">kg</option><option value="lb">lb</option>
-                </select>
-              </Field>
-              <Field label="Week starts">
-                <select value={s.settings.week_start ?? 1} onChange={e => s.save('settings', { ...s.settings, week_start: Number(e.target.value) } as never)}>
-                  <option value={1}>Monday</option><option value={0}>Sunday</option>
-                </select>
-              </Field>
-              <Field label="Default rest (s)">
-                <DraftInput type="number" min={0} max={900} value={s.settings.default_rest_sec ?? 120} ariaLabel="Default rest seconds"
-                  onCommit={v => s.save('settings', { ...s.settings, default_rest_sec: Math.min(900, Math.max(0, Number(v) || 0)) } as never)} />
-              </Field>
-              <Field label="Bar weight (kg)">
-                <DraftInput type="number" min={0} max={50} value={s.settings.bar_weight_kg ?? 20} ariaLabel="Bar weight"
-                  onCommit={v => s.save('settings', { ...s.settings, bar_weight_kg: Math.min(50, Math.max(0, Number(v) || 20)) } as never)} />
-              </Field>
-              <Field label="Effort per set">
-                <select value={s.settings.effort_scale ?? 'off'} onChange={e => s.save('settings', { ...s.settings, effort_scale: e.target.value } as never)}>
-                  <option value="off">Off</option><option value="rir">RIR (reps in reserve)</option><option value="rpe">RPE (6–10)</option>
-                </select>
-              </Field>
-              <Field label="Water goal (ml)">
-                <DraftInput type="number" min={0} max={10000} value={s.settings.water_goal_ml ?? 2500} ariaLabel="Water goal"
-                  onCommit={v => s.save('settings', { ...s.settings, water_goal_ml: Math.min(10000, Math.max(0, Number(v) || 0)) } as never)} />
-              </Field>
-              <Field label="Fasting window (h)" hint="0 hides the fasting card.">
-                <DraftInput type="number" min={0} max={72} value={s.settings.fasting_hours ?? 16} ariaLabel="Fasting hours"
-                  onCommit={v => s.save('settings', { ...s.settings, fasting_hours: Math.min(72, Math.max(0, Number(v) || 0)) } as never)} />
-              </Field>
-            </div>
-            <label className="flex items-center gap-2 text-[13px]">
-              <input type="checkbox" checked={s.settings.keep_awake !== false} onChange={e => s.save('settings', { ...s.settings, keep_awake: e.target.checked } as never)} />
-              Keep the screen awake during workouts
-            </label>
-            <label className="flex items-center gap-2 text-[13px]">
-              <input type="checkbox" checked={Boolean(s.settings.timer_flash)} onChange={e => s.save('settings', { ...s.settings, timer_flash: e.target.checked } as never)} />
-              Flash the screen when rest ends (loud gyms)
-            </label>
+            </Row>
+            <Row label="Units">
+              <select value={s.settings.units ?? 'kg'} onChange={e => s.save('settings', { ...s.settings, units: e.target.value } as never)}>
+                <option value="kg">kg</option><option value="lb">lb</option>
+              </select>
+            </Row>
+            <Row label="Week starts on">
+              <select value={s.settings.week_start ?? 1} onChange={e => s.save('settings', { ...s.settings, week_start: Number(e.target.value) } as never)}>
+                <option value={1}>Monday</option><option value={0}>Sunday</option>
+              </select>
+            </Row>
+            <Row label="Rest timer" hint="Seconds between sets">
+              <DraftInput type="number" min={0} max={900} value={s.settings.default_rest_sec ?? 120} ariaLabel="Default rest seconds"
+                onCommit={v => s.save('settings', { ...s.settings, default_rest_sec: Math.min(900, Math.max(0, Number(v) || 0)) } as never)} />
+            </Row>
+            <Row label="Barbell weight" hint="kg, for plate maths">
+              <DraftInput type="number" min={0} max={50} value={s.settings.bar_weight_kg ?? 20} ariaLabel="Bar weight"
+                onCommit={v => s.save('settings', { ...s.settings, bar_weight_kg: Math.min(50, Math.max(0, Number(v) || 20)) } as never)} />
+            </Row>
+            <Row label="Effort scale" hint="How you rate how hard a set felt">
+              <select value={s.settings.effort_scale ?? 'off'} onChange={e => s.save('settings', { ...s.settings, effort_scale: e.target.value } as never)}>
+                <option value="off">Off</option><option value="rir">RIR</option><option value="rpe">RPE</option>
+              </select>
+            </Row>
+            <Row label="Water goal" hint="ml per day">
+              <DraftInput type="number" min={0} max={10000} value={s.settings.water_goal_ml ?? 2500} ariaLabel="Water goal"
+                onCommit={v => s.save('settings', { ...s.settings, water_goal_ml: Math.min(10000, Math.max(0, Number(v) || 0)) } as never)} />
+            </Row>
+            <Row label="Fasting window" hint="Hours. Set 0 to turn fasting off.">
+              <DraftInput type="number" min={0} max={72} value={s.settings.fasting_hours ?? 16} ariaLabel="Fasting hours"
+                onCommit={v => s.save('settings', { ...s.settings, fasting_hours: Math.min(72, Math.max(0, Number(v) || 0)) } as never)} />
+            </Row>
+            <Row label="Keep screen on" hint="During workouts">
+              <input type="checkbox" className="h-5 w-5" checked={s.settings.keep_awake !== false} onChange={e => s.save('settings', { ...s.settings, keep_awake: e.target.checked } as never)} />
+            </Row>
+            <Row label="Flash when rest ends" hint="Useful in loud gyms">
+              <input type="checkbox" className="h-5 w-5" checked={Boolean(s.settings.timer_flash)} onChange={e => s.save('settings', { ...s.settings, timer_flash: e.target.checked } as never)} />
+            </Row>
           </div>
         </Card>
 
@@ -297,10 +314,13 @@ export default function SettingsScreen() {
           {supabaseConfigured ? (
             <Button variant="danger" onClick={async () => {
               localStorage.removeItem('forge:demo')
+              forgetDevice()
               await supabase?.auth.signOut()
               location.reload()
             }}>Sign out</Button>
-          ) : (
+          ) : null}
+          {supabaseConfigured && !localStorage.getItem('forge:demo') && <DeleteAccount />}
+          {supabaseConfigured ? null : (
             <Notice>Running on this device only. Add Supabase credentials to sync across devices.</Notice>
           )}
         </Card>
@@ -308,5 +328,41 @@ export default function SettingsScreen() {
         {msg && <Notice>{msg}</Notice>}
       </div>
     </Screen>
+  )
+}
+
+/** Label and hint on the left, one compact control on the right: no cramped two-column fields. */
+function Row({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-[60px] items-center gap-4 py-3" style={{ borderColor: 'var(--line)' }}>
+      <div className="min-w-0 flex-1">
+        <div className="text-[15px] font-semibold">{label}</div>
+        {hint && <div className="mt-0.5 text-[12px] leading-snug" style={{ color: 'var(--text-mute)' }}>{hint}</div>}
+      </div>
+      <div className="w-[120px] shrink-0 [&>input[type=checkbox]]:ml-auto [&>input[type=checkbox]]:block">{children}</div>
+    </div>
+  )
+}
+
+/** Permanently deletes the account and every row it owns (the database cascades). Two taps, so it can't happen by accident. */
+function DeleteAccount() {
+  const [armed, setArmed] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  return (
+    <div className="mt-4 border-t pt-4" style={{ borderColor: 'var(--line)' }}>
+      <div className="text-[15px] font-semibold">Delete my account</div>
+      <p className="mt-1 text-[12px] leading-snug" style={{ color: 'var(--text-mute)' }}>
+        Permanently deletes your account and all your data: meals, workouts, weight, plans and saved keys. This can't be undone.
+      </p>
+      <div className="mt-3">
+        <Button variant={armed ? 'danger' : 'ghost'} onClick={async () => {
+          if (!armed) { setArmed(true); return }
+          const { error } = await supabase!.rpc('delete_my_account')
+          if (error) { setErr("Couldn't delete your account right now. Try again later."); setArmed(false); return }
+          forgetDevice(); localStorage.clear(); await supabase!.auth.signOut(); location.reload()
+        }}>{armed ? 'Yes, delete everything' : 'Delete my account'}</Button>
+      </div>
+      {err && <div className="mt-2"><Notice tone="error">{err}</Notice></div>}
+    </div>
   )
 }

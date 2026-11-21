@@ -17,6 +17,15 @@ describe('training maths', () => {
     expect(platesPerSide(62.5, 20)).toEqual([20, 1.25])
     expect(platesPerSide(15, 20)).toBeNull()
   })
+  it('never suggests 0 kg + 2.5 or adds weight after a partial workout', () => {
+    // Audit bug: sets ticked with no weight read as 0 kg, so the app said "Bench 4x5 @ 2.5 kg".
+    const noWeight = ex([[0, 5], [0, 5], [0, 5], [0, 5]])
+    expect(nextTarget({ history: [{ date: '2026-11-01', ex: noWeight }], reps: '5' })?.weight).toBeNull()
+    // Only 1 of 4 sets done: same weight, not +2.5.
+    const partial = ex([[60, 5], [60, 5], [60, 5], [60, 5]])
+    partial.sets = partial.sets.map((x, i) => ({ ...x, done: i === 0 }))
+    expect(nextTarget({ history: [{ date: '2026-11-01', ex: partial }], reps: '5' })?.weight).toBe(60)
+  })
   it('parses rep ranges', () => {
     expect(parseReps('6-8')).toEqual([6, 8])
     expect(parseReps('5')).toEqual([5, 5])

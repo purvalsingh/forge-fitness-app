@@ -1,0 +1,902 @@
+[
+  {
+    "en": "Day 2 — Lower Strength",
+    "new_en": "Day 2 — Lower strength",
+    "hi": "Day 2 — Lower strength",
+    "mr": "Day 2 — Lower strength"
+  },
+  {
+    "en": "Day 3 — Upper Aesthetics",
+    "new_en": "Day 3 — Upper aesthetics",
+    "hi": "Day 3 — Upper aesthetics",
+    "mr": "Day 3 — Upper aesthetics"
+  },
+  {
+    "en": "Day 4 — Lower Aesthetics",
+    "new_en": "Day 4 — Lower aesthetics",
+    "hi": "Day 4 — Lower aesthetics",
+    "mr": "Day 4 — Lower aesthetics"
+  },
+  {
+    "en": "Day 5 — Arms & Weak Points",
+    "new_en": "Day 5 — Arms & weak points",
+    "hi": "Day 5 — Arms & weak points",
+    "mr": "Day 5 — Arms & weak points"
+  },
+  {
+    "en": "Day detail",
+    "new_en": "Day detail",
+    "hi": "दिन का विवरण",
+    "mr": "दिवसाचा तपशील"
+  },
+  {
+    "en": "Day name",
+    "new_en": "Day name",
+    "hi": "दिन का नाम",
+    "mr": "दिवसाचे नाव"
+  },
+  {
+    "en": "Days logged",
+    "new_en": "Days logged",
+    "hi": "लॉग किए गए दिन",
+    "mr": "लॉग केलेले दिवस"
+  },
+  {
+    "en": "Days per week",
+    "new_en": "Days per week",
+    "hi": "हफ़्ते में दिन",
+    "mr": "आठवड्यातील दिवस"
+  },
+  {
+    "en": "Default",
+    "new_en": "Default",
+    "hi": "डिफ़ॉल्ट",
+    "mr": "डिफॉल्ट"
+  },
+  {
+    "en": "Default rest (s)",
+    "new_en": "Default rest (s)",
+    "hi": "डिफ़ॉल्ट rest (s)",
+    "mr": "डिफॉल्ट rest (s)"
+  },
+  {
+    "en": "Define your road to elite performance",
+    "new_en": "Define your road to elite performance",
+    "hi": "शानदार परफ़ॉर्मेंस का अपना रास्ता तय करें",
+    "mr": "उत्कृष्ट परफॉर्मन्सचा तुमचा मार्ग ठरवा"
+  },
+  {
+    "en": "Delete all physique data",
+    "new_en": "Delete all physique data",
+    "hi": "सभी physique डेटा हटाएं",
+    "mr": "सर्व physique डेटा हटवा"
+  },
+  {
+    "en": "Delete entry",
+    "new_en": "Delete entry",
+    "hi": "एंट्री हटाएं",
+    "mr": "एंट्री हटवा"
+  },
+  {
+    "en": "Delete failed.",
+    "new_en": "Delete failed.",
+    "hi": "हटाया नहीं जा सका।",
+    "mr": "हटवता आले नाही."
+  },
+  {
+    "en": "Delete food",
+    "new_en": "Delete food",
+    "hi": "खाना हटाएं",
+    "mr": "फूड हटवा"
+  },
+  {
+    "en": "Delete my exercise",
+    "new_en": "Delete my exercise",
+    "hi": "मेरी exercise हटाएं",
+    "mr": "माझी exercise हटवा"
+  },
+  {
+    "en": "Delete my keys",
+    "new_en": "Delete my keys",
+    "hi": "मेरी keys हटाएं",
+    "mr": "माझ्या keys हटवा"
+  },
+  {
+    "en": "Delete recipe",
+    "new_en": "Delete recipe",
+    "hi": "रेसिपी हटाएं",
+    "mr": "रेसिपी हटवा"
+  },
+  {
+    "en": "Delete this check-in",
+    "new_en": "Delete this check-in",
+    "hi": "यह check-in हटाएं",
+    "mr": "हे check-in हटवा"
+  },
+  {
+    "en": "Delete this day",
+    "new_en": "Delete this day",
+    "hi": "यह दिन हटाएं",
+    "mr": "हा दिवस हटवा"
+  },
+  {
+    "en": "Delete this plan",
+    "new_en": "Delete this plan",
+    "hi": "यह प्लान हटाएं",
+    "mr": "हा प्लॅन हटवा"
+  },
+  {
+    "en": "Delhi",
+    "new_en": "Delhi",
+    "hi": "Delhi",
+    "mr": "Delhi"
+  },
+  {
+    "en": "Deload after",
+    "new_en": "Deload after",
+    "hi": "इसके बाद deload करें",
+    "mr": "यानंतर deload करा"
+  },
+  {
+    "en": "Deload size",
+    "new_en": "Deload size",
+    "hi": "Deload आकार",
+    "mr": "Deload प्रमाण"
+  },
+  {
+    "en": "Deload week: easy, fast reps to recover.",
+    "new_en": "Deload week: easy, fast reps to recover.",
+    "hi": "Deload हफ़्ता: रिकवरी के लिए आसान और तेज़ reps।",
+    "mr": "Deload आठवडा: रिकव्हरीसाठी सोपे आणि वेगवान reps."
+  },
+  {
+    "en": "Demo mode",
+    "new_en": "Demo mode",
+    "hi": "डेमो मोड",
+    "mr": "डेमो मोड"
+  },
+  {
+    "en": "Describe meal",
+    "new_en": "Describe meal",
+    "hi": "खाने के बारे में बताएं",
+    "mr": "जेवणाबद्दल सांगा"
+  },
+  {
+    "en": "Designing your plan",
+    "new_en": "Designing your plan",
+    "hi": "आपका प्लान तैयार हो रहा है",
+    "mr": "तुमचा प्लॅन तयार होत आहे"
+  },
+  {
+    "en": "Details →",
+    "new_en": "Details →",
+    "hi": "डिटेल्स →",
+    "mr": "तपशील →"
+  },
+  {
+    "en": "Deterministic baseline",
+    "new_en": "Deterministic baseline",
+    "hi": "Deterministic baseline",
+    "mr": "Deterministic baseline"
+  },
+  {
+    "en": "Dhokla",
+    "new_en": "Dhokla",
+    "hi": "Dhokla",
+    "mr": "Dhokla"
+  },
+  {
+    "en": "Diet",
+    "new_en": "Diet",
+    "hi": "डाइट",
+    "mr": "डाइट"
+  },
+  {
+    "en": "Diet streak",
+    "new_en": "Diet streak",
+    "hi": "डाइट streak",
+    "mr": "डाइट streak"
+  },
+  {
+    "en": "Diet tolerance (%)",
+    "new_en": "Diet tolerance (%)",
+    "hi": "डाइट टॉलरेंस (%)",
+    "mr": "डाइट टॉलरन्स (%)"
+  },
+  {
+    "en": "Dismiss",
+    "new_en": "Dismiss",
+    "hi": "हटाएं",
+    "mr": "हटवा"
+  },
+  {
+    "en": "Display name",
+    "new_en": "Display name",
+    "hi": "डिस्प्ले नाम",
+    "mr": "डिस्प्ले नाव"
+  },
+  {
+    "en": "Do I need internet?",
+    "new_en": "Do I need internet?",
+    "hi": "क्या इंटरनेट की ज़रूरत है?",
+    "mr": "इंटरनेटची गरज आहे का?"
+  },
+  {
+    "en": "Do a different day →",
+    "new_en": "Do a different day →",
+    "hi": "कोई दूसरा दिन करें →",
+    "mr": "दुसरा दिवस करा →"
+  },
+  {
+    "en": "Does it work on iPhone?",
+    "new_en": "Does it work on iPhone?",
+    "hi": "क्या यह iPhone पर काम करता है?",
+    "mr": "हे iPhone वर चालते का?"
+  },
+  {
+    "en": "Done",
+    "new_en": "Done",
+    "hi": "हो गया",
+    "mr": "झाले"
+  },
+  {
+    "en": "Done editing",
+    "new_en": "Done editing",
+    "hi": "एडिटिंग पूरी हुई",
+    "mr": "एडिटिंग पूर्ण"
+  },
+  {
+    "en": "Done — check-in saved",
+    "new_en": "Done — check-in saved",
+    "hi": "हो गया — check-in सेव हुआ",
+    "mr": "झाले — check-in सेव्ह झाले"
+  },
+  {
+    "en": "Download",
+    "new_en": "Download",
+    "hi": "डाउनलोड",
+    "mr": "डाउनलोड"
+  },
+  {
+    "en": "Download for Android",
+    "new_en": "Download for Android",
+    "hi": "Android के लिए डाउनलोड करें",
+    "mr": "Android साठी डाउनलोड करा"
+  },
+  {
+    "en": "Download the Android / iPhone app",
+    "new_en": "Download the Android / iPhone app",
+    "hi": "Android / iPhone ऐप डाउनलोड करें",
+    "mr": "Android / iPhone ॲप डाउनलोड करा"
+  },
+  {
+    "en": "Dumbbell Curl",
+    "new_en": "Dumbbell Curl",
+    "hi": "Dumbbell Curl",
+    "mr": "Dumbbell Curl"
+  },
+  {
+    "en": "Dumbbell step",
+    "new_en": "Dumbbell step",
+    "hi": "Dumbbell step",
+    "mr": "Dumbbell step"
+  },
+  {
+    "en": "Dumbbell steps → small, whole-kg change",
+    "new_en": "Dumbbell steps → small, whole-kg change",
+    "hi": "Dumbbell steps → छोटे, पूरे kg में बदलाव",
+    "mr": "Dumbbell steps → लहान, पूर्ण kg मधील बदल"
+  },
+  {
+    "en": "Duplicate",
+    "new_en": "Duplicate",
+    "hi": "डुप्लिकेट करें",
+    "mr": "डुप्लिकेट करा"
+  },
+  {
+    "en": "Duplicate plan",
+    "new_en": "Duplicate plan",
+    "hi": "प्लान डुप्लिकेट करें",
+    "mr": "प्लॅन डुप्लिकेट करा"
+  },
+  {
+    "en": "Duration",
+    "new_en": "Duration",
+    "hi": "समय",
+    "mr": "कालावधी"
+  },
+  {
+    "en": "EEE, d MMM",
+    "new_en": "EEE, d MMM",
+    "hi": "EEE, d MMM",
+    "mr": "EEE, d MMM"
+  },
+  {
+    "en": "ENERGY BALANCE",
+    "new_en": "Energy balance",
+    "hi": "Energy balance",
+    "mr": "Energy balance"
+  },
+  {
+    "en": "Each Gemini key must be different.",
+    "new_en": "Each Gemini key must be different.",
+    "hi": "हर Gemini key अलग होनी चाहिए।",
+    "mr": "प्रत्येक Gemini key वेगळी असणे आवश्यक आहे."
+  },
+  {
+    "en": "Each session's weight comes from your last sets and how hard they felt (RPE).",
+    "new_en": "Each session's weight comes from your last sets and how hard they felt (RPE).",
+    "hi": "हर सेशन का वज़न आपके पिछले sets और वो कितने मुश्किल लगे (RPE) उस पर निर्भर करता है।",
+    "mr": "प्रत्येक सेशनचे वजन तुमच्या मागील sets आणि ते किती कठीण वाटले (RPE) यावर आधारित असते."
+  },
+  {
+    "en": "Easy sets → add a little load",
+    "new_en": "Easy sets → add a little load",
+    "hi": "आसान sets → थोड़ा वज़न बढ़ाएं",
+    "mr": "सोपे sets → थोडे वजन वाढवा"
+  },
+  {
+    "en": "Eat",
+    "new_en": "Eat",
+    "hi": "खाएं",
+    "mr": "खा"
+  },
+  {
+    "en": "Eat around maintenance and let training drive the change.",
+    "new_en": "Eat around maintenance and let training drive the change.",
+    "hi": "Maintenance के आसपास खाएं और ट्रेनिंग से बदलाव आने दें।",
+    "mr": "Maintenance जवळ खा आणि ट्रेनिंगने बदल घडू द्या."
+  },
+  {
+    "en": "Edit",
+    "new_en": "Edit",
+    "hi": "एडिट करें",
+    "mr": "एडिट करा"
+  },
+  {
+    "en": "Edit food",
+    "new_en": "Edit food",
+    "hi": "खाना एडिट करें",
+    "mr": "फूड एडिट करा"
+  },
+  {
+    "en": "Edit name & numbers",
+    "new_en": "Edit name & numbers",
+    "hi": "नाम और संख्याएं एडिट करें",
+    "mr": "नाव आणि संख्या एडिट करा"
+  },
+  {
+    "en": "Edit recipe",
+    "new_en": "Edit recipe",
+    "hi": "रेसिपी एडिट करें",
+    "mr": "रेसिपी एडिट करा"
+  },
+  {
+    "en": "Effort",
+    "new_en": "Effort",
+    "hi": "Effort",
+    "mr": "Effort"
+  },
+  {
+    "en": "Effort per set",
+    "new_en": "Effort per set",
+    "hi": "हर set का effort",
+    "mr": "प्रत्येक set चा effort"
+  },
+  {
+    "en": "Effort scale",
+    "new_en": "Effort scale",
+    "hi": "Effort scale",
+    "mr": "Effort scale"
+  },
+  {
+    "en": "Egg White",
+    "new_en": "Egg White",
+    "hi": "Egg White",
+    "mr": "Egg White"
+  },
+  {
+    "en": "Email",
+    "new_en": "Email",
+    "hi": "ईमेल",
+    "mr": "ईमेल"
+  },
+  {
+    "en": "End",
+    "new_en": "End",
+    "hi": "समाप्त",
+    "mr": "शेवट"
+  },
+  {
+    "en": "Energy balance",
+    "new_en": "Energy balance",
+    "hi": "Energy balance",
+    "mr": "Energy balance"
+  },
+  {
+    "en": "Entries",
+    "new_en": "Entries",
+    "hi": "एंट्रीज",
+    "mr": "नोंदी"
+  },
+  {
+    "en": "Equipment",
+    "new_en": "Equipment",
+    "hi": "इक्विपमेंट",
+    "mr": "इक्विपमेंट"
+  },
+  {
+    "en": "Equipment in your gym",
+    "new_en": "Equipment in your gym",
+    "hi": "आपके जिम का इक्विपमेंट",
+    "mr": "तुमच्या जिममधील इक्विपमेंट"
+  },
+  {
+    "en": "Estimated timeline",
+    "new_en": "Estimated timeline",
+    "hi": "अनुमानित समय",
+    "mr": "अंदाजे वेळ"
+  },
+  {
+    "en": "Evening Snack",
+    "new_en": "Evening snack",
+    "hi": "शाम का स्नैक",
+    "mr": "संध्याकाळचा स्नॅक"
+  },
+  {
+    "en": "Every major muscle got work in this window.",
+    "new_en": "Every major muscle worked in this window.",
+    "hi": "इस दौरान हर मुख्य मांसपेशी की कसरत हुई।",
+    "mr": "या वेळेत प्रत्येक मुख्य स्नायूचा व्यायाम झाला."
+  },
+  {
+    "en": "Every meal you log adds to this line.",
+    "new_en": "Every meal you log adds to this line.",
+    "hi": "लॉग किया गया हर मील इस लाइन में जुड़ता है।",
+    "mr": "लॉग केलेले प्रत्येक जेवण या रेषेत जोडले जाते."
+  },
+  {
+    "en": "Every state's food is in it.",
+    "new_en": "Every state's food is in it.",
+    "hi": "इसमें हर राज्य का खाना शामिल है।",
+    "mr": "यात प्रत्येक राज्यातील पदार्थांचा समावेश आहे."
+  },
+  {
+    "en": "Example: I want bigger shoulders and a wider back while losing belly fat. Keep bench press heavy.",
+    "new_en": "Example: bigger shoulders and wider back while losing belly fat. Keep bench press heavy.",
+    "hi": "उदाहरण: पेट की चर्बी घटाते हुए बड़े कंधे और चौड़ी पीठ चाहिए। bench press भारी रखें।",
+    "mr": "उदाहरण: पोटाची चरबी कमी करताना मोठे खांदे आणि रुंद पाठ हवी आहे. bench press हेवी ठेवा."
+  },
+  {
+    "en": "Example: bigger shoulders and wider back, keep bench heavy, no barbell squats — my knee dislikes them.",
+    "new_en": "Example: bigger shoulders and wider back, keep bench heavy, no barbell squats — knee pain.",
+    "hi": "उदाहरण: बड़े कंधे और चौड़ी पीठ, bench भारी रखें, barbell squats नहीं — घुटने में दर्द है।",
+    "mr": "उदाहरण: मोठे खांदे आणि रुंद पाठ, bench हेवी ठेवा, barbell squats नको — गुडघेदुखी आहे."
+  },
+  {
+    "en": "Example: bigger shoulders, wider back, larger arms, smaller waist appearance.",
+    "new_en": "Example: bigger shoulders, wider back, larger arms, smaller waist.",
+    "hi": "उदाहरण: बड़े कंधे, चौड़ी पीठ, बड़े आर्म्स, पतली कमर।",
+    "mr": "उदाहरण: मोठे खांदे, रुंद पाठ, मोठे आर्म्स, बारीक कंबर."
+  },
+  {
+    "en": "Exercise",
+    "new_en": "Exercise",
+    "hi": "Exercise",
+    "mr": "Exercise"
+  },
+  {
+    "en": "Exercise library",
+    "new_en": "Exercise library",
+    "hi": "Exercise लाइब्रेरी",
+    "mr": "Exercise लायब्ररी"
+  },
+  {
+    "en": "Exercise name",
+    "new_en": "Exercise name",
+    "hi": "Exercise का नाम",
+    "mr": "Exercise चे नाव"
+  },
+  {
+    "en": "Exercise note",
+    "new_en": "Exercise note",
+    "hi": "Exercise नोट",
+    "mr": "Exercise नोट"
+  },
+  {
+    "en": "Exercise options",
+    "new_en": "Exercise options",
+    "hi": "Exercise के विकल्प",
+    "mr": "Exercise चे पर्याय"
+  },
+  {
+    "en": "Exercises",
+    "new_en": "Exercises",
+    "hi": "Exercises",
+    "mr": "Exercises"
+  },
+  {
+    "en": "Experience",
+    "new_en": "Experience",
+    "hi": "अनुभव",
+    "mr": "अनुभव"
+  },
+  {
+    "en": "Explain & personalise",
+    "new_en": "Explain & personalise",
+    "hi": "समझाएं और मनमुताबिक बनाएं",
+    "mr": "समजावून सांगा आणि पर्सनलाइझ करा"
+  },
+  {
+    "en": "Export check-ins (with photos)",
+    "new_en": "Export check-ins (with photos)",
+    "hi": "Check-ins एक्सपोर्ट करें (फ़ोटो के साथ)",
+    "mr": "Check-ins एक्सपोर्ट करा (फोटोसह)"
+  },
+  {
+    "en": "Export everything (JSON)",
+    "new_en": "Export everything (JSON)",
+    "hi": "सबकुछ एक्सपोर्ट करें (JSON)",
+    "mr": "सर्व काही एक्सपोर्ट करा (JSON)"
+  },
+  {
+    "en": "Export food logs (CSV)",
+    "new_en": "Export food logs (CSV)",
+    "hi": "फ़ूड लॉग एक्सपोर्ट करें (CSV)",
+    "mr": "फूड लॉग एक्सपोर्ट करा (CSV)"
+  },
+  {
+    "en": "Export saved.",
+    "new_en": "Export saved.",
+    "hi": "एक्सपोर्ट सेव हो गया।",
+    "mr": "एक्सपोर्ट सेव्ह झाले."
+  },
+  {
+    "en": "Export weight history (CSV)",
+    "new_en": "Export weight history (CSV)",
+    "hi": "वज़न का इतिहास एक्सपोर्ट करें (CSV)",
+    "mr": "वजनाचा इतिहास एक्सपोर्ट करा (CSV)"
+  },
+  {
+    "en": "Export workout history (CSV)",
+    "new_en": "Export workout history (CSV)",
+    "hi": "वर्कआउट का इतिहास एक्सपोर्ट करें (CSV)",
+    "mr": "वर्कआउटचा इतिहास एक्सपोर्ट करा (CSV)"
+  },
+  {
+    "en": "FAT",
+    "new_en": "Fat",
+    "hi": "फैट",
+    "mr": "फॅट"
+  },
+  {
+    "en": "FORGE",
+    "new_en": "FORGE",
+    "hi": "FORGE",
+    "mr": "FORGE"
+  },
+  {
+    "en": "FORGE Full Backup",
+    "new_en": "FORGE full backup",
+    "hi": "FORGE का पूरा बैकअप",
+    "mr": "FORGE चा पूर्ण बॅकअप"
+  },
+  {
+    "en": "FORGE home",
+    "new_en": "FORGE home",
+    "hi": "FORGE होम",
+    "mr": "FORGE होम"
+  },
+  {
+    "en": "FORGE home screen showing calories eaten, protein, steps and water for today",
+    "new_en": "FORGE home screen showing calories, protein, steps and water for today",
+    "hi": "FORGE की होम स्क्रीन आज की कैलोरी, प्रोटीन, स्टेप्स और पानी दिखा रही है",
+    "mr": "FORGE ची होम स्क्रीन आजच्या कॅलरी, प्रोटीन, स्टेप्स आणि पाणी दाखवत आहे"
+  },
+  {
+    "en": "FORGE in numbers",
+    "new_en": "FORGE in numbers",
+    "hi": "FORGE आंकड़ों में",
+    "mr": "FORGE आकडेवारीत"
+  },
+  {
+    "en": "FORGE looks at the weights, reps and RPE you logged and suggests what to lift next. You can always type a different weight in the session.",
+    "new_en": "FORGE checks your logged weights, reps, and RPE to suggest your next lift. You can always enter a different weight in the session.",
+    "hi": "FORGE आपके लॉग किए गए weights, reps और RPE के आधार पर अगला वज़न सुझाता है। आप सेशन में कभी भी अलग वज़न डाल सकते हैं।",
+    "mr": "FORGE तुम्ही लॉग केलेले weights, reps आणि RPE तपासून पुढचे वजन सुचवते. तुम्ही सेशनमध्ये कधीही वेगळे वजन टाकू शकता."
+  },
+  {
+    "en": "FORGE rules",
+    "new_en": "FORGE rules",
+    "hi": "FORGE के नियम",
+    "mr": "FORGE चे नियम"
+  },
+  {
+    "en": "FORGE tries the server first and moves to local backup if offline.",
+    "new_en": "FORGE tries the server first and uses local backup if offline.",
+    "hi": "FORGE पहले सर्वर से कनेक्ट करता है और ऑफ़लाइन होने पर लोकल बैकअप इस्तेमाल करता है।",
+    "mr": "FORGE प्रथम सर्व्हर वापरते आणि ऑफलाइन असल्यास लोकल बॅकअप वापरते."
+  },
+  {
+    "en": "FORGE tries this site first and moves to a backup host if one stops answering.",
+    "new_en": "FORGE tries this site first and switches to a backup host if one fails.",
+    "hi": "FORGE पहले इस साइट को आज़माता है और जवाब न मिलने पर बैकअप होस्ट पर चला जाता है।",
+    "mr": "FORGE प्रथम ही साइट वापरते आणि प्रतिसाद न मिळाल्यास बॅकअप होस्टवर स्विच करते."
+  },
+  {
+    "en": "FORGE — Strength + Aesthetics",
+    "new_en": "FORGE — Strength + aesthetics",
+    "hi": "FORGE — Strength + aesthetics",
+    "mr": "FORGE — Strength + aesthetics"
+  },
+  {
+    "en": "FORGE's AI (food camera, meal parsing, coach, plans) runs on your own free Gemini keys, so it stays free and nobody else's usage slows you down.",
+    "new_en": "FORGE's AI (food camera, meal parsing, coach, plans) runs on your free Gemini keys, so it stays free and never slows down.",
+    "hi": "FORGE का AI (फ़ूड कैमरा, मील पार्सिंग, कोच, प्लान्स) आपकी मुफ़्त Gemini keys पर चलता है, इसलिए यह हमेशा मुफ़्त रहता है और कभी धीमा नहीं होता।",
+    "mr": "FORGE चे AI (फूड कॅमेरा, मील पार्सिंग, कोच, प्लॅन्स) तुमच्या मोफत Gemini keys वर चालते, त्यामुळे ते मोफत राहते आणि कधीही स्लो होत नाही."
+  },
+  {
+    "en": "FORGE's server is offline right now. Your data is safe — try again in a few minutes, or use the app without an account meanwhile.",
+    "new_en": "FORGE's server is offline right now. Your data is safe — try again in a few minutes, or use the app offline meanwhile.",
+    "hi": "FORGE का सर्वर अभी ऑफ़लाइन है। आपका डेटा सुरक्षित है — कुछ मिनटों में दोबारा कोशिश करें, या तब तक बिना अकाउंट ऐप इस्तेमाल करें।",
+    "mr": "FORGE चा सर्व्हर सध्या ऑफलाइन आहे. तुमचा डेटा सुरक्षित आहे — काही मिनिटांनी पुन्हा प्रयत्न करा, किंवा तोपर्यंत अकाउंटशिवाय ॲप वापरा."
+  },
+  {
+    "en": "FORGE-Fitness/3.0.0 (Android)",
+    "new_en": "FORGE-Fitness/3.0.0 (Android)",
+    "hi": "FORGE-Fitness/3.0.0 (Android)",
+    "mr": "FORGE-Fitness/3.0.0 (Android)"
+  },
+  {
+    "en": "FORGE: Fitness for Indian Food",
+    "new_en": "FORGE: Fitness for Indian food",
+    "hi": "FORGE: भारतीय खाने के लिए फ़िटनेस",
+    "mr": "FORGE: भारतीय जेवणासाठी फिटनेस"
+  },
+  {
+    "en": "Face Pulls",
+    "new_en": "Face Pulls",
+    "hi": "Face Pulls",
+    "mr": "Face Pulls"
+  },
+  {
+    "en": "Failed to generate plan.",
+    "new_en": "Failed to generate plan.",
+    "hi": "प्लान नहीं बन सका।",
+    "mr": "प्लॅन तयार करता आला नाही."
+  },
+  {
+    "en": "Fasting window (h)",
+    "new_en": "Fasting window (h)",
+    "hi": "Fasting विंडो (h)",
+    "mr": "Fasting विंडो (h)"
+  },
+  {
+    "en": "Fat",
+    "new_en": "Fat",
+    "hi": "फैट",
+    "mr": "फॅट"
+  },
+  {
+    "en": "Fat (g)",
+    "new_en": "Fat (g)",
+    "hi": "फैट (g)",
+    "mr": "फॅट (g)"
+  },
+  {
+    "en": "Fat Loss",
+    "new_en": "Fat loss",
+    "hi": "फैट लॉस",
+    "mr": "फॅट लॉस"
+  },
+  {
+    "en": "Favourite",
+    "new_en": "Favourite",
+    "hi": "पसंदीदा",
+    "mr": "आवडते"
+  },
+  {
+    "en": "Female",
+    "new_en": "Female",
+    "hi": "महिला",
+    "mr": "महिला"
+  },
+  {
+    "en": "Fiber",
+    "new_en": "Fiber",
+    "hi": "फ़ाइबर",
+    "mr": "फायबर"
+  },
+  {
+    "en": "Find these foods",
+    "new_en": "Find these foods",
+    "hi": "ये फ़ूड खोजें",
+    "mr": "हे पदार्थ शोधा"
+  },
+  {
+    "en": "Finish",
+    "new_en": "Finish",
+    "hi": "पूरा करें",
+    "mr": "पूर्ण करा"
+  },
+  {
+    "en": "Finish a session and its total kg lifted shows here.",
+    "new_en": "Finish a session and its total kg lifted shows here.",
+    "hi": "सेशन पूरा करें और उठाया गया कुल kg यहां दिखेगा।",
+    "mr": "सेशन पूर्ण करा आणि उचललेले एकूण kg येथे दिसेल."
+  },
+  {
+    "en": "Finish ✓",
+    "new_en": "Finish ✓",
+    "hi": "पूरा करें ✓",
+    "mr": "पूर्ण करा ✓"
+  },
+  {
+    "en": "First time — pick a weight you can lift for the top of the range with 1–2 reps to spare.",
+    "new_en": "First time — pick a weight you can lift for top reps with 1–2 reps to spare.",
+    "hi": "पहली बार — ऐसा वज़न चुनें जिससे आप 1–2 reps बचाते हुए पूरे reps लगा सकें।",
+    "mr": "पहिल्यांदाच — 1–2 reps शिल्लक ठेवून पूर्ण reps करता येतील असे वजन निवडा."
+  },
+  {
+    "en": "Flash the screen when rest ends (loud gyms)",
+    "new_en": "Flash the screen when rest ends (loud gyms)",
+    "hi": "Rest खत्म होने पर स्क्रीन चमकाएं (शोर वाले जिम के लिए)",
+    "mr": "Rest संपल्यावर स्क्रीन फ्लॅश करा (आवाजाच्या जिमसाठी)"
+  },
+  {
+    "en": "Focus",
+    "new_en": "Focus",
+    "hi": "फ़ोकस",
+    "mr": "फोकस"
+  },
+  {
+    "en": "Food",
+    "new_en": "Food",
+    "hi": "खाना",
+    "mr": "अन्न"
+  },
+  {
+    "en": "Food database",
+    "new_en": "Food database",
+    "hi": "फ़ूड डेटाबेस",
+    "mr": "फूड डेटाबेस"
+  },
+  {
+    "en": "Food name",
+    "new_en": "Food name",
+    "hi": "खाने का नाम",
+    "mr": "पदार्थाचे नाव"
+  },
+  {
+    "en": "Food screen with breakfast, lunch and snacks logged",
+    "new_en": "Food screen with breakfast, lunch and snacks logged",
+    "hi": "नाश्ता, दोपहर का खाना और स्नैक्स लॉग की गई फ़ूड स्क्रीन",
+    "mr": "नाश्ता, दुपारचे जेवण आणि स्नॅक्स लॉग केलेली फूड स्क्रीन"
+  },
+  {
+    "en": "For the first",
+    "new_en": "For the first",
+    "hi": "पहले के लिए",
+    "mr": "पहिल्यासाठी"
+  },
+  {
+    "en": "Forearms",
+    "new_en": "Forearms",
+    "hi": "फोरआर्म्स",
+    "mr": "फोरआर्म्स"
+  },
+  {
+    "en": "Forgot password",
+    "new_en": "Forgot password",
+    "hi": "पासवर्ड भूल गए",
+    "mr": "पासवर्ड विसरलात"
+  },
+  {
+    "en": "Free · No ads · Made in India",
+    "new_en": "Free · No ads · Made in India",
+    "hi": "मुफ़्त · कोई विज्ञापन नहीं · Made in India",
+    "mr": "मोफत · जाहिराती नाहीत · Made in India"
+  },
+  {
+    "en": "Free. Takes a minute to set up.",
+    "new_en": "Free. Takes a minute to set up.",
+    "hi": "मुफ़्त। सेट अप करने में बस एक मिनट लगता है।",
+    "mr": "मोफत. सेट करायला फक्त एक मिनिट लागतो."
+  },
+  {
+    "en": "Freestyle",
+    "new_en": "Freestyle",
+    "hi": "Freestyle",
+    "mr": "Freestyle"
+  },
+  {
+    "en": "Freestyle (pick exercises)",
+    "new_en": "Freestyle (pick exercises)",
+    "hi": "Freestyle (exercises चुनें)",
+    "mr": "Freestyle (exercises निवडा)"
+  },
+  {
+    "en": "Freestyle session",
+    "new_en": "Freestyle session",
+    "hi": "Freestyle सेशन",
+    "mr": "Freestyle सेशन"
+  },
+  {
+    "en": "From Kashmir's rogan josh to Kerala's appam. Home food, the way your family makes it.",
+    "new_en": "From Kashmir's rogan josh to Kerala's appam. Home food, the way your family makes it.",
+    "hi": "Kashmir के rogan josh से लेकर Kerala के appam तक। घर का खाना, जैसा आपका परिवार बनाता है।",
+    "mr": "Kashmir च्या rogan josh पासून Kerala च्या appam पर्यंत. घरचे जेवण, जसे तुमचे कुटुंब बनवते."
+  },
+  {
+    "en": "Front",
+    "new_en": "Front",
+    "hi": "आगे",
+    "mr": "समोर"
+  },
+  {
+    "en": "Fuel log",
+    "new_en": "Fuel log",
+    "hi": "फ़्यूल लॉग",
+    "mr": "फ्युएल लॉग"
+  },
+  {
+    "en": "Full Body A",
+    "new_en": "Full body A",
+    "hi": "Full body A",
+    "mr": "Full body A"
+  },
+  {
+    "en": "Full Body B",
+    "new_en": "Full body B",
+    "hi": "Full body B",
+    "mr": "Full body B"
+  },
+  {
+    "en": "Full Body C",
+    "new_en": "Full body C",
+    "hi": "Full body C",
+    "mr": "Full body C"
+  },
+  {
+    "en": "Full JSON export downloaded.",
+    "new_en": "Full JSON export downloaded.",
+    "hi": "पूरा JSON एक्सपोर्ट डाउनलोड हो गया।",
+    "mr": "पूर्ण JSON एक्सपोर्ट डाउनलोड झाले."
+  },
+  {
+    "en": "Full body",
+    "new_en": "Full body",
+    "hi": "Full body",
+    "mr": "Full body"
+  },
+  {
+    "en": "Full commercial gym",
+    "new_en": "Full commercial gym",
+    "hi": "फुल कमर्शियल जिम",
+    "mr": "फुल कमर्शियल जिम"
+  },
+  {
+    "en": "Gap between your dumbbells",
+    "new_en": "Gap between your dumbbells",
+    "hi": "आपके dumbbells के बीच का अंतर",
+    "mr": "तुमच्या dumbbells मधील अंतर"
+  },
+  {
+    "en": "Gemini",
+    "new_en": "Gemini",
+    "hi": "Gemini",
+    "mr": "Gemini"
+  },
+  {
+    "en": "Gemini keys start with \"AIza\" or \"AQ.\" — check for missing characters.",
+    "new_en": "Gemini keys start with \"AIza\" or \"AQ.\" — check for missing characters.",
+    "hi": "Gemini keys \"AIza\" या \"AQ.\" से शुरू होती हैं — छूटे हुए कैरेक्टर जांचें।",
+    "mr": "Gemini keys \"AIza\" किंवा \"AQ.\" ने सुरू होतात — गहाळ झालेले कॅरेक्टर्स तपासा."
+  },
+  {
+    "en": "Gender",
+    "new_en": "Gender",
+    "hi": "लिंग",
+    "mr": "लिंग"
+  }
+]

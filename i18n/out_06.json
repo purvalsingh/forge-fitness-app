@@ -1,0 +1,902 @@
+[
+  {
+    "en": "Stop camera",
+    "new_en": "Stop camera",
+    "hi": "Camera बंद करें",
+    "mr": "Camera बंद करा"
+  },
+  {
+    "en": "Straight-arm Pulldown",
+    "new_en": "Straight-arm Pulldown",
+    "hi": "Straight-arm Pulldown",
+    "mr": "Straight-arm Pulldown"
+  },
+  {
+    "en": "Streak",
+    "new_en": "Streak",
+    "hi": "Streak",
+    "mr": "Streak"
+  },
+  {
+    "en": "Streaks",
+    "new_en": "Streaks",
+    "hi": "Streaks",
+    "mr": "Streaks"
+  },
+  {
+    "en": "Streaks that keep you going",
+    "new_en": "Streaks that keep you going",
+    "hi": "Streaks जो आपको प्रेरित रखें",
+    "mr": "Streaks ज्या तुम्हाला प्रेरित ठेवतात"
+  },
+  {
+    "en": "Strength",
+    "new_en": "Strength",
+    "hi": "Strength",
+    "mr": "Strength"
+  },
+  {
+    "en": "Strength + Aesthetics",
+    "new_en": "Strength + aesthetics",
+    "hi": "Strength + aesthetics",
+    "mr": "Strength + aesthetics"
+  },
+  {
+    "en": "Strength history",
+    "new_en": "Strength history",
+    "hi": "Strength इतिहास",
+    "mr": "Strength इतिहास"
+  },
+  {
+    "en": "Strong",
+    "new_en": "Strong",
+    "hi": "Strong",
+    "mr": "Strong"
+  },
+  {
+    "en": "Sugar",
+    "new_en": "Sugar",
+    "hi": "चीनी",
+    "mr": "साखर"
+  },
+  {
+    "en": "Sun",
+    "new_en": "Sun",
+    "hi": "रवि",
+    "mr": "रवि"
+  },
+  {
+    "en": "Sunday",
+    "new_en": "Sunday",
+    "hi": "रविवार",
+    "mr": "रविवार"
+  },
+  {
+    "en": "Superset with next",
+    "new_en": "Superset with next",
+    "hi": "अगले set के साथ superset",
+    "mr": "पुढील set सोबत superset"
+  },
+  {
+    "en": "Surplus capped at 35% over maintenance.",
+    "new_en": "Surplus capped at 35% over maintenance.",
+    "hi": "Surplus maintenance से 35% तक सीमित है।",
+    "mr": "Surplus maintenance पेक्षा 35% पर्यंत मर्यादित आहे."
+  },
+  {
+    "en": "Swap exercise",
+    "new_en": "Swap exercise",
+    "hi": "Exercise बदलें",
+    "mr": "Exercise बदला"
+  },
+  {
+    "en": "Swap this day",
+    "new_en": "Swap this day",
+    "hi": "यह दिन बदलें",
+    "mr": "हा दिवस बदला"
+  },
+  {
+    "en": "Switching from the",
+    "new_en": "Switching from the",
+    "hi": "यहाँ से switch कर रहे हैं:",
+    "mr": "येथून switch करत आहात:"
+  },
+  {
+    "en": "Switching from the Strong or Hevy workout apps? Export your workouts there as a CSV file and pick it here — every set comes across.",
+    "new_en": "Switching from Strong or Hevy? Export your workouts as a CSV file and pick it here — every set comes across.",
+    "hi": "Strong या Hevy से switch कर रहे हैं? अपने workouts को CSV फ़ाइल में export करें और यहाँ चुनें — हर set आ जाएगा।",
+    "mr": "Strong किंवा Hevy वरून switch करत आहात? तुमचे workouts CSV फाईलमध्ये export करा आणि येथे निवडा — प्रत्येक set येईल."
+  },
+  {
+    "en": "System",
+    "new_en": "System",
+    "hi": "System",
+    "mr": "System"
+  },
+  {
+    "en": "TOTAL",
+    "new_en": "Total",
+    "hi": "कुल",
+    "mr": "एकूण"
+  },
+  {
+    "en": "Take picture",
+    "new_en": "Take picture",
+    "hi": "फ़ोटो लें",
+    "mr": "फोटो घ्या"
+  },
+  {
+    "en": "Tamil Nadu",
+    "new_en": "Tamil Nadu",
+    "hi": "तमिलनाडु",
+    "mr": "तमिळनाडू"
+  },
+  {
+    "en": "Tap a muscle to see its sets",
+    "new_en": "Tap a muscle to see its sets",
+    "hi": "Sets देखने के लिए muscle पर tap करें",
+    "mr": "Sets पाहण्यासाठी muscle वर tap करा"
+  },
+  {
+    "en": "Tap to add",
+    "new_en": "Tap to add",
+    "hi": "जोड़ने के लिए tap करें",
+    "mr": "जोडण्यासाठी tap करा"
+  },
+  {
+    "en": "Target",
+    "new_en": "Target",
+    "hi": "Target",
+    "mr": "Target"
+  },
+  {
+    "en": "Target RPE",
+    "new_en": "Target RPE",
+    "hi": "Target RPE",
+    "mr": "Target RPE"
+  },
+  {
+    "en": "Target applied",
+    "new_en": "Target applied",
+    "hi": "Target लागू किया गया",
+    "mr": "Target लागू केले"
+  },
+  {
+    "en": "Target saved. Today's screen now uses it.",
+    "new_en": "Target saved. Today's screen now uses it.",
+    "hi": "Target save हो गया। आज की screen अब इसका उपयोग करेगी।",
+    "mr": "Target save झाले. आजची screen आता हे वापरेल."
+  },
+  {
+    "en": "Target weight (kg)",
+    "new_en": "Target weight (kg)",
+    "hi": "Target weight (kg)",
+    "mr": "Target weight (kg)"
+  },
+  {
+    "en": "Target weight looks invalid.",
+    "new_en": "Target weight looks invalid.",
+    "hi": "Target weight अमान्य लग रहा है।",
+    "mr": "Target weight अमान्य वाटत आहे."
+  },
+  {
+    "en": "Tell FORGE about you and your goal",
+    "new_en": "Tell FORGE about you and your goal",
+    "hi": "FORGE को अपने और अपने goal के बारे में बताएं",
+    "mr": "FORGE ला स्वतःबद्दल आणि तुमच्या goal बद्दल सांगा"
+  },
+  {
+    "en": "Template plan",
+    "new_en": "Template plan",
+    "hi": "Template plan",
+    "mr": "Template plan"
+  },
+  {
+    "en": "Template preview",
+    "new_en": "Template preview",
+    "hi": "Template preview",
+    "mr": "Template preview"
+  },
+  {
+    "en": "Tempo",
+    "new_en": "Tempo",
+    "hi": "Tempo",
+    "mr": "Tempo"
+  },
+  {
+    "en": "Testing the coach",
+    "new_en": "Testing the coach",
+    "hi": "Coach की जांच की जा रही है",
+    "mr": "Coach ची चाचणी सुरू आहे"
+  },
+  {
+    "en": "That day already has this workout. Open it instead?",
+    "new_en": "That day already has this workout. Open it instead?",
+    "hi": "उस दिन यह workout पहले से है। क्या उसे खोलें?",
+    "mr": "त्या दिवशी हा workout आधीपासून आहे. तो उघडायचा का?"
+  },
+  {
+    "en": "That file isn't a workout export from the Strong or Hevy apps. In those apps use Settings → Export data → CSV.",
+    "new_en": "That file isn't a workout export from Strong or Hevy. In those apps use Settings → Export data → CSV.",
+    "hi": "यह फ़ाइल Strong या Hevy से export किया गया workout नहीं है। उन apps में Settings → Export data → CSV का उपयोग करें।",
+    "mr": "ही फाईल Strong किंवा Hevy मधून export केलेला workout नाही. त्या apps मध्ये Settings → Export data → CSV वापरा."
+  },
+  {
+    "en": "That workout day no longer exists.",
+    "new_en": "That workout day no longer exists.",
+    "hi": "वह workout day अब मौजूद नहीं है।",
+    "mr": "तो workout day आता अस्तित्वात नाही."
+  },
+  {
+    "en": "That's it. FORGE does all the maths.",
+    "new_en": "That's it. FORGE does all the math.",
+    "hi": "बस इतना ही। FORGE बाकी सारा हिसाब कर लेता है।",
+    "mr": "झाले इतकेच. FORGE सर्व हिशोब करतो."
+  },
+  {
+    "en": "The AI could not build a plan just now. Showing a template plan instead.",
+    "new_en": "The AI couldn't build a plan right now. Showing a template plan instead.",
+    "hi": "AI अभी plan नहीं बना सका। इसके बदले template plan दिखाया जा रहा है।",
+    "mr": "AI आत्ता plan तयार करू शकला नाही. त्याऐवजी template plan दाखवत आहे."
+  },
+  {
+    "en": "The AI must get easy sets, missed reps, short rest, lift order, stalls, bodyweight and dumbbell steps right, twice, before it can coach you.",
+    "new_en": "The AI must get easy sets, missed reps, short rest, lift order, stalls, bodyweight and dumbbell steps right, twice, before coaching you.",
+    "hi": "आपको coach करने से पहले AI को easy sets, missed reps, short rest, lift order, stalls, bodyweight और dumbbell steps दो बार सही समझने होंगे।",
+    "mr": "तुम्हाला coach करण्यापूर्वी AI ला easy sets, missed reps, short rest, lift order, stalls, bodyweight आणि dumbbell steps दोनदा अचूक समजणे आवश्यक आहे."
+  },
+  {
+    "en": "The AI plans each session from your history, inside your limits below.",
+    "new_en": "The AI plans each session from your history, within the limits below.",
+    "hi": "AI आपके इतिहास और नीचे दी गई सीमाओं के भीतर हर session plan करता है।",
+    "mr": "AI तुमच्या इतिहासानुसार आणि खालील मर्यादांमध्ये प्रत्येक session plan करतो."
+  },
+  {
+    "en": "The AI returned an unexpected response. Enter the details manually.",
+    "new_en": "The AI gave an unexpected response. Enter the details manually.",
+    "hi": "AI से अनपेक्षित जवाब मिला। विवरण manually दर्ज करें।",
+    "mr": "AI कडून अनपेक्षित प्रतिसाद आला. तपशील manually प्रविष्ट करा."
+  },
+  {
+    "en": "The AI review needs an account and your Gemini keys. Your next-session weights are still suggested automatically from RPE.",
+    "new_en": "AI review needs an account and your Gemini keys. Next-session weights are still suggested automatically from RPE.",
+    "hi": "AI review के लिए account और आपकी Gemini keys चाहिए। अगले session के weights अभी भी RPE से अपने आप सुझाये जाते हैं।",
+    "mr": "AI review साठी account आणि तुमच्या Gemini keys आवश्यक आहेत. पुढील session चे weights अजूनही RPE वरून आपोआप सुचवले जातात."
+  },
+  {
+    "en": "The AI took too long to answer. Try again, or log it manually.",
+    "new_en": "The AI took too long to answer. Try again, or log it manually.",
+    "hi": "AI ने जवाब देने में बहुत समय लिया। फिर कोशिश करें, या manually log करें।",
+    "mr": "AI ने उत्तर देण्यासाठी खूप वेळ घेतला. पुन्हा प्रयत्न करा, किंवा manually log करा."
+  },
+  {
+    "en": "The check didn't finish. Try again.",
+    "new_en": "The check didn't finish. Try again.",
+    "hi": "जांच पूरी नहीं हुई। फिर कोशिश करें।",
+    "mr": "तपासणी पूर्ण झाली नाही. पुन्हा प्रयत्न करा."
+  },
+  {
+    "en": "The coach returned an unexpected answer.",
+    "new_en": "The coach returned an unexpected answer.",
+    "hi": "Coach से अनपेक्षित जवाब मिला।",
+    "mr": "Coach कडून अनपेक्षित उत्तर आले."
+  },
+  {
+    "en": "The download was damaged. Try again.",
+    "new_en": "The download was damaged. Try again.",
+    "hi": "Download में खराबी आ गई। फिर कोशिश करें।",
+    "mr": "Download मध्ये बिघाड झाला. पुन्हा प्रयत्न करा."
+  },
+  {
+    "en": "The numbers above come from the app's own calculation. AI only explains them and may suggest small adjustments — this is a planning estimate, not medical advice.",
+    "new_en": "The numbers above come from app calculations. AI only explains them and may suggest small adjustments — this is a planning estimate, not medical advice.",
+    "hi": "ऊपर दिए गए नंबर app की गणना से आते हैं। AI केवल उन्हें समझाता है और छोटे बदलाव सुझा सकता है — यह केवल योजना के लिए अनुमान है, कोई मेडिकल सलाह नहीं।",
+    "mr": "वरील आकडे app च्या गणनेवरून आले आहेत. AI फक्त ते समजावून सांगतो आणि लहान बदल सुचवू शकतो — हा केवळ नियोजनाचा अंदाज आहे, वैद्यकीय सल्ला नाही."
+  },
+  {
+    "en": "The review didn't come through. Try again.",
+    "new_en": "The review didn't come through. Try again.",
+    "hi": "Review नहीं मिल सका। फिर कोशिश करें।",
+    "mr": "Review आला नाही. पुन्हा प्रयत्न करा."
+  },
+  {
+    "en": "Theme",
+    "new_en": "Theme",
+    "hi": "Theme",
+    "mr": "Theme"
+  },
+  {
+    "en": "These values are outside a sane range and cannot be saved.",
+    "new_en": "These values are out of valid range and cannot be saved.",
+    "hi": "ये मान अमान्य हैं और इन्हें save नहीं किया जा सकता।",
+    "mr": "ही मूल्ये अमान्य आहेत आणि save केली जाऊ शकत नाहीत."
+  },
+  {
+    "en": "This is an estimate, not a guarantee. Genetics, starting condition, consistency, nutrition and recovery can change it substantially.",
+    "new_en": "This is an estimate, not a guarantee. Genetics, starting condition, consistency, nutrition and recovery can change it substantially.",
+    "hi": "यह केवल एक अनुमान है, कोई गारंटी नहीं। Genetics, शुरुआती स्थिति, निरंतरता, पोषण और recovery इसे काफी बदल सकते हैं।",
+    "mr": "हा फक्त एक अंदाज आहे, कोणतीही हमी नाही. Genetics, सुरुवातीची स्थिती, सातत्य, पोषण आणि recovery यामुळे यात मोठा बदल होऊ शकतो."
+  },
+  {
+    "en": "This phone has no speech recogniser. Install or enable the Google app, or type instead.",
+    "new_en": "This phone has no speech recognizer. Install or enable the Google app, or type instead.",
+    "hi": "इस फ़ोन में speech recognizer नहीं है। Google app इंस्टॉल या चालू करें, या लिखकर दर्ज करें।",
+    "mr": "या फोनमध्ये speech recognizer नाही. Google app इन्स्टॉल किंवा सुरू करा, किंवा टाईप करा."
+  },
+  {
+    "en": "Three things. That's the whole app.",
+    "new_en": "Three things. That's the whole app.",
+    "hi": "सिर्फ तीन चीज़ें। बस यही है पूरा app।",
+    "mr": "फक्त तीन गोष्टी. एवढेच आहे संपूर्ण app."
+  },
+  {
+    "en": "Thukpa",
+    "new_en": "Thukpa",
+    "hi": "Thukpa",
+    "mr": "Thukpa"
+  },
+  {
+    "en": "Time (hold)",
+    "new_en": "Time (hold)",
+    "hi": "समय (hold)",
+    "mr": "वेळ (hold)"
+  },
+  {
+    "en": "Timeframe",
+    "new_en": "Timeframe",
+    "hi": "समयसीमा",
+    "mr": "कालावधी"
+  },
+  {
+    "en": "Today",
+    "new_en": "Today",
+    "hi": "आज",
+    "mr": "आज"
+  },
+  {
+    "en": "Today's training",
+    "new_en": "Today's training",
+    "hi": "आज की training",
+    "mr": "आजचे training"
+  },
+  {
+    "en": "Today's workout",
+    "new_en": "Today's workout",
+    "hi": "आज का workout",
+    "mr": "आजचा workout"
+  },
+  {
+    "en": "Top-down, whole plate in frame, good light.",
+    "new_en": "Top-down, whole plate in frame, good light.",
+    "hi": "ऊपर से फ़ोटो लें, पूरी थाली फ़्रेम में हो, अच्छी रोशनी रखें।",
+    "mr": "वरच्या बाजूने फोटो घ्या, संपूर्ण ताट फ्रेममध्ये असावे, चांगला प्रकाश ठेवा."
+  },
+  {
+    "en": "Total",
+    "new_en": "Total",
+    "hi": "कुल",
+    "mr": "एकूण"
+  },
+  {
+    "en": "Train",
+    "new_en": "Train",
+    "hi": "Train",
+    "mr": "Train"
+  },
+  {
+    "en": "Train hard. Eat Indian.",
+    "new_en": "Train hard. Eat Indian.",
+    "hi": "जमकर train करें। भारतीय खाना खाएं।",
+    "mr": "कठोर train करा. भारतीय जेवण घ्या."
+  },
+  {
+    "en": "Train today instead →",
+    "new_en": "Train today instead →",
+    "hi": "इसके बजाय आज train करें →",
+    "mr": "त्याऐवजी आज train करा →"
+  },
+  {
+    "en": "Train · Eat · Track",
+    "new_en": "Train · Eat · Track",
+    "hi": "Train · Eat · Track",
+    "mr": "Train · Eat · Track"
+  },
+  {
+    "en": "Training",
+    "new_en": "Training",
+    "hi": "Training",
+    "mr": "Training"
+  },
+  {
+    "en": "Training & nutrition AI",
+    "new_en": "Training & nutrition AI",
+    "hi": "Training और nutrition AI",
+    "mr": "Training आणि nutrition AI"
+  },
+  {
+    "en": "Training days / week",
+    "new_en": "Training days / week",
+    "hi": "Training दिन / सप्ताह",
+    "mr": "Training दिवस / आठवडा"
+  },
+  {
+    "en": "Training days per week",
+    "new_en": "Training days per week",
+    "hi": "प्रति सप्ताह training के दिन",
+    "mr": "दर आठवड्याला training चे दिवस"
+  },
+  {
+    "en": "Training focus",
+    "new_en": "Training focus",
+    "hi": "Training focus",
+    "mr": "Training focus"
+  },
+  {
+    "en": "Training priorities",
+    "new_en": "Training priorities",
+    "hi": "Training प्राथमिकताएं",
+    "mr": "Training प्राधान्ये"
+  },
+  {
+    "en": "Training settings",
+    "new_en": "Training settings",
+    "hi": "Training settings",
+    "mr": "Training settings"
+  },
+  {
+    "en": "Training volume",
+    "new_en": "Training volume",
+    "hi": "Training volume",
+    "mr": "Training volume"
+  },
+  {
+    "en": "Traps",
+    "new_en": "Traps",
+    "hi": "Traps",
+    "mr": "Traps"
+  },
+  {
+    "en": "Triceps",
+    "new_en": "Triceps",
+    "hi": "Triceps",
+    "mr": "Triceps"
+  },
+  {
+    "en": "Try a gradient",
+    "new_en": "Try a gradient",
+    "hi": "Gradient आज़माएं",
+    "mr": "Gradient वापरून पहा"
+  },
+  {
+    "en": "Try it offline without an account (no AI, data stays on this device)",
+    "new_en": "Try it offline without an account (no AI, data stays on this device)",
+    "hi": "Account के बिना offline आज़माएं (AI नहीं, data इसी device पर रहेगा)",
+    "mr": "Account शिवाय offline वापरून पहा (AI नाही, data याच device वर राहील)"
+  },
+  {
+    "en": "UTF-8",
+    "new_en": "UTF-8",
+    "hi": "UTF-8",
+    "mr": "UTF-8"
+  },
+  {
+    "en": "Unable to analyse this image. You can search for the food manually.",
+    "new_en": "Unable to analyze this image. You can search for the food manually.",
+    "hi": "इस फ़ोटो को analyze नहीं किया जा सका। आप food को manually खोज सकते हैं।",
+    "mr": "या फोटोचे analyze करता आले नाही. तुम्ही food manually शोधू शकता."
+  },
+  {
+    "en": "Undo set",
+    "new_en": "Undo set",
+    "hi": "Set undo करें",
+    "mr": "Set undo करा"
+  },
+  {
+    "en": "Unit",
+    "new_en": "Unit",
+    "hi": "Unit",
+    "mr": "Unit"
+  },
+  {
+    "en": "Units",
+    "new_en": "Units",
+    "hi": "Units",
+    "mr": "Units"
+  },
+  {
+    "en": "Unknown food",
+    "new_en": "Unknown food",
+    "hi": "Unknown food",
+    "mr": "Unknown food"
+  },
+  {
+    "en": "Update failed. Try again.",
+    "new_en": "Update failed. Try again.",
+    "hi": "Update विफल रहा। फिर कोशिश करें।",
+    "mr": "Update अयशस्वी झाले. पुन्हा प्रयत्न करा."
+  },
+  {
+    "en": "Update now",
+    "new_en": "Update now",
+    "hi": "अभी update करें",
+    "mr": "आत्ता update करा"
+  },
+  {
+    "en": "Update ready",
+    "new_en": "Update ready",
+    "hi": "Update तैयार है",
+    "mr": "Update तयार आहे"
+  },
+  {
+    "en": "Upper Aesthetics",
+    "new_en": "Upper aesthetics",
+    "hi": "Upper aesthetics",
+    "mr": "Upper aesthetics"
+  },
+  {
+    "en": "Upper Strength",
+    "new_en": "Upper strength",
+    "hi": "Upper strength",
+    "mr": "Upper strength"
+  },
+  {
+    "en": "Upper back & lats",
+    "new_en": "Upper back & lats",
+    "hi": "Upper back और lats",
+    "mr": "Upper back आणि lats"
+  },
+  {
+    "en": "Use the supplied FORGE 5-day plan",
+    "new_en": "Use the provided FORGE 5-day plan",
+    "hi": "दिए गए FORGE 5-day plan का उपयोग करें",
+    "mr": "दिलेला FORGE 5-day plan वापरा"
+  },
+  {
+    "en": "Use your email. Tell it your weight and goal.",
+    "new_en": "Use your email. Share your weight and goal.",
+    "hi": "अपना email उपयोग करें। अपना weight और goal बताएं।",
+    "mr": "तुमचा email वापरा. तुमचे weight आणि goal सांगा."
+  },
+  {
+    "en": "Use “Photo” to take a picture with your camera app instead.",
+    "new_en": "Use “Photo” to take a picture with your camera app instead.",
+    "hi": "अपने camera app से तस्वीर लेने के लिए “Photo” का उपयोग करें।",
+    "mr": "तुमच्या camera app ने फोटो काढण्यासाठी “Photo” वापरा."
+  },
+  {
+    "en": "Uses your phone's step sensor. Keep the phone in your pocket or bag.",
+    "new_en": "Uses your phone's step sensor. Keep the phone in your pocket or bag.",
+    "hi": "फ़ोन के step sensor का उपयोग करता है। फ़ोन को अपनी जेब या बैग में रखें।",
+    "mr": "तुमच्या फोनचा step sensor वापरतो. फोन खिशात किंवा बॅगेत ठेवा."
+  },
+  {
+    "en": "Using standard body details",
+    "new_en": "Using standard body details",
+    "hi": "सामान्य शारीरिक विवरण का उपयोग किया जा रहा है",
+    "mr": "सर्वसाधारण शारीरिक तपशील वापरत आहे"
+  },
+  {
+    "en": "Uttar Pradesh",
+    "new_en": "Uttar Pradesh",
+    "hi": "उत्तर प्रदेश",
+    "mr": "उत्तर प्रदेश"
+  },
+  {
+    "en": "Vada pav, dal makhani, paneer…",
+    "new_en": "Vada pav, dal makhani, paneer…",
+    "hi": "Vada pav, dal makhani, paneer…",
+    "mr": "Vada pav, dal makhani, paneer…"
+  },
+  {
+    "en": "View workout",
+    "new_en": "View workout",
+    "hi": "Workout देखें",
+    "mr": "Workout पहा"
+  },
+  {
+    "en": "Visible physique change lags weight change — muscle is built over quarters, not weeks.",
+    "new_en": "Physique changes lag weight changes — muscle builds over months, not weeks.",
+    "hi": "शरीर में दिखने वाला बदलाव वजन के बदलाव से धीमा होता है — muscle हफ़्तों में नहीं, महीनों में बनती है।",
+    "mr": "शरीरात दिसणारा बदल वजनाच्या बदलापेक्षा हळू होतो — muscle आठवड्यांत नाही, महिन्यांत बनते."
+  },
+  {
+    "en": "Volume",
+    "new_en": "Volume",
+    "hi": "Volume",
+    "mr": "Volume"
+  },
+  {
+    "en": "Warm-ups",
+    "new_en": "Warm-ups",
+    "hi": "Warm-ups",
+    "mr": "Warm-ups"
+  },
+  {
+    "en": "Water",
+    "new_en": "Water",
+    "hi": "पानी",
+    "mr": "पाणी"
+  },
+  {
+    "en": "Water goal (ml)",
+    "new_en": "Water goal (ml)",
+    "hi": "Water goal (ml)",
+    "mr": "Water goal (ml)"
+  },
+  {
+    "en": "Water tile that fills like a glass",
+    "new_en": "Water tile that fills like a glass",
+    "hi": "पानी का tile जो गिलास की तरह भरता है",
+    "mr": "पाण्याचा tile जो पेल्यासारखा भरतो"
+  },
+  {
+    "en": "Week starts",
+    "new_en": "Week starts",
+    "hi": "सप्ताह शुरू होता है",
+    "mr": "आठवडा सुरू होतो"
+  },
+  {
+    "en": "Weekly % of your estimated max, worked out from your logged sets. Reps follow the weight: 5 reps at 70 %, 4 at 80 %, 3 at 90 %, singles at 100 %+.",
+    "new_en": "Weekly % of your estimated max from logged sets. Reps match the weight: 5 reps at 70%, 4 at 80%, 3 at 90%, singles at 100%+.",
+    "hi": "Logged sets से अनुमानित max का साप्ताहिक %। Reps वजन के अनुसार होते हैं: 70% पर 5 reps, 80% पर 4, 90% पर 3, 100%+ पर singles।",
+    "mr": "Logged sets वरून काढलेली अंदाजे max ची साप्ताहिक %। Reps वजनानुसार असतात: 70% वर 5 reps, 80% वर 4, 90% वर 3, 100%+ वर singles."
+  },
+  {
+    "en": "Weekly percentages",
+    "new_en": "Weekly percentages",
+    "hi": "साप्ताहिक प्रतिशत",
+    "mr": "साप्ताहिक टक्केवारी"
+  },
+  {
+    "en": "Weigh in a few times a week and the smoothed trend shows up here.",
+    "new_en": "Weigh in a few times a week to see your smoothed trend here.",
+    "hi": "सप्ताह में कुछ बार वजन मापें और आपका smoothed trend यहाँ दिखेगा।",
+    "mr": "आठवड्यातून काही वेळा वजन करा आणि तुमचा smoothed trend येथे दिसेल."
+  },
+  {
+    "en": "Weight",
+    "new_en": "Weight",
+    "hi": "Weight",
+    "mr": "Weight"
+  },
+  {
+    "en": "Weight (kg)",
+    "new_en": "Weight (kg)",
+    "hi": "Weight (kg)",
+    "mr": "Weight (kg)"
+  },
+  {
+    "en": "Weight × reps",
+    "new_en": "Weight × reps",
+    "hi": "Weight × reps",
+    "mr": "Weight × reps"
+  },
+  {
+    "en": "Weight, steps and water on one page. Steps count by themselves with your phone in your pocket.",
+    "new_en": "Weight, steps and water on one page. Steps count automatically with your phone in pocket.",
+    "hi": "Weight, steps और पानी एक ही पेज पर। फ़ोन जेब में होने पर steps अपने आप गिने जाते हैं।",
+    "mr": "Weight, steps आणि पाणी एकाच पानावर. फोन खिशात असताना steps आपोआप मोजले जातात."
+  },
+  {
+    "en": "Weighted Pull-ups",
+    "new_en": "Weighted Pull-ups",
+    "hi": "Weighted Pull-ups",
+    "mr": "Weighted Pull-ups"
+  },
+  {
+    "en": "Weights come from your last sets and how hard they felt.",
+    "new_en": "Weights come from your last sets and how hard they felt.",
+    "hi": "Weights आपके पिछले sets और उनके कठिनाई स्तर से तय होते हैं।",
+    "mr": "Weights तुमच्या मागील sets आणि ते किती कठीण वाटले यावरून ठरतात."
+  },
+  {
+    "en": "Weights go up as you get stronger",
+    "new_en": "Weights go up as you get stronger",
+    "hi": "जैसे-जैसे आप मजबूत होते हैं, weights बढ़ते हैं",
+    "mr": "जसे तुम्ही मजबूत होता, तसे weights वाढतात"
+  },
+  {
+    "en": "West Bengal",
+    "new_en": "West Bengal",
+    "hi": "पश्चिम बंगाल",
+    "mr": "पश्चिम बंगाल"
+  },
+  {
+    "en": "What FORGE does",
+    "new_en": "What FORGE does",
+    "hi": "FORGE क्या करता है",
+    "mr": "FORGE काय करतो"
+  },
+  {
+    "en": "What FORGE sees",
+    "new_en": "What FORGE sees",
+    "hi": "FORGE क्या देखता है",
+    "mr": "FORGE काय पाहतो"
+  },
+  {
+    "en": "What did you eat?",
+    "new_en": "What did you eat?",
+    "hi": "आपने क्या खाया?",
+    "mr": "तुम्ही काय खाल्ले?"
+  },
+  {
+    "en": "What do you want from this plan?",
+    "new_en": "What do you want from this plan?",
+    "hi": "आप इस plan से क्या चाहते हैं?",
+    "mr": "तुम्हाला या plan कडून काय हवे आहे?"
+  },
+  {
+    "en": "Whey Protein",
+    "new_en": "Whey Protein",
+    "hi": "Whey Protein",
+    "mr": "Whey Protein"
+  },
+  {
+    "en": "White Rice, cooked",
+    "new_en": "White Rice, cooked",
+    "hi": "White Rice, cooked",
+    "mr": "White Rice, cooked"
+  },
+  {
+    "en": "Who sets your weights",
+    "new_en": "Who sets your weights",
+    "hi": "आपके weights कौन तय करता है",
+    "mr": "तुमचे weights कोण ठरवते"
+  },
+  {
+    "en": "Whole Egg",
+    "new_en": "Whole Egg",
+    "hi": "Whole Egg",
+    "mr": "Whole Egg"
+  },
+  {
+    "en": "Why this plan",
+    "new_en": "Why this plan",
+    "hi": "यह plan क्यों",
+    "mr": "हा plan का"
+  },
+  {
+    "en": "Window used to estimate your max",
+    "new_en": "Window used to estimate your max",
+    "hi": "आपके max का अनुमान लगाने के लिए समय विंडो",
+    "mr": "तुमच्या max चा अंदाज लावण्यासाठी वापरलेली विंडो"
+  },
+  {
+    "en": "Workout",
+    "new_en": "Workout",
+    "hi": "Workout",
+    "mr": "Workout"
+  },
+  {
+    "en": "Workout plan",
+    "new_en": "Workout plan",
+    "hi": "Workout plan",
+    "mr": "Workout plan"
+  },
+  {
+    "en": "Workout plan screen",
+    "new_en": "Workout plan screen",
+    "hi": "Workout plan screen",
+    "mr": "Workout plan screen"
+  },
+  {
+    "en": "Workout plans",
+    "new_en": "Workout plans",
+    "hi": "Workout plans",
+    "mr": "Workout plans"
+  },
+  {
+    "en": "Workout streak",
+    "new_en": "Workout streak",
+    "hi": "Workout streak",
+    "mr": "Workout streak"
+  },
+  {
+    "en": "Workouts added later never claim PRs against sessions that came after them.",
+    "new_en": "Workouts added later never claim PRs against sessions that came after them.",
+    "hi": "बाद में जोड़े गए workouts अपने बाद के sessions के PRs पर दावा नहीं करते।",
+    "mr": "नंतर जोडलेले workouts त्यानंतर झालेल्या sessions मधील PRs वर दावा करत नाहीत."
+  },
+  {
+    "en": "Write as much as you like: what you want to achieve, injuries or exercises to avoid, how long you can train,",
+    "new_en": "Write as much as you like: what you want to achieve, injuries or exercises to avoid, how long you can train,",
+    "hi": "जितना चाहें लिखें: आप क्या हासिल करना चाहते हैं, चोटें या बचने वाली exercises, आप कितनी देर train कर सकते हैं,",
+    "mr": "तुम्हाला हवे तितके लिहा: तुम्हाला काय साध्य करायचे आहे, दुखापती किंवा टाळायच्या exercises, तुम्ही किती वेळ train करू शकता,"
+  },
+  {
+    "en": "YYYY-MM-DD",
+    "new_en": "YYYY-MM-DD",
+    "hi": "YYYY-MM-DD",
+    "mr": "YYYY-MM-DD"
+  },
+  {
+    "en": "Yes, in Safari. Open the browser version, tap Share, then",
+    "new_en": "Yes, in Safari. Open the browser version, tap Share, then",
+    "hi": "हाँ, Safari में। ब्राउज़र वर्जन खोलें, Share पर tap करें, फिर",
+    "mr": "होय, Safari मध्ये. ब्राउझर व्हर्जन उघडा, Share वर tap करा, नंतर"
+  },
+  {
+    "en": "Yes. No ads, no paid plan.",
+    "new_en": "Yes. No ads, no paid plan.",
+    "hi": "हाँ। कोई विज्ञापन नहीं, कोई paid plan नहीं।",
+    "mr": "होय. जाहिराती नाहीत, कोणताही paid plan नाही."
+  },
+  {
+    "en": "Yes. Open the app and choose to try it without an account. Your data stays on that phone.",
+    "new_en": "Yes. Open the app and try it without an account. Your data stays on that phone.",
+    "hi": "हाँ। App खोलें और बिना account के आज़माएं। आपका data उसी फ़ोन पर रहेगा।",
+    "mr": "होय. App उघडा आणि account शिवाय वापरून पहा. तुमचा data त्याच फोनवर राहील."
+  },
+  {
+    "en": "Yesterday",
+    "new_en": "Yesterday",
+    "hi": "कल",
+    "mr": "काल"
+  },
+  {
+    "en": "You",
+    "new_en": "You",
+    "hi": "आप",
+    "mr": "तुम्ही"
+  },
+  {
+    "en": "You are currently in demo/offline mode. Sign in with an account to attach and use Gemini keys.",
+    "new_en": "You are in demo/offline mode. Sign in to add and use Gemini keys.",
+    "hi": "आप अभी demo/offline मोड में हैं। Gemini keys जोड़ने और उपयोग करने के लिए sign in करें।",
+    "mr": "तुम्ही सध्या demo/offline मोडमध्ये आहात. Gemini keys जोडण्यासाठी आणि वापरण्यासाठी sign in करा."
+  },
+  {
+    "en": "You can keep up to 5 keys. Remove one below first.",
+    "new_en": "You can keep up to 5 keys. Remove one below first.",
+    "hi": "आप अधिकतम 5 keys रख सकते हैं। पहले नीचे से एक हटाएं।",
+    "mr": "तुम्ही जास्तीत जास्त 5 keys ठेवू शकता. आधी खालून एक काढून टाका."
+  },
+  {
+    "en": "You chose to rest today. It won't count against your streak.",
+    "new_en": "You chose to rest today. It won't affect your streak.",
+    "hi": "आपने आज आराम करना चुना। यह आपकी streak को प्रभावित नहीं करेगा।",
+    "mr": "तुम्ही आज विश्रांती घेणे निवडले. यामुळे तुमच्या streak वर परिणाम होणार नाही."
+  },
+  {
+    "en": "You have the latest version.",
+    "new_en": "You have the latest version.",
+    "hi": "आपके पास latest version है।",
+    "mr": "तुमच्याकडे latest version आहे."
+  },
+  {
+    "en": "You're trying FORGE without an account. Sign in to back up your data, sync devices and use AI.",
+    "new_en": "You're trying FORGE without an account. Sign in to back up data, sync devices, and use AI.",
+    "hi": "आप बिना account के FORGE आज़मा रहे हैं। Data backup, device sync और AI के उपयोग के लिए sign in करें।",
+    "mr": "तुम्ही account शिवाय FORGE वापरून पाहत आहात. Data backup, device sync आणि AI वापरण्यासाठी sign in करा."
+  },
+  {
+    "en": "You're using FORGE without an account, so data stays on this phone.",
+    "new_en": "You're using FORGE without an account, so data stays on this phone.",
+    "hi": "आप बिना account के FORGE उपयोग कर रहे हैं, इसलिए data इसी फ़ोन पर रहेगा।",
+    "mr": "तुम्ही account शिवाय FORGE वापरत आहात, त्यामुळे data याच फोनवर राहील."
+  },
+  {
+    "en": "Your Gemini keys",
+    "new_en": "Your Gemini keys",
+    "hi": "आपकी Gemini keys",
+    "mr": "तुमच्या Gemini keys"
+  },
+  {
+    "en": "Your coach is planning today's weights",
+    "new_en": "Your coach is planning today's weights",
+    "hi": "आपका coach आज के weights plan कर रहा है",
+    "mr": "तुमचा coach आजचे weights plan करत आहे"
+  },
+  {
+    "en": "Your data stays private.",
+    "new_en": "Your data stays private.",
+    "hi": "आपका data निजी रहता है।",
+    "mr": "तुमचा data खाजगी राहतो."
+  },
+  {
+    "en": "Your existing workout history is kept — activating a plan never deletes past sessions.",
+    "new_en": "Your workout history is kept — activating a plan never deletes past sessions.",
+    "hi": "आपका workout इतिहास सुरक्षित रहता है — नया plan शुरू करने से पिछले sessions कभी हटाए नहीं जाते।",
+    "mr": "तुमचा workout इतिहास सुरक्षित राहतो — नवीन plan सुरू केल्याने मागील sessions कधीही हटवले जात नाहीत."
+  }
+]

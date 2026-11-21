@@ -1,4 +1,4 @@
-import { dayAdherence, sumTotals, type DayAdherence } from './calc'
+import { dayAdherence, sumTotals, toISO, type DayAdherence } from './calc'
 import type { FoodLog, ISODate, NutritionTarget, Settings, StepLog, WorkoutSession } from './types'
 
 export interface DaySource {
@@ -29,6 +29,11 @@ export function adherenceFor(src: DaySource, date: ISODate): DayAdherence {
     session: daySession(src, date),
     steps: daySteps(src, date),
     settings: src.settings,
+    trainedRecently: [1, 2].some(n => {
+      const d = new Date(date + 'T00:00:00'); d.setDate(d.getDate() - n)
+      const key = toISO(d)
+      return src.sessions.some(s => s.date === key && s.finished_at)
+    }),
   })
 }
 

@@ -35,7 +35,8 @@ export const working = (sets: WorkoutSet[]) => sets.filter(s => s.done && !s.war
 /** Most recent sessions of one exercise, newest first, excluding deloads (they never set the baseline). */
 export function exerciseHistory(sessions: WorkoutSession[], exerciseId: string, before?: string) {
   return sessions
-    .filter(s => !s.deload && (!before || s.date < before))
+    // Unfinished workouts never set the next target (an abandoned session would drag it down).
+    .filter(s => !s.deload && (s.finished_at || s.backfilled) && (!before || s.date < before))
     .map(s => ({ date: s.date, ex: s.exercises.find(e => e.exercise_id === exerciseId) }))
     .filter((x): x is { date: string; ex: SessionExercise } => Boolean(x.ex && working(x.ex.sets).length))
     .sort((a, b) => b.date.localeCompare(a.date))
@@ -59,7 +60,12 @@ export function nextTarget(opts: {
   const [lo, hi] = range
   const last = opts.history[0]
   if (!last) return { weight: null, reps: lo, why: 'First time — pick a weight you can lift for the top of the range with 1–2 reps to spare.' }
-  const sets = working(last.ex.sets)
+  const rule0 = opts.rule ?? (lo === hi ? 'linear' : 'double')
+  // A set ticked with no weight is not a 0 kg set: for loaded lifts only sets with a weight count.
+  const sets = working(last.ex.sets).filter(s => opts.bodyweight || rule0 === 'reps' || (s.weight_kg ?? 0) > 0)
+  if (!sets.length) return { weight: null, reps: lo, why: `No weight was entered last time. Pick a weight you can lift for ${hi} reps with 1–2 to spare.` }
+  // Weight only goes up after every planned working set was done, not after 1 of 4.
+  const allDone = last.ex.sets.filter(s => !s.warmup).every(s => s.done)
   const topW = Math.max(...sets.map(s => s.weight_kg ?? 0))
   const top = sets.filter(s => (s.weight_kg ?? 0) === topW)
   const minReps = Math.min(...top.map(s => s.reps ?? 0))
@@ -81,6 +87,7 @@ export function nextTarget(opts: {
     const w = Math.max(0, Math.round((topW * 0.9) / inc) * inc)
     return { weight: w, reps: lo, why: `Missed ${lo} reps three sessions running — deload 10 % and build back.` }
   }
+  if (minReps >= hi && !allDone) return { weight: topW, reps: lo, why: 'Same weight. Finish all your sets before adding weight.' }
   if (minReps >= hi) {
     return { weight: topW + inc, reps: lo, why: `+${inc} kg · hit ${top.map(s => s.reps).join(', ')} last time.` }
   }

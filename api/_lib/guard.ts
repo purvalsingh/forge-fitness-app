@@ -26,6 +26,12 @@ const FOOD_EXCEPTIONS = [
   'squid ink', 'gun powder', 'sun dried tomato', 'star apple',
 ]
 
+// Words that say how much or how, never what: they cannot make a non-food description count as food.
+const FILLER = new Set(['a', 'an', 'the', 'of', 'with', 'and', 'or', 'some', 'my', 'i', 'ate', 'had', 'eat', 'eating', 'drank',
+  'plate', 'plates', 'bowl', 'bowls', 'cup', 'cups', 'glass', 'piece', 'pieces', 'slice', 'slices', 'handful', 'spoon', 'spoons',
+  'g', 'gm', 'grams', 'kg', 'ml', 'l', 'big', 'small', 'little', 'full', 'half', 'one', 'two', 'three', 'raw', 'hot', 'cold',
+  'fried', 'boiled', 'else', 'just', 'only', 'today', 'for', 'in', 'on', 'to', 'like'])
+
 const INJECTION = /(ignore|disregard|forget)\s+(all\s+|the\s+|your\s+|previous\s+|prior\s+|above\s+)*(instructions|rules|prompt)|system\s*prompt|you\s+are\s+now|act\s+as|developer\s+mode|jailbreak|\bDAN\b|reveal\s+(your|the)\s+(prompt|instructions)|<\/?(system|entry)>/i
 
 export type PreCheck = { ok: true } | { ok: false; reason: string }
@@ -43,10 +49,19 @@ export function preCheckFoodText(text: unknown): PreCheck {
   let w = words(t)
   for (const ok of FOOD_EXCEPTIONS) w = w.replaceAll(` ${ok} `, ' ').replaceAll(ok, '')
   const hit = NON_FOOD.find(b => w.includes(` ${b} `) || w.includes(` ${b}s `))
-  if (hit) return { ok: false, reason: `"${hit}" isn't food. FORGE only logs things people can actually eat.` }
+  // A non-food word only blocks when nothing else in the text could be food: "fire paan", "Cadbury 5 Star",
+  // "brick oven pizza", "dal rice and nothing else" are real meals. Gemini still flags inedible items afterwards.
+  if (hit) {
+    let rest = w
+    for (const b of NON_FOOD) rest = rest.replaceAll(` ${b}s `, ' ').replaceAll(` ${b} `, ' ')
+    const left = rest.split(' ').filter(x => x && !FILLER.has(x) && !/^\d/.test(x))
+    if (!left.length) return { ok: false, reason: `"${hit}" isn't food. FORGE only logs things people can actually eat.` }
+  }
   // Absurd counts: "50 rotis", "100 eggs"
-  const m = t.match(/\b(\d{2,})\s*(roti|rotis|chapati|eggs?|samosas?|idlis?|dosas?|puris?|parathas?|vada|pav|burgers?|pizzas?|bananas?|laddoos?|plates?|bowls?)\b/i)
+  const m = t.match(/\b(\d{2,})\s*(roti|rotis|chapati|eggs?(?!\s*whites?)|samosas?|idlis?|dosas?|puris?|parathas?|vada|pav|burgers?|pizzas?|bananas?|laddoos?|plates?|bowls?)\b/i)
   if (m && Number(m[1]) > 20) return { ok: false, reason: `${m[1]} ${m[2]} in one sitting isn't realistic. Log what you actually ate.` }
+  const ew = t.match(/\b(\d{2,})\s*egg\s*whites?\b/i)
+  if (ew && Number(ew[1]) > 40) return { ok: false, reason: `${ew[1]} egg whites in one sitting isn't realistic. Log what you actually ate.` }
   const kg = t.match(/\b(\d+(?:\.\d+)?)\s*(kg|kilo|kilos|litre|liter|litres|liters|l)\b/i)
   if (kg && Number(kg[1]) > 3) return { ok: false, reason: `${kg[1]} ${kg[2]} at once isn't realistic. Check the amount.` }
   return { ok: true }
@@ -114,4 +129,5 @@ export function postCheckFood(raw: { is_food_request?: boolean; rejection_reason
 const round1 = (n: number) => Math.round(n * 10) / 10
 
 /** Gemini API keys have a fixed shape; anything else is rejected before it is stored or used. */
-export const GEMINI_KEY_RE = /^AIza[0-9A-Za-z_-]{35}$/
+/** Google AI Studio keys: classic "AIza…" (39 chars) or the newer "AQ.…" format. */
+export const GEMINI_KEY_RE = /^(AIza[0-9A-Za-z_-]{35}|AQ\.[0-9A-Za-z_-]{30,120})$/

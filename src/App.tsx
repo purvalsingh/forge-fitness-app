@@ -1,3 +1,4 @@
+import Feedback from './screens/Feedback'
 import { lazy, Suspense, useState } from 'react'
 import { BrowserRouter, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { ActiveDateProvider, StoreProvider, useActiveDate, useStore } from './store'
@@ -42,7 +43,7 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
         {NAV.map((n, i) => n === null ? (
           <button key={i} onClick={onAdd} aria-label="Quick add"
             className="press -mt-7 grid h-[62px] w-[62px] shrink-0 place-items-center rounded-full"
-            style={{ background: 'var(--accent)', color: 'var(--accent-ink)', boxShadow: '0 10px 30px -6px rgba(255,107,44,.65)' }}>
+            style={{ background: 'var(--accent)', color: 'var(--accent-ink)', boxShadow: '0 10px 30px -6px color-mix(in srgb, var(--accent) 65%, transparent)' }}>
             <Icon name="plus" size={30} />
           </button>
         ) : (
@@ -129,6 +130,7 @@ function Shell() {
           <Route path="/more/recipes" element={<Recipes />} />
           <Route path="/more/plan" element={<PlanBuilder />} />
           <Route path="/more/settings" element={<SettingsScreen />} />
+          <Route path="/more/feedback" element={<Feedback />} />
           <Route path="/physique" element={<Physique />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="/exercises" element={<Exercises />} />

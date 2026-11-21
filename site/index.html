@@ -3,252 +3,165 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>FORGE — Train hard. Eat Indian. Track everything.</title>
-  <meta name="description" content="Free fitness and Indian nutrition app for Android and iPhone: workouts with smart progression, 16,000+ foods including dishes from all 28 states and 8 union territories, and an AI food camera on your own Gemini keys." />
-  <meta name="theme-color" content="#0A1F38" />
-  <meta property="og:title" content="FORGE — Train hard. Eat Indian. Track everything." />
-  <meta property="og:description" content="Workouts, every Indian dish, AI food camera. Free on Android & iPhone." />
+  <title>FORGE: Fitness for Indian Food</title>
+  <meta name="description" content="A free fitness app made for Indian food. Log dal, roti and rice the way you eat them, track your workouts and see your progress. No ads." />
+  <meta name="theme-color" content="#B9E3F2" />
+  <meta property="og:title" content="FORGE: Fitness for Indian Food" />
+  <meta property="og:description" content="Log Indian food the way you eat it, track workouts, see progress. Free, no ads." />
   <meta property="og:image" content="/og.png" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/app/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500;9..40,700&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
+  <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
-  <!-- drawing-sheet frame: ruler, crosshair, readout -->
-  <div class="ruler" aria-hidden="true"><i class="ruler-mark"></i></div>
-  <div class="xhair" aria-hidden="true"><i class="xh-x"></i><i class="xh-y"></i><span class="xh-read mono">X 0000 · Y 0000</span></div>
+  <div class="bar" aria-hidden="true"></div>
+  <div class="liquid" aria-hidden="true"><i></i><i></i><i></i></div>
 
-  <header class="nav">
-    <a href="#top" class="brand" aria-label="FORGE home">
-      <svg viewBox="0 0 512 512" width="26" height="26" aria-hidden="true"><rect x="16" y="16" width="480" height="480" rx="104" fill="none" stroke="currentColor" stroke-width="24"/><path d="M150 400V112h212v70H232v52h110v68H232v98z" fill="#FF6B2C"/></svg>
-      <span>FORGE</span><small class="mono">DWG. NO. FG-2.0</small>
-    </a>
-    <nav class="nav-links mono" aria-label="Sections">
-      <a href="#features">02 Features</a><a href="#india">03 Indian food</a><a href="#accuracy">04 Accuracy</a><a href="#security">05 Security</a><a href="#install">06 Install</a>
-    </nav>
-    <p class="readout mono" aria-hidden="true"><span class="ro-sheet">SHEET 01 / 08</span><span class="ro-title">GENERAL ARRANGEMENT</span><span class="ro-pct">000.0%</span></p>
-    <details class="nav-index mono">
-      <summary>Index</summary>
-      <div><a href="#features">02 Features</a><a href="#india">03 Indian food</a><a href="#accuracy">04 Accuracy</a><a href="#security">05 Security</a><a href="#install">06 Install</a><a href="#notes">07 Questions</a></div>
-    </details>
-    <a href="#download" class="btn btn-sm">Get the app</a>
+  <!-- Gooey filter: overlapping circles melt into one warm blob -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="22" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -11"/></filter>
+  </svg>
+
+  <header class="top">
+    <a href="#" class="logo" aria-label="FORGE home"><span class="mark" aria-hidden="true">F</span>FORGE</a>
+    <nav class="links" aria-label="Sections"><a href="#how">How it works</a><a href="#food">Food</a><a href="#faq">Questions</a></nav>
+    <select id="lang" class="lang" aria-label="Language" data-no-i18n>
+      <option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option>
+    </select>
+    <a class="btn small magnetic" href="/download/forge.apk" download><span>Download</span></a>
   </header>
 
-  <main id="top">
-    <!-- 01 HERO: pinned drawing that inks itself -->
-    <section class="sheet hero" data-sheet="01" data-title="GENERAL ARRANGEMENT" data-pin>
-      <div class="hero-stage">
-        <div class="hero-copy">
-          <p class="tag mono">SHEET 01 · Free · Android &amp; iPhone · No ads</p>
-          <h1 class="hero-title">
-            <span>Train hard.</span>
-            <span>Eat <em>Indian.</em></span>
-            <span class="outline">Track everything.</span>
-          </h1>
-          <p class="hero-sub">Workouts with real progression, <b>16,000+ foods</b> including dishes from <b>all 28 states &amp; 8 union territories</b>, and an AI food camera that runs on <b>your own Gemini keys</b>.</p>
-          <div class="hero-cta" id="download">
-            <a class="btn press" href="/download/forge.apk" download>
-              <span>Download for Android</span><small class="mono">APK · {{APK_SIZE}}</small>
-            </a>
-            <a class="btn btn-ghost press" href="#install" data-ios><span>Install on iPhone</span></a>
-            <a class="text-link mono" href="/app/">Open the web app →</a>
-          </div>
-          <p class="key-note">Needs 2 free Gemini API keys from Google AI Studio. They keep FORGE free with no ads; <a href="#key-step">setup takes a few minutes →</a></p>
-          <p class="hero-note mono">REV v2.0.0 · signed APK · SHA-256 <code title="{{APK_SHA256}}">{{APK_SHA_SHORT}}</code></p>
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <p class="kicker reveal"><span class="dot"></span>Free · No ads · Made in India</p>
+        <h1 data-words>Your gym and your thali, in one app.</h1>
+        <p class="lead reveal">Log food the way you actually eat it, like <i>1 katori dal</i> or <i>2 rotis</i>. Track your workouts. Watch your progress add up.</p>
+        <div class="ctas reveal">
+          <a class="btn magnetic" href="/download/forge.apk" download><span>Download for Android</span><small>{{APK_SIZE}}</small></a>
+          <a class="btn ghost magnetic" href="/app/"><span>Open in your browser</span><b aria-hidden="true">→</b></a>
         </div>
+        <p class="fine reveal">On iPhone? Open it in Safari, tap Share, then <b>Add to Home Screen</b>.</p>
+      </div>
 
-        <figure class="drawing" aria-hidden="true">
-          <svg class="dr" viewBox="0 0 640 620">
-            <g class="phone-lines" transform="translate(170 10)">
-              <rect x="0" y="0" width="280" height="580" rx="40"/>
-              <rect x="14" y="14" width="252" height="552" rx="30"/>
-              <rect x="105" y="22" width="70" height="18" rx="9"/>
-            </g>
-            <!-- inner detail is traced from the real screen below (app.js), so lines and fill always match -->
-            <g class="phone-lines traced"></g>
-            <!-- dimension lines carry the real numbers -->
-            <g class="dims">
-              <line x1="140" y1="10" x2="140" y2="590"/><line x1="132" y1="10" x2="148" y2="10"/><line x1="132" y1="590" x2="148" y2="590"/>
-              <line x1="170" y1="606" x2="450" y2="606"/><line x1="170" y1="598" x2="170" y2="614"/><line x1="450" y1="598" x2="450" y2="614"/>
-            </g>
-            <text class="dim-t" x="128" y="300" transform="rotate(-90 128 300)" text-anchor="middle">16,365 FOODS</text>
-            <text class="dim-t" x="310" y="600" text-anchor="middle">28 STATES + 8 UNION TERRITORIES</text>
-            <!-- leaders + callouts -->
-            <g class="leaders">
-              <polyline data-from="title" data-y="30" points="0,0"/>
-              <polyline data-from="ring" data-y="160" points="0,0"/>
-              <polyline data-from="macros" data-y="285" points="0,0"/>
-              <polyline data-from="meal" data-y="440" points="0,0"/>
-            </g>
-            <text class="call" x="630" y="150" text-anchor="end">B · ENERGY BALANCE, LIVE</text>
-            <text class="call" x="630" y="20" text-anchor="end">A · YOUR DAY ENDS AT 4 AM</text>
-            <text class="call" x="630" y="275" text-anchor="end">C · MACROS ≤ 9 KCAL / G</text>
-            <text class="call" x="630" y="430" text-anchor="end">D · 1 PIECE, 1 KATORI</text>
-          </svg>
-          <!-- the inked (filled) state, revealed by the scan line -->
-          <div class="phone-fill">
-            <div class="s-top"><div><div class="s-eyebrow">THU 25 SEP</div><div class="s-title" data-callout="title">Today<b>.</b></div></div><div class="s-avatar" data-trace="circle">A</div></div>
-            <div class="s-hero" data-trace="rect">
-              <div><div class="s-eyebrow ember">ENERGY BALANCE</div><div class="s-kcal"><span data-to="1284">1,284</span><small> / 2,150</small></div><div class="s-chip" data-trace="rect">866 kcal left</div></div>
-              <svg class="s-ring" data-trace="circle" data-callout="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"/><circle class="arc" cx="50" cy="50" r="42"/></svg>
-            </div>
-            <div class="s-macros" data-callout="macros"><div data-trace="rect"><span>PROTEIN</span><b>96</b></div><div data-trace="rect"><span>CARBS</span><b>140</b></div><div data-trace="rect"><span>FAT</span><b>38</b></div></div>
-            <div class="s-meal" data-trace="rect" data-callout="meal"><div><div class="s-eyebrow">BREAKFAST · 8:30</div>Poha (1 plate), Chai (1 cup)</div><b>410</b></div>
-            <div class="s-meal" data-trace="rect"><div><div class="s-eyebrow">LUNCH · 1:45</div>2 Roti, Dal tadka, Bhindi</div><b>620</b></div>
-            <div class="s-meal ghost" data-trace="rect" data-dash><div><div class="s-eyebrow">SNACK</div>Vada pav · 1 piece ≈ 150 g</div><b>+</b></div>
-            <div class="s-nav" data-trace="rect"><i data-trace="circle"></i></div>
-          </div>
-          <i class="scan"></i>
-        </figure>
-        <p class="scroll-hint mono" aria-hidden="true">SCROLL TO INK THE DRAWING ↓</p>
+      <div class="stage" data-tilt>
+        <div class="blobs" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
+        <figure class="phone hero-phone"><img src="/shots/today.webp" width="390" height="715" alt="FORGE home screen showing calories eaten, protein, steps and water for today" /></figure>
+        <div class="chip f1" data-depth="1.6"><span><svg viewBox="0 0 24 24"><path d="M4 11h16a8 8 0 0 1-16 0Z"/><path d="M8 7c0-1.5 1-1.5 1-3M12 7c0-1.5 1-1.5 1-3M16 7c0-1.5 1-1.5 1-3"/></svg></span><div><b>Poha</b><small>1 plate · 270 kcal</small></div></div>
+        <div class="chip f2" data-depth="2.2"><span><svg viewBox="0 0 24 24"><path d="M3 12h18a9 9 0 0 1-18 0Z"/><path d="M7 12c1-3 3-4 5-4s4 1 5 4"/></svg></span><div><b>Rajma chawal</b><small>1 plate · 520 kcal</small></div></div>
+        <div class="chip f3" data-depth="1.2"><span><svg viewBox="0 0 24 24"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5Z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8 3v3M12 3v3"/></svg></span><div><b>Masala chai</b><small>1 cup · 90 kcal</small></div></div>
+        <div class="chip f4 done" data-depth="2.6"><span><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><div><b>Protein goal</b><small>hit today</small></div></div>
       </div>
     </section>
 
-    <!-- statement: outlined type fills as the scan passes -->
-    <section class="sheet statement" data-sheet="01" data-title="GENERAL NOTE">
-      <p class="outline big-note">A vada pav is one piece, not a hundred grams. A katori of dal is a katori. FORGE logs food the way India actually eats it — and the numbers come from ingredients, not guesses.</p>
-      <i class="scan"></i>
+    <section class="stats" aria-label="FORGE in numbers">
+      <div><b data-count="16000" data-suffix="+">0</b><span>Indian &amp; global foods</span></div>
+      <div><b data-count="36">0</b><span>states &amp; UTs covered</span></div>
+      <div><b data-count="1324">0</b><span>exercises with guides</span></div>
+      <div><b data-count="0" data-prefix="₹">₹0</b><span>to use, forever</span></div>
     </section>
 
-    <!-- 02 FEATURES as a parts list -->
-    <section class="sheet features" id="features" data-sheet="02" data-title="PARTS LIST">
-      <header class="sheet-head"><span class="mono">SHEET 02 — PARTS LIST</span><h2>Everything a serious app does. <em>Built for India.</em></h2></header>
-      <ol class="bom">
-        <li><span class="no mono">01</span><svg class="dr glyph" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="4"/><path d="M8 7l2-3h4l2 3"/></svg><h3>AI food camera</h3><p>Snap your thali. FORGE finds each item, estimates the portion from the plate and katori, then checks it against its own database before you log it. Every number stays editable.</p></li>
-        <li><span class="no mono">02</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/></svg><h3>Gym after midnight?</h3><p>Your day ends at 4 AM, not 12. A 12:30 AM session or snack still counts for the evening before. You can also log to yesterday, or any day, in one tap.</p></li>
-        <li><span class="no mono">03</span><svg class="dr glyph" viewBox="0 0 24 24"><polyline points="3,19 9,13 13,16 21,6"/><polyline points="16,6 21,6 21,11"/></svg><h3>Gets you stronger, and says why</h3><p>Hit all your reps and the weight goes up next time. Stall three sessions in a row and it eases off so you can rebuild. It also tells you which plates to load, estimates your one-rep max, and handles warm-ups, supersets, planks and cardio.</p></li>
-        <li><span class="no mono">04</span><svg class="dr glyph" viewBox="0 0 24 24"><line x1="6" y1="12" x2="18" y2="12"/><rect x="2" y="8" width="4" height="8"/><rect x="18" y="8" width="4" height="8"/></svg><h3><span data-to="1324">1,324</span> exercises</h3><p>Search by muscle or the equipment you own, add favourites and your own exercises, and read instructions in English or Hindi.</p></li>
-        <li><span class="no mono">05</span><svg class="dr glyph" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M7 10h10M12 15l-3 6M12 15l3 6"/></svg><h3>Muscle map &amp; training calendar</h3><p>A male or female body lights up by how much each muscle trained this week, so you can see what you skipped. A year-long calendar and personal records sit alongside it.</p></li>
-        <li><span class="no mono">06</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M12 3C12 3 5 11 5 15a7 7 0 0 0 14 0c0-4-7-12-7-12z"/></svg><h3>Water, fasting, steps</h3><p>One-tap water, an intermittent-fasting timer, step goals and a daily adherence score. Rest days never count against you.</p></li>
-        <li><span class="no mono">07</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M4 5v14M7 5v14M9.5 5v14M13 5v14M16 5v14M18 5v14M20.5 5v14"/></svg><h3>Barcode &amp; quick meals</h3><p>Scan packaged food through Open Food Facts, copy a meal from yesterday, or save any meal as a one-tap quick meal.</p></li>
-        <li><span class="no mono">08</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg><h3>Coach that stays on topic</h3><p>Ask about training, recovery or Indian food. Off-topic requests and prompt tricks get a polite no.</p></li>
-        <li><span class="no mono">09</span><svg class="dr glyph" viewBox="0 0 24 24"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg><h3>Switching from another app?</h3><p>Bring your whole workout history over from <b>Strong</b> or <b>Hevy</b>, two popular gym-tracking apps. And download everything you log in FORGE whenever you like.</p></li>
+    <section class="deck" id="how" aria-label="What FORGE does">
+      <p class="eyebrow">How it works</p>
+      <h2 class="deck-title" data-words>Three things. That's the whole app.</h2>
+      <article class="card c1">
+        <div class="card-text">
+          <h3>Eat</h3>
+          <p>Search “poha”, “rajma chawal” or “dosa” and tap. FORGE knows Indian portions, so you never weigh anything.</p>
+          <ul class="ticks"><li>Katori, roti, plate sizes built in</li><li>On Android, just say it: “do roti aur dal”</li><li>Snap a photo or scan a barcode</li></ul>
+        </div>
+        <figure class="phone"><img src="/shots/food.webp" width="390" height="715" loading="lazy" alt="Food screen with breakfast, lunch and snacks logged" /></figure>
+      </article>
+      <article class="card c2">
+        <div class="card-text">
+          <h3>Train</h3>
+          <p>Pick a ready plan or build your own. FORGE tells you what to lift today and times your rest.</p>
+          <ul class="ticks"><li>Plans for gym or home</li><li>Rest timer that buzzes</li><li>Weights go up as you get stronger</li></ul>
+        </div>
+        <figure class="phone"><img src="/shots/train.webp" width="390" height="715" loading="lazy" alt="Workout plan screen" /></figure>
+      </article>
+      <article class="card c3">
+        <div class="card-text">
+          <h3>See progress</h3>
+          <p>Weight, steps and water on one page. Steps count by themselves with your phone in your pocket.</p>
+          <ul class="ticks"><li>Calorie target that learns from you</li><li>Water tile that fills like a glass</li><li>Streaks that keep you going</li></ul>
+        </div>
+        <figure class="phone"><img src="/shots/progress.webp" width="390" height="715" loading="lazy" alt="Progress screen with weight and averages" /></figure>
+      </article>
+    </section>
+
+    <section class="themes">
+      <p class="eyebrow">Make it yours</p>
+      <h2 data-words>Six gradients. Even the icon changes.</h2>
+      <p class="sub reveal">Pick a gradient and the whole app follows, right down to the icon on your home screen. Tap one to try it here.</p>
+      <div class="swatches reveal" role="group" aria-label="Try a gradient">
+        <button type="button" class="sw" data-theme="monsoon" data-c="#D7F3EE,#B9E3F2,#C9C6F5,#1A7F92,#3D5FE8,#35C2B4,#2B9FB3,#4C6FFF" aria-pressed="true"><i style="background:linear-gradient(135deg,#35C2B4,#2B9FB3 55%,#4C6FFF)"></i><b>Monsoon</b></button>
+        <button type="button" class="sw" data-theme="dusk" data-c="#FFE6CC,#FFC7B4,#F6CBE3,#D0501F,#D13A6C,#FFA36B,#F2683C,#E8457A" aria-pressed="false"><i style="background:linear-gradient(135deg,#FFA36B,#F2683C 55%,#E8457A)"></i><b>Saffron dusk</b></button>
+        <button type="button" class="sw" data-theme="lagoon" data-c="#DDF7E6,#BFEFE0,#B8E0F2,#137A58,#1F86A3,#4FD18F,#1E9E74,#2BA3C4" aria-pressed="false"><i style="background:linear-gradient(135deg,#4FD18F,#1E9E74 55%,#2BA3C4)"></i><b>Lagoon</b></button>
+        <button type="button" class="sw" data-theme="lilac" data-c="#EFE6FF,#DAD5FB,#F8D8EC,#6747CF,#C23A6C,#A98BFF,#7A5AE0,#D9457A" aria-pressed="false"><i style="background:linear-gradient(135deg,#A98BFF,#7A5AE0 55%,#D9457A)"></i><b>Lilac</b></button>
+        <button type="button" class="sw" data-theme="citrus" data-c="#FFF7CC,#FFE4A8,#FFD2BC,#B45F00,#D2452D,#FFC94A,#E8890C,#F2553C" aria-pressed="false"><i style="background:linear-gradient(135deg,#FFC94A,#E8890C 55%,#F2553C)"></i><b>Citrus</b></button>
+        <button type="button" class="sw" data-theme="rose" data-c="#FFE9EE,#F7D3E2,#E3D9F7,#C23866,#8649D6,#FF8AB0,#D94877,#9B5DE5" aria-pressed="false"><i style="background:linear-gradient(135deg,#FF8AB0,#D94877 55%,#9B5DE5)"></i><b>Rose quartz</b></button>
+      </div>
+    </section>
+
+    <section class="food" id="food">
+      <p class="eyebrow">Food</p>
+      <h2 data-words>Every state's food is in it.</h2>
+      <p class="sub reveal">From Kashmir's rogan josh to Kerala's appam. Home food, the way your family makes it.</p>
+      <div class="rail" aria-hidden="true">
+        <div class="row">
+          <span>Poha <em>Maharashtra</em></span><span>Litti chokha <em>Bihar</em></span><span>Appam <em>Kerala</em></span><span>Dhokla <em>Gujarat</em></span><span>Thukpa <em>Sikkim</em></span><span>Macher jhol <em>West Bengal</em></span><span>Sarson ka saag <em>Punjab</em></span><span>Pongal <em>Tamil Nadu</em></span>
+          <span>Poha <em>Maharashtra</em></span><span>Litti chokha <em>Bihar</em></span><span>Appam <em>Kerala</em></span><span>Dhokla <em>Gujarat</em></span><span>Thukpa <em>Sikkim</em></span><span>Macher jhol <em>West Bengal</em></span><span>Sarson ka saag <em>Punjab</em></span><span>Pongal <em>Tamil Nadu</em></span>
+        </div>
+        <div class="row rev">
+          <span>Dal baati <em>Rajasthan</em></span><span>Idli <em>Karnataka</em></span><span>Rogan josh <em>J&amp;K</em></span><span>Pakhala <em>Odisha</em></span><span>Bebinca <em>Goa</em></span><span>Masor tenga <em>Assam</em></span><span>Chole bhature <em>Delhi</em></span><span>Pesarattu <em>Andhra</em></span>
+          <span>Dal baati <em>Rajasthan</em></span><span>Idli <em>Karnataka</em></span><span>Rogan josh <em>J&amp;K</em></span><span>Pakhala <em>Odisha</em></span><span>Bebinca <em>Goa</em></span><span>Masor tenga <em>Assam</em></span><span>Chole bhature <em>Delhi</em></span><span>Pesarattu <em>Andhra</em></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="steps">
+      <p class="eyebrow">Get started</p>
+      <h2 data-words>Start in 3 steps</h2>
+      <ol class="timeline">
+        <li><span class="n">1</span><div><b>Download</b><p>Get the app, or open it in your browser.</p></div></li>
+        <li><span class="n">2</span><div><b>Sign up</b><p>Use your email. Tell it your weight and goal.</p></div></li>
+        <li><span class="n">3</span><div><b>Log your first meal</b><p>That's it. FORGE does all the maths.</p></div></li>
       </ol>
     </section>
 
-    <!-- 03 INDIA as a survey grid -->
-    <section class="sheet india" id="india" data-sheet="03" data-title="SURVEY GRID">
-      <header class="sheet-head">
-        <span class="mono">SHEET 03 — SURVEY OF EVERY STATE</span>
-        <h2><span data-to="28">28</span> states. <span data-to="8">8</span> union territories. <em><span data-to="16365">16,365</span> foods.</em></h2>
-        <p class="muted">Every region of India has its own dishes in FORGE — calculated from their ingredients at the portion you are actually served, alongside 800+ recipes from the Indian Nutrient Databank. Each plot shows how many dishes that region has.</p>
-      </header>
-      <div class="survey">{{STATE_CARDS}}</div>
-      <i class="scan"></i>
+    <section class="private">
+      <div class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 0 1 6 0v3H9Z"/></svg></div>
+      <h2 data-words>Your data stays private.</h2>
+      <p class="reveal">Only you can see your meals, workouts, and weight. We handle security, so there is nothing for you to set up.</p>
     </section>
 
-    <!-- 04 ACCURACY as a tolerance check -->
-    <section class="sheet accuracy" id="accuracy" data-sheet="04" data-title="TOLERANCE CHECK">
-      <div class="acc-copy">
-        <span class="mono tag">SHEET 04 — TOLERANCE CHECK</span>
-        <h2>Tell it you ate a nuclear bomb. <em>It won't log it.</em></h2>
-        <p class="muted">Every entry is checked twice. First, anything that isn't food, an impossible amount (40 rotis at once) or an attempt to trick the AI is refused. Then the AI's answer is checked against basic food science: no food has more than 9 calories per gram, and the protein, carbs and fat must add up to the calories. If the numbers don't make sense, they never reach your diary.</p>
-        <svg class="dr gauge" viewBox="0 0 400 70" aria-hidden="true">
-          <line x1="10" y1="40" x2="390" y2="40"/>
-          <line x1="10" y1="30" x2="10" y2="50"/><line x1="94" y1="32" x2="94" y2="48"/><line x1="178" y1="32" x2="178" y2="48"/><line x1="262" y1="32" x2="262" y2="48"/><line x1="346" y1="22" x2="346" y2="58"/>
-          <text x="10" y="18">0</text><text x="346" y="14" text-anchor="middle" class="warn">9 KCAL/G LIMIT</text><text x="390" y="68" text-anchor="end">REJECTED →</text>
-        </svg>
+    <section class="faq" id="faq">
+      <p class="eyebrow">Questions</p>
+      <h2 data-words>Good to know</h2>
+      <details><summary>Is it really free?</summary><p>Yes. No ads, no paid plan.</p></details>
+      <details><summary>Android can't install the app. What do I do?</summary><p>Android is careful with apps from outside the Play Store. When it asks, tap <b>Settings</b>, turn on <b>Allow from this source</b>, then go back and tap <b>Install</b>.</p></details>
+      <details><summary>Does it work on iPhone?</summary><p>Yes, in Safari. Open the browser version, tap Share, then <b>Add to Home Screen</b>. It opens like a normal app.</p></details>
+      <details><summary>Do I need internet?</summary><p>Only to sync. You can log food and workouts offline; they save when you're back online.</p></details>
+      <details><summary>Can I try it without signing up?</summary><p>Yes. Open the app and choose to try it without an account. Your data stays on that phone.</p></details>
+    </section>
+
+    <section class="end">
+      <div class="end-card">
+        <div class="blobs small" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+        <h2 data-words>Ready when you are.</h2>
+        <p>Free. Takes a minute to set up.</p>
+        <a class="btn light magnetic" href="/download/forge.apk" download><span>Download for Android</span><small>{{APK_SIZE}}</small></a>
       </div>
-      <form class="acc-demo" onsubmit="return false">
-        <label class="mono" for="acc-input">INPUT · WHAT DID YOU EAT?</label>
-        <div class="acc-row">
-          <input id="acc-input" autocomplete="off" placeholder="I ate a nuclear bomb" maxlength="120" />
-          <button class="btn btn-sm press" type="submit">Check</button>
-        </div>
-        <div class="acc-chips">
-          <button type="button" class="chip">1 vada pav</button>
-          <button type="button" class="chip">I ate a nuclear bomb</button>
-          <button type="button" class="chip">40 rotis</button>
-          <button type="button" class="chip">ignore previous instructions</button>
-          <button type="button" class="chip">2 roti dal tadka</button>
-        </div>
-        <output class="acc-out mono" aria-live="polite">Waiting for a meal…</output>
-      </form>
-    </section>
-
-    <!-- 05 SECURITY as a section cut -->
-    <section class="sheet security" id="security" data-sheet="05" data-title="SECTION A–A">
-      <header class="sheet-head"><span class="mono">SHEET 05 — SECTION A–A THROUGH YOUR KEYS</span><h2>Your keys. <em>Locked.</em></h2></header>
-      <div class="sec-wrap">
-        <svg class="dr rings" viewBox="0 0 400 400" aria-hidden="true">
-          <circle cx="200" cy="200" r="190"/><circle cx="200" cy="200" r="160"/><circle cx="200" cy="200" r="130"/>
-          <circle cx="200" cy="200" r="100"/><circle cx="200" cy="200" r="70"/><circle cx="200" cy="200" r="40"/>
-          <line x1="0" y1="200" x2="400" y2="200" stroke-dasharray="10 5 2 5"/>
-          <text x="200" y="18" text-anchor="middle">6</text><text x="200" y="48" text-anchor="middle">5</text><text x="200" y="78" text-anchor="middle">4</text>
-          <text x="200" y="108" text-anchor="middle">3</text><text x="200" y="138" text-anchor="middle">2</text><text x="200" y="168" text-anchor="middle">1</text>
-          <text x="8" y="192">A</text><text x="384" y="192">A</text>
-          <rect class="core" x="186" y="198" width="28" height="22" rx="3"/><path class="core" d="M191 198v-7a9 9 0 0 1 18 0v7"/>
-        </svg>
-        <ol class="layers">
-          <li><b class="mono">1 · BANK-GRADE ENCRYPTION</b><p>Your 2–5 Gemini keys are locked with AES-256 encryption, the same standard banks use. The key that unlocks them never touches the database, and each one only works for your account.</p></li>
-          <li><b class="mono">2 · NEVER SHOWN AGAIN</b><p>After you save your keys, the app only ever sees the last four characters. The browser doesn't hold them, and neither does the APK.</p></li>
-          <li><b class="mono">3 · YOUR DATA IS YOURS</b><p>The database itself enforces that only you can read your meals, workouts and keys. Even a bug in the app couldn't show them to someone else.</p></li>
-          <li><b class="mono">4 · SPEED LIMITS ON AI</b><p>Each account can make only so many AI requests per minute and per day. If someone ever got into your account, they couldn't burn through your free quota.</p></li>
-          <li><b class="mono">5 · LOCKED-DOWN WEBSITE</b><p>Always HTTPS. The site can't be embedded in other sites or load code from anywhere else. Food photos go straight to the AI and are never stored.</p></li>
-          <li><b class="mono">6 · SIGNED APP</b><p>Every Android release is signed with the same FORGE key, and its fingerprint (SHA-256) is printed on this page so you can check your download wasn't tampered with.</p></li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- 06 INSTALL as assembly steps -->
-    <section class="sheet install" id="install" data-sheet="06" data-title="ASSEMBLY">
-      <header class="sheet-head"><span class="mono">SHEET 06 — ASSEMBLY INSTRUCTIONS</span><h2>Install in a few minutes.</h2></header>
-      <div class="tabs mono" role="tablist" aria-label="Your phone">
-        <button role="tab" id="tab-android" aria-controls="panel-android" aria-selected="true" data-tab="android">Android</button>
-        <button role="tab" id="tab-ios" aria-controls="panel-ios" aria-selected="false" tabindex="-1" data-tab="ios">iPhone</button>
-      </div>
-      <ol class="steps" id="panel-android" role="tabpanel" aria-labelledby="tab-android" data-panel="android">
-        <li><b>Download</b> <a href="/download/forge.apk" download>forge.apk</a> ({{APK_SIZE}}). Its SHA-256 fingerprint should be:
-          <span class="sha-row"><code class="sha mono">{{APK_SHA256}}</code><button type="button" class="chip copy" data-copy="{{APK_SHA256}}">Copy</button></span>
-          <span class="muted small">To check on a computer: <code>sha256sum forge.apk</code> (Mac/Linux) or <code>certutil -hashfile forge.apk SHA256</code> (Windows) must print exactly this. If it doesn't, delete the file.</span></li>
-        <li><b>Open it.</b> If Android asks, allow your browser to “install unknown apps”. That's normal for apps outside the Play Store. If Play Protect warns about an unknown developer, tap <b>More details → Install anyway</b>.</li>
-        <li id="key-step"><b>Get 2 free Gemini keys</b> (a few minutes): sign in at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>, tap <b>Create API key</b>, then make a second one in a new project. You can add up to 5.</li>
-        <li><b>Sign up</b> in FORGE with your name, email, a password and those keys.</li>
-      </ol>
-      <ol class="steps" id="panel-ios" role="tabpanel" aria-labelledby="tab-ios" data-panel="ios" hidden>
-        <li><b>Open</b> <a href="/app/">forgefit-india.vercel.app/app</a> in <b>Safari</b>.</li>
-        <li>Tap the <b>Share</b> button (the square with an arrow pointing up), then <b>Add to Home Screen</b>. FORGE then opens full-screen with its own icon and works offline.</li>
-        <li><b>Get 2 free Gemini keys</b> at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> (<b>Create API key</b>, then a second one in a new project).</li>
-        <li><b>Sign up</b> the same way as on Android. Your data syncs across all your devices.</li>
-      </ol>
-      <p class="muted small">Why no iPhone download? Apple only allows iPhone apps from the App Store, which requires a paid developer account. The home-screen version is the same app with the same features.</p>
-    </section>
-
-    <!-- 07 FAQ as drawing notes -->
-    <section class="sheet faq" id="notes" data-sheet="07" data-title="NOTES">
-      <header class="sheet-head"><span class="mono">SHEET 07 — NOTES</span><h2>Questions</h2></header>
-      <details><summary><span class="mono">N1</span> Is FORGE free?</summary><p>Yes. The AI runs on your own free Gemini keys, so there are no subscriptions and no ads.</p></details>
-      <details><summary><span class="mono">N2</span> Why 2–5 Gemini keys?</summary><p>Each free key has a quota. FORGE rotates between your keys, so the food camera and coach keep working on heavy days. Keys from different Google projects give you more room.</p></details>
-      <details><summary><span class="mono">N3</span> How accurate is the calorie count?</summary><p>Dishes in the database are calculated from their ingredients at typical serving sizes. AI photo estimates are checked against that database and shown as editable estimates, never as facts. Portions are the hardest part, so adjust with − / + before you log.</p></details>
-      <details><summary><span class="mono">N4</span> Does it work offline?</summary><p>Yes. The app and its food and exercise data live on your phone. Entries sync when you're back online.</p></details>
-      <details><summary><span class="mono">N5</span> Can I delete my data?</summary><p>Yes. Delete your AI keys any time in Settings, and export everything as JSON or CSV.</p></details>
     </section>
   </main>
 
-  <!-- 08 title block -->
-  <footer class="sheet footer" data-sheet="08" data-title="TITLE BLOCK">
-    <div class="closing">
-      <h2>Start logging tonight. <em>Thali and all.</em></h2>
-      <div class="hero-cta">
-        <a class="btn press" href="/download/forge.apk" download><span>Download for Android</span><small class="mono">APK · {{APK_SIZE}}</small></a>
-        <a class="btn btn-ghost press" href="#install" data-ios><span>Install on iPhone</span></a>
-        <a class="text-link mono" href="/app/">Open the web app →</a>
-      </div>
-      <p class="key-note">Free, no ads. You'll need 2 free Gemini keys; <a href="#key-step">here's how</a>.</p>
-    </div>
-    <table class="title-block mono" role="presentation">
-      <tr><td>PROJECT</td><td class="tb-big" colspan="3">FORGE<span class="ember">.</span></td></tr>
-      <tr><td>DRAWN BY</td><td><a href="https://purvalsingh.github.io" target="_blank" rel="noopener">Purval Singh</a></td><td>REV</td><td>v2.0.0</td></tr>
-      <tr><td>MADE IN</td><td>India · © 2026</td><td>SOURCE</td><td><a href="https://github.com/purvalsingh/forge-fitness-app" target="_blank" rel="noopener">GitHub</a></td></tr>
-      <tr><td>SHEET</td><td>08 / 08</td><td>SCALE</td><td>1 : 1 katori</td></tr>
-    </table>
-    <p class="muted small">Food data: USDA FoodData Central (public domain), Indian Nutrient Databank (Vijayakumar et al., 2024), Open Food Facts (ODbL). Exercise text: exercises-dataset (MIT). Body map: react-native-body-highlighter (MIT). FORGE is not medical advice.</p>
-  </footer>
-
-  <a class="dock btn press" href="/download/forge.apk" download data-dock><span>Download for Android</span><small class="mono">APK · {{APK_SIZE}}</small></a>
+  <footer class="foot"><span class="logo"><span class="mark" aria-hidden="true">F</span>FORGE</span><span>Made for Indian food.</span></footer>
   <script src="/app.js" defer></script>
+  <script src="/i18n.js" defer></script>
 </body>
 </html>

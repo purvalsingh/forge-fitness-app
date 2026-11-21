@@ -12,7 +12,7 @@ export const SEED_MEAL_TYPES: MealType[] = [
 export const SEED_SETTINGS: Settings = {
   id: 'settings',
   step_goal: 10000,
-  rest_days: [0, 6],
+  rest_days: [],
   adherence_weights: { diet: 0.4, workout: 0.4, steps: 0.2 },
   diet_tolerance: 0.1,
   day_start_hour: 4,
@@ -108,55 +108,46 @@ const day = (name: string, focus: string, position: number, list: SeedEx[]) => (
   })),
 })
 
+// A neutral starter for anyone: no prescribed weights (the first session asks for yours, then progression takes
+// over), every muscle trained twice a week, and only exercises a beginner can do on day one.
 export const SEED_PLAN: WorkoutPlan = {
   id: id('plan-forge'),
-  name: 'FORGE — Strength + Aesthetics',
+  name: 'FORGE starter — 4-day upper/lower',
   active: true,
   days: [
-    day('Day 1 — Upper Strength', 'Strength', 0, [
-      { name: 'Bench Press', sets: 4, reps: '5', target: '58–60 kg' },
-      { name: 'Weighted Pull-ups', sets: 4, reps: '5', target: '+20–25 kg' },
-      { name: 'Seated Cable Row', sets: 3, reps: '8', target: 'Moderate' },
-      { name: 'DB Shoulder Press', sets: 3, reps: '8', target: '14–18 kg / hand' },
-      { name: 'Cable Tricep Pushdown', sets: 3, reps: '12', target: '' },
-      { name: 'Lat Pulldown — Wide Grip', sets: 3, reps: '10', target: 'Moderate' },
-      { name: 'DB Bicep Curl', sets: 3, reps: '10', target: '' },
-      { name: 'Hanging Knee Raise', sets: 3, reps: '15', target: '' },
+    day('Day 1 — Upper A', 'Upper body', 0, [
+      { name: 'Bench Press', sets: 3, reps: '6-8', target: '' },
+      { name: 'Lat Pulldown — Wide Grip', sets: 3, reps: '8-10', target: '' },
+      { name: 'DB Shoulder Press', sets: 3, reps: '8-10', target: '' },
+      { name: 'Seated Cable Row', sets: 3, reps: '8-10', target: '' },
+      { name: 'Cable Lateral Raise', sets: 3, reps: '12-15', target: '' },
+      { name: 'Cable Tricep Pushdown', sets: 2, reps: '10-12', target: '' },
+      { name: 'DB Hammer Curl', sets: 2, reps: '10-12', target: '' },
     ]),
-    day('Day 2 — Lower Strength', 'Strength', 1, [
-      { name: 'Squat, Rack — Full Depth', sets: 4, reps: '5', target: '70–75 kg, build to 85+' },
-      { name: 'Hack Squat', sets: 3, reps: '8', target: 'Moderate-heavy' },
-      { name: 'Romanian Deadlift — DB', sets: 3, reps: '8', target: '70–80 kg' },
-      { name: 'Leg Extension', sets: 3, reps: '12', target: 'Moderate' },
-      { name: 'Standing Calf Raise', sets: 4, reps: '15', target: '' },
-      { name: 'Plank', sets: 3, reps: '45 sec', target: '' },
+    day('Day 2 — Lower A', 'Lower body', 1, [
+      { name: 'Squat, Rack — Full Depth', sets: 3, reps: '6-8', target: '' },
+      { name: 'Romanian Deadlift — DB', sets: 3, reps: '8-10', target: '' },
+      { name: 'Leg Extension', sets: 3, reps: '10-12', target: '' },
+      { name: 'Leg Curl / DB RDL', sets: 3, reps: '10-12', target: '' },
+      { name: 'Standing Calf Raise', sets: 3, reps: '12-15', target: '' },
+      { name: 'Plank', sets: 3, reps: '30-45 sec', target: '' },
     ]),
-    day('Day 3 — Upper Aesthetics', 'Aesthetics', 2, [
-      { name: 'Incline DB Press', sets: 3, reps: '10', target: '' },
-      { name: 'Overhead Cable Tricep Extension', sets: 3, reps: '12', target: '' },
-      { name: 'Pec Dec Fly', sets: 3, reps: '12', target: '' },
-      { name: 'Cable Lower-Chest Fly', sets: 3, reps: '12', target: '' },
-      { name: 'Lat Pulldown — Close Grip', sets: 3, reps: '10', target: '' },
-      { name: 'Cable Rear Delt Fly', sets: 3, reps: '15', target: '' },
-      { name: 'Cable Lateral Raise', sets: 3, reps: '15', target: '' },
-      { name: 'Cable Bicep Curl', sets: 3, reps: '12', target: '' },
-      { name: 'Cable Crunch', sets: 3, reps: '15', target: '' },
-    ]),
-    day('Day 4 — Lower Aesthetics', 'Aesthetics', 3, [
-      { name: 'Hack Squat', sets: 3, reps: '12', target: '' },
-      { name: 'DB Reverse Lunge', sets: 3, reps: '10 / leg', target: '' },
-      { name: 'Leg Extension', sets: 3, reps: '15', target: '' },
-      { name: 'Leg Curl / DB RDL', sets: 3, reps: '12', target: '' },
-      { name: 'DB Hip Thrust', sets: 3, reps: '15', target: '' },
-      { name: 'Calf Raise', sets: 4, reps: '15', target: '' },
-      { name: 'Plank', sets: 3, reps: '45 sec', target: '' },
-    ]),
-    day('Day 5 — Arms & Weak Points', 'Aesthetics', 4, [
-      { name: 'Cable Bicep Curl', sets: 3, reps: '12', target: '' },
-      { name: 'DB Hammer Curl', sets: 3, reps: '12', target: '' },
-      { name: 'Cable Tricep Pushdown', sets: 3, reps: '12', target: '' },
-      { name: 'Overhead Cable Tricep Extension', sets: 3, reps: '12', target: '' },
+    day('Day 3 — Upper B', 'Upper body', 2, [
+      { name: 'Incline DB Press', sets: 3, reps: '8-10', target: '' },
+      { name: 'Lat Pulldown — Close Grip', sets: 3, reps: '8-10', target: '' },
+      { name: 'Pec Dec Fly', sets: 2, reps: '12-15', target: '' },
       { name: 'Face Pulls', sets: 3, reps: '15', target: '' },
+      { name: 'Cable Lateral Raise', sets: 3, reps: '12-15', target: '' },
+      { name: 'Overhead Cable Tricep Extension', sets: 2, reps: '10-12', target: '' },
+      { name: 'Cable Bicep Curl', sets: 2, reps: '10-12', target: '' },
+    ]),
+    day('Day 4 — Lower B', 'Lower body', 3, [
+      { name: 'Hack Squat', sets: 3, reps: '8-10', target: '' },
+      { name: 'DB Hip Thrust', sets: 3, reps: '10-12', target: '' },
+      { name: 'DB Reverse Lunge', sets: 2, reps: '10 / leg', target: '' },
+      { name: 'Leg Curl / DB RDL', sets: 3, reps: '10-12', target: '' },
+      { name: 'Calf Raise', sets: 3, reps: '12-15', target: '' },
+      { name: 'Cable Crunch', sets: 3, reps: '12-15', target: '' },
     ]),
   ],
 }

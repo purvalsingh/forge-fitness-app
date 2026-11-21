@@ -13,6 +13,10 @@ export default function Today() {
   const s = useStore()
   const { date, today, isToday, setDate } = useActiveDate()
   const nav = useNavigate()
+  const newUser = s.foodLogs.length === 0 && s.sessions.length === 0 && s.weights.length === 0
+  // The first-steps card stays until all three are done, not just the first log.
+  const setupSteps = [[Boolean(s.target), 'Set your goal', '/more/goals'], [s.foodLogs.length > 0, 'Log your first meal', '/diet'], [s.sessions.some(x => x.finished_at), 'Do your first workout', '/workout']] as const
+  const setupLeft = setupSteps.some(([done]) => !done)
   const [stepSheet, setStepSheet] = useState(false)
   const [waterSheet, setWaterSheet] = useState(false)
   const [addFor, setAddFor] = useState<string | null>(null)
@@ -73,17 +77,35 @@ export default function Today() {
 
       {!isToday && (
         <button onClick={() => setDate(today)} className="press mb-3 flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-[13px]"
-          style={{ background: 'rgba(255,107,44,.12)', color: 'var(--accent)', border: '1px solid rgba(255,107,44,.3)' }}>
+          style={{ background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)', border: '1px solid color-mix(in srgb, var(--accent) 30%, transparent)' }}>
           <span>Logging for <b>{niceDate(date)}</b> — food, workouts and steps go to this day.</span>
           <span className="shrink-0 font-bold">Back to today →</span>
         </button>
+      )}
+
+      {/* Brand-new user: three clear first steps instead of a wall of zeros. Gone after the first log. */}
+      {setupLeft && isToday && (
+        <section className="raised mb-3 p-5">
+          <div className="eyebrow">Get started</div>
+          <p className="mt-1 text-[13px]" style={{ color: 'var(--text-mute)' }}>Three steps and FORGE starts working for you.</p>
+          <div className="mt-3 divide-y" style={{ borderColor: 'var(--line)' }}>
+            {setupSteps.map(([done, label, to], i) => (
+              <button key={to} className="press flex w-full items-center gap-3 py-3 text-left" style={{ borderColor: 'var(--line)' }} onClick={() => nav(to)}>
+                <span className="grid h-7 w-7 place-items-center rounded-full text-[13px] font-bold"
+                  style={{ background: done ? 'var(--lime)' : 'var(--surface-high)', color: done ? '#000' : 'var(--text)' }}>{done ? '✓' : i + 1}</span>
+                <span className="flex-1 text-[15px] font-semibold">{label}</span>
+                <span style={{ color: 'var(--accent)' }}>→</span>
+              </button>
+            ))}
+          </div>
+        </section>
       )}
 
       {/* Energy hero */}
       <section className="paper glow p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="eyebrow flex items-center gap-1.5" style={{ color: 'var(--accent)' }}><Icon name="flame" size={13} /> Energy balance</div>
+            <div className="eyebrow flex items-center gap-1.5" style={{ color: 'var(--accent)' }}><Icon name="flame" size={13} /> Calories today</div>
             <div className="mt-2 flex items-baseline gap-1.5">
               <span className="figure text-[44px] leading-none">{Math.round(totals.calories).toLocaleString()}</span>
               <span className="mono text-[13px]" style={{ color: 'var(--paper-ink-dim)' }}>/ {t ? t.calories.toLocaleString() : '—'} kcal</span>
@@ -99,26 +121,26 @@ export default function Today() {
           </div>
           <Arc value={pct} />
         </div>
-        <div className="mt-5 grid grid-cols-3 gap-2">
+        {!newUser && <div className="mt-5 grid grid-cols-3 gap-2">
           <Macro label="Protein" v={totals.protein_g} target={t?.protein_g} color="var(--protein)" />
           <Macro label="Carbs" v={totals.carbs_g} target={t?.carbs_g} color="var(--carbs)" />
           <Macro label="Fat" v={totals.fat_g} target={t?.fat_g} color="var(--fat)" />
-        </div>
+        </div>}
       </section>
 
-      {/* Stat tiles */}
-      <div className="mt-3 grid grid-cols-3 gap-2">
+      {/* Stat tiles: hidden until there is something to show */}
+      {!newUser && <div className="mt-3 grid grid-cols-3 gap-2">
         <Tile icon="steps" onClick={() => setStepSheet(true)} value={steps == null ? '—' : steps.toLocaleString()}
           label="Steps" sub={`goal ${(s.settings.step_goal / 1000).toFixed(0)}k`} />
         <Tile icon="water" onClick={() => setWaterSheet(true)} value={`${round1(water / 1000)}`} unit="L"
           label="Water" sub={`of ${round1(waterGoal / 1000)} L`} done={water >= waterGoal} />
         <Tile icon="bolt" onClick={() => nav('/adherence')} value={String(cur)} unit="d" label="Streak" sub={`score ${Math.round(adh.score * 100)}%`} accent />
-      </div>
+      </div>}
 
       {/* Workout */}
       <section className="card mt-3 p-5">
-        <div className="chip" style={{ color: 'var(--accent)', borderColor: 'rgba(255,107,44,.35)', background: 'rgba(255,107,44,.08)' }}>
-          <Icon name="workout" size={14} /> {isToday ? "Today's forge" : 'Workout'}
+        <div className="chip" style={{ color: 'var(--accent)', borderColor: 'color-mix(in srgb, var(--accent) 35%, transparent)', background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}>
+          <Icon name="workout" size={14} /> {isToday ? "Today's workout" : 'Workout'}
         </div>
         {isRest && !session ? (
           <div className="mt-3">
@@ -152,7 +174,7 @@ export default function Today() {
 
       {/* Fuel log */}
       <div className="mt-5 flex items-baseline justify-between">
-        <h2 className="title text-[20px]">Fuel log <span className="mono text-[12px] font-normal" style={{ color: 'var(--text-mute)' }}>· {s.mealTypes.filter(m => byMeal[m.id]).length}/{s.mealTypes.length} logged</span></h2>
+        <h2 className="title text-[20px]">Meals <span className="mono text-[12px] font-normal" style={{ color: 'var(--text-mute)' }}>· {s.mealTypes.filter(m => byMeal[m.id]).length}/{s.mealTypes.length} logged</span></h2>
         <Link to="/diet" className="mono text-[11px] font-bold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>Details →</Link>
       </div>
       <div className="mt-2 grid gap-2">
@@ -199,7 +221,7 @@ function Arc({ value }: { value: number }) {
       <svg width={size} height={size} className="-rotate-90" aria-hidden>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} stroke="var(--surface-high)" />
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} strokeLinecap="round" stroke="var(--accent)" opacity={value > 0 ? 1 : 0}
-          strokeDasharray={`${c * Math.min(1, value)} ${c}`} style={{ transition: 'stroke-dasharray .6s cubic-bezier(.2,.9,.25,1)', filter: 'drop-shadow(0 0 6px rgba(255,107,44,.5))' }} />
+          strokeDasharray={`${c * Math.min(1, value)} ${c}`} style={{ transition: 'stroke-dasharray .6s cubic-bezier(.2,.9,.25,1)', filter: 'drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 50%, transparent))' }} />
       </svg>
       <div className="absolute inset-0 grid place-items-center text-center">
         <div><div className="figure text-[22px] leading-none">{Math.round(value * 100)}%</div><div className="eyebrow mt-0.5 text-[9px]">eaten</div></div>

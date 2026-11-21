@@ -62,7 +62,7 @@ export default function DayDetail() {
             <div className="mt-2 grid grid-cols-3 gap-2">
               <Stat label="Sets" value={sessionSets(session)} />
               <Stat label="Volume" value={`${Math.round(sessionVolume(session)).toLocaleString()} kg`} />
-              <Stat label="Duration" value={duration(session.started_at, session.finished_at)} />
+              <Stat label="Duration" value={duration(session.started_at, session.finished_at ?? undefined)} />
             </div>
           </>
         ) : <div className="mt-1 text-[12px]" style={{ color: 'var(--text-mute)' }}>

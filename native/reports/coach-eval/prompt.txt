@@ -1,0 +1,55 @@
+You are the lifter's strength coach planning TODAY's working weights.
+The lifter's own coaching settings (respect them): target RPE 8, never raise load more than 5 % over the most recent top working weight, barbell steps 2.5 kg, dumbbell steps 1 kg, deload by about 10 % after 3 sessions in a row below the rep floor.
+Profile: {"goal":"strength"}
+History notation: each workout lists lifts in the order performed ("(after 2)" = after two other lifts), sets in the order completed as weight×reps@RPE, "W" = warm-up, "(rest m:ss)" = rest before that set. RPE rising across sets is normal fatigue, faster after short rest or when the lift came after others for the same muscles: judge strength mainly from the first working set. Lighter weight for more reps at a given RPE still shows strength (estimate the max from weight, reps and reps in reserve).
+Bodyweight exercises (weight 0 or "BW"): keep weight_kg 0 and progress reps.
+Plan each exercise below for today: working weight_kg and reps (inside its rep range) for the first working set to land near the target RPE, with one short reason. Use the exact "key" given.
+key=easy | Back Squat | 3 sets × 5 reps | equipment: barbell | HARD LIMIT today: weight_kg must be ≤ 105 kg, even if you change the rep range
+History (newest last):
+2026-10-27 (Day A, 60 min)
+ 1. Back Squat: W40×8 W60×5 | 100×5@6 (rest 3:00) · 100×5@6.5 (rest 3:10) · 100×5@7 (rest 3:05)
+
+key=grind | Bench Press | 3 sets × 5 reps | equipment: barbell | HARD LIMIT today: weight_kg must be ≤ 95 kg, even if you change the rep range
+History (newest last):
+2026-10-28 (Day B, 55 min)
+ 1. Bench Press: W40×8 | 90×5@9.5 (rest 3:00) · 90×4@10 (rest 3:00) · 90×3@10 (rest 3:00)
+
+key=fatigue | Deadlift | 3 sets × 5 reps | equipment: barbell | HARD LIMIT today: weight_kg must be ≤ 147.5 kg, even if you change the rep range
+History (newest last):
+2026-10-29 (Day C, 40 min)
+ 1. Deadlift: W60×5 | 140×5@7 (rest 2:30) · 140×5@8.5 (rest 1:20) · 140×5@9.5 (rest 1:10)
+
+key=order | Incline Dumbbell Press | 3 sets × 8-10 reps | equipment: dumbbell | HARD LIMIT today: weight_kg must be ≤ 28 kg, even if you change the rep range
+History (newest last):
+2026-10-20 (Day A, 50 min)
+ 1. Incline Dumbbell Press: 26×10@7 (rest 2:00) · 26×10@7.5 (rest 2:00)
+2026-10-27 (Day A, 70 min)
+ 1. Bench Press: 90×5@8
+ 2. Overhead Press (after 1): 55×6@8.5
+ 3. Incline Dumbbell Press (after 2): 26×8@9 (rest 1:45) · 26×7@9.5 (rest 1:40)
+
+key=lighter | Overhead Press | 3 sets × 5 reps | equipment: barbell | HARD LIMIT today: weight_kg must be ≤ 47.5 kg, even if you change the rep range
+History (newest last):
+2026-10-30 (Day B, 45 min)
+ 1. Overhead Press: 45×10@9 (rest 2:30) · 45×9@9.5 (rest 2:30)
+
+key=stall | Barbell Row | 3 sets × 8 reps | equipment: barbell | HARD LIMIT today: weight_kg must be ≤ 85 kg, even if you change the rep range
+History (newest last):
+2026-10-15 (Day C, 50 min)
+ 1. Barbell Row: 80×7@10 (rest 2:30) · 80×6@10 (rest 2:30) · 80×6@10 (rest 2:30)
+2026-10-20 (Day C, 50 min)
+ 1. Barbell Row: 80×7@10 (rest 2:30) · 80×6@10 (rest 2:30) · 80×6@10 (rest 2:30)
+2026-10-25 (Day C, 50 min)
+ 1. Barbell Row: 80×7@10 (rest 2:30) · 80×6@10 (rest 2:30) · 80×6@10 (rest 2:30)
+
+key=bodyweight | Pull-up | 3 sets × 6-10 reps | equipment: bodyweight
+History (newest last):
+2026-10-30 (Day B, 45 min)
+ 1. Pull-up: BW×10@8 (rest 2:00) · BW×10@8.5 (rest 2:00) · BW×9@9 (rest 2:00)
+
+key=dumbbell | Dumbbell Curl | 3 sets × 10-12 reps | equipment: dumbbell | HARD LIMIT today: weight_kg must be ≤ 15 kg, even if you change the rep range
+History (newest last):
+2026-10-30 (Day B, 45 min)
+ 1. Dumbbell Curl: 14×12@7 (rest 1:30) · 14×12@7.5 (rest 1:30)
+
+Reply with ONLY a JSON object: {"exercises":[{"key":"...","weight_kg":number,"reps":integer,"reason":"..."}],"note":"..."} and nothing else.

@@ -26,4 +26,10 @@ describe('food AI guard', () => {
   it('surfaces a model-side refusal', () => {
     expect(postCheckFood({ is_food_request: false, rejection_reason: 'Not food', items: [] }).notFood).toBe('Not food')
   })
+  it('lets real foods with odd words through (audit list)', () => {
+    for (const t of ['fire paan', 'Cadbury 5 Star', 'dal rice and nothing else', 'coin parotta', 'kaju katli with silver paper (vark)',
+      '30 egg whites', 'mud pie', 'brick oven pizza', 'hot air popcorn'])
+      expect(preCheckFoodText(t).ok, t).toBe(true)
+    expect(preCheckFoodText('a plate of nails').ok).toBe(false)
+  })
 })

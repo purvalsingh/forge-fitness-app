@@ -1,11 +1,14 @@
 import { caller, json, preflight, readBody } from './_lib/http.js'
-import { encryptKeys } from './_lib/crypto.js'
+import { decryptKeys, encryptKeys } from './_lib/crypto.js'
 import { GEMINI_KEY_RE } from './_lib/guard.js'
 
 /**
  * Per-user Gemini keys.
  *   GET    -> { count, hints }            never returns a key
- *   POST   { keys: string[] } (2–5)     -> validates each with Google, encrypts, stores
+ *   POST   { keys: string[], mode?: 'add' } -> validates each with Google, encrypts, stores.
+ *          mode 'add' merges the new keys into the saved ones (so adding a 3rd key never asks for the first two again);
+ *          without it the list replaces what is saved. The saved total must end up 2–5.
+ *   DELETE ?hint=…abcd                   -> removes the one key with that hint (no hint: removes all)
  *   DELETE                               -> removes them
  */
 export const OPTIONS = preflight
@@ -33,18 +36,21 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const who = await caller(req)
   if (!who) return json(req, { error: 'unauthorized' }, 401)
-  const body = await readBody(req, 4096) as { keys?: unknown } | null
+  const body = await readBody(req, 4096) as { keys?: unknown; mode?: unknown } | null
   const raw = Array.isArray(body?.keys) ? body!.keys : null
   if (!raw) return json(req, { error: 'bad_request', message: 'Send { keys: [...] }.' }, 400)
-  const keys = [...new Set(raw.map(k => String(k ?? '').trim()).filter(Boolean))]
-  if (keys.length < 2 || keys.length > 5) {
-    return json(req, { error: 'bad_count', message: 'Add at least 2 and at most 5 different Gemini API keys.' }, 400)
-  }
-  const malformed = keys.findIndex(k => !GEMINI_KEY_RE.test(k))
+  const incoming = [...new Set(raw.map(k => String(k ?? '').trim()).filter(Boolean))]
+  const existing = body?.mode === 'add' ? await savedKeys(who) : []
+  const fresh = incoming.filter(k => !existing.includes(k))
+  const keys = [...existing, ...fresh]
+  if (keys.length > 5) return json(req, { error: 'bad_count', message: `You can save up to 5 keys. You already have ${existing.length}; remove one first.` }, 400)
+  if (keys.length < 1) return json(req, { error: 'bad_count', message: 'Add a Gemini API key.' }, 400)
+  const malformed = fresh.findIndex(k => !GEMINI_KEY_RE.test(k))
   if (malformed >= 0) {
-    return json(req, { error: 'malformed', index: malformed, message: `Key ${malformed + 1} doesn't look like a Gemini API key (it should start with "AIza").` }, 400)
+    return json(req, { error: 'malformed', index: malformed, message: `Key ${malformed + 1} doesn't look like a Gemini API key (Gemini keys start with "AIza" or "AQ.").` }, 400)
   }
-  const results = await Promise.all(keys.map(verify))
+  // Only the new keys need checking with Google; saved ones were verified when they were added.
+  const results = await Promise.all(fresh.map(verify))
   const bad = results.map((r, i) => (r === 'invalid' ? i + 1 : 0)).filter(Boolean)
   if (bad.length) {
     return json(req, { error: 'invalid_keys', bad, message: `Google rejected key ${bad.join(', ')}. Copy it again from aistudio.google.com/apikey.` }, 400)
@@ -61,9 +67,28 @@ export async function POST(req: Request) {
   return json(req, { count: row.key_count, hints: row.hints, unverified: results.filter(r => r === 'unreachable').length })
 }
 
+async function savedKeys(who: { userId: string; db: any }): Promise<string[]> {
+  const { data } = await who.db.from('user_ai_keys').select('ciphertext').maybeSingle()
+  if (!data?.ciphertext) return []
+  try { return decryptKeys(who.userId, data.ciphertext) } catch { return [] }
+}
+
 export async function DELETE(req: Request) {
   const who = await caller(req)
   if (!who) return json(req, { error: 'unauthorized' }, 401)
+  const hint = new URL(req.url).searchParams.get('hint')
+  if (hint) {
+    // Remove ONE key with that hint: two keys can share their last 4 characters.
+    const all = await savedKeys(who)
+    const at = all.findIndex(k => `…${k.slice(-4)}` === hint)
+    const left = at < 0 ? all : all.filter((_, i) => i !== at)
+    if (left.length === 0) { await who.db.from('user_ai_keys').delete().eq('user_id', who.userId); return json(req, { count: 0, hints: [] }) }
+    const row = { user_id: who.userId, ciphertext: encryptKeys(who.userId, left), hints: left.map(k => `…${k.slice(-4)}`),
+      key_count: left.length, updated_at: new Date().toISOString() }
+    const { error } = await who.db.from('user_ai_keys').upsert(row)
+    if (error) return json(req, { error: 'db_error' }, 500)
+    return json(req, { count: row.key_count, hints: row.hints })
+  }
   const { error } = await who.db.from('user_ai_keys').delete().eq('user_id', who.userId)
   if (error) return json(req, { error: 'db_error' }, 500)
   return json(req, { count: 0, hints: [] })

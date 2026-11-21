@@ -454,12 +454,14 @@ export function ReviewItems({ items, rejected = [], date, mealTypeId, source, on
   const [edit, setEdit] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const [target, setTarget] = useState({ date, mealTypeId })
+  // Oil, ghee and tadka are the biggest blind spot in Indian food logging: ask once per meal.
+  const [oilG, setOilG] = useState(0)
   const eff = rows.map(r => ({
     ...r, calories: r.calories * r.factor, protein_g: r.protein_g * r.factor, carbs_g: r.carbs_g * r.factor, fat_g: r.fat_g * r.factor,
   }))
   const tot = eff.reduce((a, r) => ({
     calories: a.calories + r.calories, protein_g: a.protein_g + r.protein_g, carbs_g: a.carbs_g + r.carbs_g, fat_g: a.fat_g + r.fat_g,
-  }), { calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0 })
+  }), { calories: oilG * 9, protein_g: 0, carbs_g: 0, fat_g: oilG })
   const patch = (i: number, p: Partial<(typeof rows)[number]>) => setRows(rs => rs.map((r, j) => j === i ? { ...r, ...p } : r))
 
   return (
@@ -525,6 +527,15 @@ export function ReviewItems({ items, rejected = [], date, mealTypeId, source, on
         <span>Total</span>
         <span><b className="text-[15px]">{Math.round(tot.calories)} kcal</b> · P {round1(tot.protein_g)} · C {round1(tot.carbs_g)} · F {round1(tot.fat_g)}</span>
       </div>
+      <div>
+        <div className="text-[15px] font-semibold">Extra oil or ghee?</div>
+        <div className="mt-0.5 text-[12px]" style={{ color: 'var(--text-mute)' }}>Tadka, ghee on roti, fried or oily dishes. It's easy to miss.</div>
+        <div className="mt-2 grid grid-cols-4 gap-2">
+          {([[0, 'None'], [5, '1 tsp'], [15, '1 tbsp'], [30, '2 tbsp']] as const).map(([g, l]) => (
+            <button key={g} className="chip press !min-h-[44px] justify-center" aria-pressed={oilG === g} onClick={() => setOilG(g)}>{l}</button>
+          ))}
+        </div>
+      </div>
       <LogTarget value={target} onChange={setTarget} />
       <Button disabled={busy || rows.length === 0} onClick={async () => {
         setBusy(true)
@@ -537,6 +548,11 @@ export function ReviewItems({ items, rejected = [], date, mealTypeId, source, on
               calories: round1(r.calories), protein_g: round1(r.protein_g), carbs_g: round1(r.carbs_g), fat_g: round1(r.fat_g),
             } as never)
           }
+          if (oilG > 0) await s.save('food_logs', {
+            id: uid(), date: target.date, meal_type_id: target.mealTypeId, name: 'Cooking oil / ghee', qty: oilG, unit: 'g',
+            serving_label: oilG === 5 ? '1 tsp' : oilG === 15 ? '1 tbsp' : '2 tbsp', source,
+            calories: oilG * 9, protein_g: 0, carbs_g: 0, fat_g: oilG,
+          } as never)
           onDone()
         } finally { setBusy(false) }
       }}>{busy ? 'Saving…' : `Log ${rows.length} item${rows.length === 1 ? '' : 's'}`}</Button>

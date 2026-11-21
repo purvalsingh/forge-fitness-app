@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
-import { calcTargets, isValidTarget } from '../lib/calc'
+import { adaptiveTdee, calcTargets, isValidTarget, sumTotals } from '../lib/calc'
 import { ai, AIUnavailable } from '../lib/ai'
 import { Button, Card, Field, Notice, Screen, Spinner } from '../ui'
 import type { NutritionTarget } from '../lib/types'
@@ -22,6 +22,13 @@ export default function TargetCalc() {
       mode: g.mode, rateKgPerWeek: g.rate_kg_per_week,
     })
   }, [g, p])
+
+  const adaptive = useMemo(() => {
+    const byDay: Record<string, typeof s.foodLogs> = {}
+    for (const l of s.foodLogs) (byDay[l.date] ??= []).push(l)
+    const kcal = Object.fromEntries(Object.entries(byDay).map(([d, ls]) => [d, sumTotals(ls).calories]))
+    return adaptiveTdee(s.weights, kcal)
+  }, [s.foodLogs, s.weights])
 
   const [draft, setDraft] = useState<Omit<NutritionTarget, 'id' | 'updated_at'> | null>(null)
   const [aiText, setAiText] = useState<string | null>(null)
@@ -72,6 +79,24 @@ export default function TargetCalc() {
       </Card>
 
       <Card className="mt-3">
+        <div className="eyebrow">Adaptive maintenance</div>
+        {adaptive ? (<>
+          <div className="figure mt-1 text-[24px] leading-none">{adaptive.tdee.toLocaleString()} kcal</div>
+          <p className="mt-1 text-[12px]" style={{ color: 'var(--text-mute)' }}>
+            From your last {adaptive.loggedDays} logged days and a {adaptive.trendDeltaKg > 0 ? '+' : ''}{adaptive.trendDeltaKg} kg weight-trend change.
+            {base && ` Formula says ${base.maintenance.toLocaleString()}.`} Missed logs make this read low.
+          </p>
+          {base && <div className="mt-2"><Button variant="ghost" onClick={() => set({ calories: Math.round(adaptive.tdee + (base.calories - base.maintenance)) })}>
+            Apply to target ({(base.calories - base.maintenance) >= 0 ? '+' : ''}{base.calories - base.maintenance} kcal goal offset)
+          </Button></div>}
+        </>) : (
+          <p className="mt-1 text-[12px]" style={{ color: 'var(--text-mute)' }}>
+            Log food on 14 of the last 21 days and weigh in at least twice, a week apart, and FORGE will learn your real maintenance from your data.
+          </p>
+        )}
+      </Card>
+
+      <Card className="mt-3">
         <div className="eyebrow mb-2">Your target — edit anything</div>
         <div className="grid grid-cols-2 gap-2">
           <Field label="Calories"><input type="number" value={current!.calories} onChange={e => set({ calories: Number(e.target.value) })} /></Field>
@@ -93,7 +118,7 @@ export default function TargetCalc() {
           The numbers above come from the app's own calculation. AI only explains them and may suggest small adjustments —
           this is a planning estimate, not medical advice.
         </p>
-        {!ai.configured && <div className="mt-2"><Notice tone="warn">AI is not configured. The calculated target above still works.</Notice></div>}
+        {!ai.configured && <div className="mt-2"><Notice tone="warn">AI is not set up. The target above still works.</Notice></div>}
         {err && <div className="mt-2"><Notice tone="error">{err}</Notice></div>}
         {busy ? <Spinner label="Asking AI" /> : (
           <div className="mt-3">
@@ -126,7 +151,7 @@ export default function TargetCalc() {
       <div className="mt-3 grid gap-2">
         <Button disabled={!isValidTarget(current!)} onClick={async () => {
           await s.save('nutrition_targets', {
-            id: s.target?.id ?? uid(), ...current!, note: aiText ?? undefined,
+            id: s.target?.id ?? uid(), ...current!, note: aiText ?? null,
             updated_at: new Date().toISOString(),
           } as never)
           setSaved(true)

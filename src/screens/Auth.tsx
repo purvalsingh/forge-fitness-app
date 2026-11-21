@@ -1,3 +1,4 @@
+import { claimDevice, forgetDevice } from '../lib/db'
 import { useEffect, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseConfigured } from '../lib/supabase'
@@ -15,7 +16,7 @@ type Mode = 'signin' | 'signup' | 'reset'
 let pendingKeys: string[] | null = null
 let pendingSex: 'male' | 'female' | null = null
 
-const KEY_RE = /^AIza[0-9A-Za-z_-]{35}$/
+const KEY_RE = /^(AIza[0-9A-Za-z_-]{35}|AQ\.[0-9A-Za-z_-]{30,120})$/
 
 /**
  * Auth gate. With Supabase configured it enforces a real session AND at least two Gemini keys on
@@ -39,6 +40,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (!session) { setKeys('unknown'); return }
     let alive = true
     ;(async () => {
+      claimDevice(session.user.id)
       if (pendingSex && supabase) {
         // The body shown on the muscle map (and used for calorie maths) — chosen at sign-up.
         await supabase.from('profiles').update({ sex: pendingSex }).eq('id', session.user.id).then(() => { pendingSex = null }, () => {})
@@ -48,7 +50,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       }
       try {
         const k = await aiKeys.get()
-        if (alive) setKeys(k.count >= 2 ? 'ok' : 'missing')
+        if (alive) setKeys(k.count >= 1 ? 'ok' : 'missing')
       } catch {
         // API unreachable (offline, cold start): let them in — AI features explain themselves.
         if (alive) setKeys('ok')
@@ -64,7 +66,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (checking) return <Spinner label="Checking session" />
   if (!session) return <AuthScreen onDemo={() => { try { localStorage.setItem('forge:demo', '1') } catch { /* private mode */ } setDemo(true) }} />
   if (keys === 'unknown') return <Spinner label="Loading your account" />
-  if (keys === 'missing') return <Shell><KeySetup required onSaved={() => setKeys('ok')} /></Shell>
+  // No keys yet is fine: the app works without AI, and each AI feature explains how to add a key (You → My Gemini AI keys).
   return <>{children}</>
 }
 
@@ -111,11 +113,10 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
     if (pw) return pw
     if (password !== confirm) return 'Passwords don\'t match.'
     const filled = keys.map(k => k.trim()).filter(Boolean)
-    if (filled.length < 2) return 'Add at least 2 Gemini API keys (up to 5).'
     if (new Set(filled).size !== filled.length) return 'Each Gemini key must be different.'
     const bad = filled.findIndex(k => !KEY_RE.test(k))
-    if (bad >= 0) return `Key ${bad + 1} doesn't look like a Gemini API key (it starts with "AIza").`
-    if (!consent) return 'Please accept how your keys are stored.'
+    if (bad >= 0) return `Key ${bad + 1} doesn't look like a Gemini API key (they start with "AIza" or "AQ.").`
+    if (filled.length && !consent) return 'Please accept how your keys are stored.'
     return null
   }
 
@@ -247,7 +248,7 @@ function KeyInputs({ keys, setKeys }: { keys: string[]; setKeys: (k: string[]) =
       {keys.map((k, i) => (
         <div key={i} className="flex gap-2">
           <input type={show ? 'text' : 'password'} autoComplete="off" spellCheck={false} maxLength={60}
-            value={k} placeholder={`Key ${i + 1}: AIza…`} aria-label={`Gemini key ${i + 1}`}
+            value={k} placeholder={`Key ${i + 1}: AIza… or AQ.…`} aria-label={`Gemini key ${i + 1}`}
             onChange={e => setKeys(keys.map((x, j) => (j === i ? e.target.value.trim() : x)))}
             style={{ borderColor: k && !KEY_RE.test(k) ? 'var(--danger)' : undefined }} />
           {keys.length > 2 && (
@@ -274,13 +275,15 @@ export function KeySetup({ required, onSaved }: { required?: boolean; onSaved?: 
 
   async function save() {
     const filled = keys.map(k => k.trim()).filter(Boolean)
-    if (filled.length < 2) { setMsg({ tone: 'error', text: 'Add at least 2 keys.' }); return }
-    if (filled.some(k => !KEY_RE.test(k))) { setMsg({ tone: 'error', text: 'Every key starts with "AIza" and is 39 characters.' }); return }
+    const saved = status?.count ?? 0
+    if (filled.length === 0) { setMsg({ tone: 'error', text: 'Paste a key first.' }); return }
+    if (saved + filled.length < 1) { setMsg({ tone: 'error', text: 'Add a key first.' }); return }
+    if (filled.some(k => !KEY_RE.test(k))) { setMsg({ tone: 'error', text: 'Gemini keys start with "AIza" or "AQ." — check for missing characters.' }); return }
     setBusy(true); setMsg(null)
     try {
-      const r = await aiKeys.save(filled)
-      setStatus(r); setKeys(['', ''])
-      setMsg({ tone: 'info', text: `Saved ${r.count} keys. Google confirmed they work.` })
+      const r = await aiKeys.save(filled, true) // adds to saved keys; never asks for them again
+      setStatus(r); setKeys([''])
+      setMsg({ tone: 'info', text: `Saved. You now have ${r.count} keys.` })
       onSaved?.()
     } catch (e) {
       setMsg({ tone: 'error', text: e instanceof AIUnavailable ? e.message : 'Could not save keys.' })
@@ -306,7 +309,7 @@ export function KeySetup({ required, onSaved }: { required?: boolean; onSaved?: 
         <Button variant="danger" onClick={async () => { await aiKeys.remove(); setStatus({ count: 0, hints: [] }) }}>Delete my keys</Button>
       )}
       {required && (
-        <button className="text-[12px] underline" style={{ color: 'var(--text-mute)' }} onClick={() => supabase?.auth.signOut()}>Sign out</button>
+        <button className="text-[12px] underline" style={{ color: 'var(--text-mute)' }} onClick={() => { forgetDevice(); supabase?.auth.signOut() }}>Sign out</button>
       )}
     </div>
   )

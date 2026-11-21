@@ -205,7 +205,7 @@ export interface WorkoutSession {
   day_id: ID
   day_name: string
   started_at: string
-  finished_at?: string
+  finished_at?: string | null
   exercises: SessionExercise[]
   /** Added after the fact (e.g. trained without the phone). Never claims PRs against later workouts. */
   backfilled?: boolean

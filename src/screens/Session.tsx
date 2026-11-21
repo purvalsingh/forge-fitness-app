@@ -165,7 +165,7 @@ export default function Session() {
         {!finished
           ? <button className="press rounded-full border px-4 py-2 text-[13px] font-extrabold uppercase" style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}
               onClick={async () => { await persist({ ...session, finished_at: new Date().toISOString() }); nav('/workout?done=' + session.id) }}>Finish ✓</button>
-          : <button className="chip press" onClick={() => void persist({ ...session, finished_at: undefined })}>Reopen</button>}
+          : <button className="chip press" onClick={() => void persist({ ...session, finished_at: null })}>Reopen</button>}
       </header>
 
       <div className="mt-3 flex items-center justify-between">
@@ -237,7 +237,7 @@ export default function Session() {
                 const active = !st.done && cur.sets.findIndex(x => !x.done) === j
                 return (
                   <div key={j} className="grid grid-cols-[34px_1fr_64px_56px_auto_44px] items-center gap-1.5 rounded-2xl p-1.5"
-                    style={{ background: active ? 'rgba(255,107,44,.08)' : st.done ? 'var(--surface-raised)' : 'transparent', border: active ? '1.5px solid var(--accent)' : '1.5px solid transparent', opacity: st.warmup && !active ? 0.75 : 1 }}>
+                    style={{ background: active ? 'color-mix(in srgb, var(--accent) 8%, transparent)' : st.done ? 'var(--surface-raised)' : 'transparent', border: active ? '1.5px solid var(--accent)' : '1.5px solid transparent', opacity: st.warmup && !active ? 0.75 : 1 }}>
                     <button className="mono press grid h-8 w-8 place-items-center rounded-lg text-[12px] font-bold"
                       style={{ background: 'var(--surface-high)', color: st.warmup ? 'var(--text-mute)' : st.pr ? 'var(--lime)' : 'var(--text)' }}
                       aria-label={`Set ${j + 1}: tap to toggle warm-up`} disabled={finished}

@@ -41,3 +41,17 @@ release/
 .env*
 data/indb/
 .impeccable/
+
+# Native Android (Kotlin) build output and machine-local files
+native/.gradle/
+native/.kotlin/
+native/build/
+native/app/build/
+native/local.properties
+native/**/*.jks
+native/**/*.keystore
+native/captures/
+# i18n pipeline scratch (dictionaries live in public/i18n and native assets)
+i18n/in_*.json
+i18n/strings.json
+i18n/agy.log

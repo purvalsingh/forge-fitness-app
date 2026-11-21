@@ -67,7 +67,7 @@ export async function requestPlan(req: PlanRequest): Promise<PlanResult> {
   })
 
   if (!ai.configured) {
-    return { plan: template(), source: 'template', fallbackReason: 'AI is not configured, so this plan comes from the built-in templates.' }
+    return { plan: template(), source: 'template', fallbackReason: 'AI is not set up, so this plan uses built-in templates.' }
   }
 
   try {

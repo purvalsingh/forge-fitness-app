@@ -1,0 +1,9 @@
+score 8/8
+PASS Easy sets → add a little load -> 105.0kg x5
+PASS Missed reps at RPE 10 → don't add load -> 85.0kg x5
+PASS RPE drift from short rest → not a stall -> 145.0kg x5
+PASS Lift done late in the workout → don't punish it -> 27.0kg x8
+PASS Lighter for more reps → strength kept, jump still capped -> 47.5kg x5
+PASS 3 stalled sessions → deload -> 72.5kg x8
+PASS Bodyweight lift → progress reps, not load -> 0.0kg x10
+PASS Dumbbell steps → small, whole-kg change -> 15.0kg x10

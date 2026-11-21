@@ -103,6 +103,9 @@ export function toFoodRow(f: CatalogFood | Food): Food & { cuisine?: string; ser
  * then word-start, then substring. Dishes outrank raw ingredients on equal footing —
  * someone typing "biryani" wants the dish, not the rice.
  */
+const COOKED = /fried|coated|baked|roasted|broiled|stewed|breaded|canned|dried|sweetened/i
+const OFFAL = /giblet|liver|heart|gizzard|kidney|capon|stewing|feet|neck|skin only|separable fat|mechanically/i
+
 export function searchFoods(foods: CatalogFood[], query: string, limit = 60): CatalogFood[] {
   const raw = normalise(query)
   if (!raw) return foods.filter(f => f.src !== 'sr').slice(0, limit)
@@ -122,7 +125,10 @@ export function searchFoods(foods: CatalogFood[], query: string, limit = 60): Ca
     else if (terms.length > 1 && terms.every(t => name.includes(t))) score = 300 - name.length
     else if (qSquashed.length >= 4 && squash(f.name).includes(qSquashed)) score = 250 - name.length
     if (score === 0) continue
-    if (f.src === 'composed') score += 120
+    // "Banana, raw" / "Eggs, whole" / "Chicken, breast, raw": the plain ingredient itself beats "banana cake".
+    const plain = (f.src === 'sr' || f.src === 'fndds') && new RegExp(`^${q}s?,`).test(f.name.toLowerCase())
+    if (plain) score = 960 + (/\braw\b/i.test(f.name) && !COOKED.test(f.name) ? 20 : 0) - (OFFAL.test(f.name) ? 80 : 0) - (COOKED.test(f.name) ? 30 : 0) - Math.min(name.length, 60) / 10
+    else if (f.src === 'composed') score += 120
     else if (f.src === 'indb') score += 100
     else if (f.src === 'fndds') score += 60
     else if (f.src === 'off') score += 30

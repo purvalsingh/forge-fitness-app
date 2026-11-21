@@ -1,0 +1,15 @@
+You are auditing FORGE, a native Android fitness + Indian-nutrition app (Kotlin + Jetpack Compose) at ~/forge/native.
+Context: ~/forge/native/AGENT_BRIEF.md and ~/forge/CLAUDE.md describe the architecture and rules. The React web version in
+~/forge/src is the reference for intended behaviour. Backend: Supabase via https://forgefit-india.vercel.app/sb + Vercel API (api/).
+DO NOT EDIT ANY FILE. Read-only audit. Write your findings to ~/forge/native/reports/audit_<NAME>.md.
+
+Find, with file:line evidence for every item:
+1. BUGS: crashes, wrong maths, state not saved/restored, navigation dead ends, data loss, offline/server-down handling,
+   race conditions in Store.kt optimistic writes, sensor/step logic errors (data/StepCounter.kt), updater issues (data/Updater.kt),
+   AI output used without validation, anything that differs from the web app's behaviour in a way users would notice.
+2. UI/UX DEFECTS: unreadable contrast on the gradient/glass theme (ui/Theme.kt "Monsoon" palettes), touch targets < 44dp,
+   missing loading/empty/error states, text clipping, untranslated raw values (ids, enums) shown to users, confusing copy.
+3. FEATURES genuinely worth adding for an Indian fitness/nutrition app user (not fluff), each with why it matters and
+   roughly how big it is (S/M/L).
+Rank each section most-severe/most-valuable first. Be concrete and honest: if you are unsure an item is real, mark it UNVERIFIED.
+Do not invent line numbers; quote the code.
