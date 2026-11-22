@@ -43,7 +43,7 @@ src/
     templates.ts  data-driven plan generation (splits × focus × frequency × emphasis)
     physique.ts   deterministic physique roadmap + clamping of AI output
     training.ts   e1RM, plate math, progression/deload, muscle sets, heatmap (tested)
-    exercises.ts  1,324-exercise library loader + name matching
+    exercises.ts  1,334-exercise library loader + name matching
     importers.ts  Strong / Hevy CSV import
     native.ts     Capacitor wiring (back button, status bar, splash)
   ui.tsx          all shared primitives (Card, Glass, Sheet, ScoreArc, Ring, FillCircle, Icon…)

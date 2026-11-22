@@ -47,6 +47,8 @@ interface Row { val id: String }
     override val id: String, val date: String, val meal_type_id: String, val food_id: String? = null, val name: String,
     val qty: Double, val unit: String, val calories: Double, val protein_g: Double, val carbs_g: Double, val fat_g: Double,
     val note: String? = null, val source: String = "manual", val serving_label: String? = null,
+    /** Set by the database; used so back-filled logs only count toward the streak for the last 7 days. */
+    val created_at: String? = null,
 ) : Row
 
 @Serializable data class Exercise(
@@ -71,6 +73,8 @@ interface Row { val id: String }
     override val id: String, val name: String, val days: List<WorkoutDay> = emptyList(), val active: Boolean? = null,
     val focus: String? = null, val days_per_week: Int? = null, val source: String? = null, val updated_at: String? = null,
     val deload: Boolean? = null, val progression: String? = null,
+    /** What the user told FORGE when the plan was made (injuries, limits, likes). AI swaps keep to it. */
+    val brief: String? = null,
 ) : Row
 
 @Serializable data class WorkoutSet(
@@ -131,7 +135,10 @@ interface Row { val id: String }
 )
 
 @Serializable data class Settings(
-    override val id: String = "settings", val step_goal: Int = 8000, val rest_days: List<Int> = emptyList(),
+    override val id: String = "settings",
+    /** Training limits told once (injuries, conditions, dislikes); every AI plan, revision and swap keeps to them. */
+    val training_notes: String? = null,
+    val step_goal: Int = 8000, val rest_days: List<Int> = emptyList(),
     val adherence_weights: AdherenceWeights = AdherenceWeights(), val diet_tolerance: Double = 0.1,
     val day_start_hour: Int? = 4, val water_goal_ml: Int? = 2500, val week_start: Int? = 1, val units: String? = "kg",
     val bar_weight_kg: Double? = 20.0, val default_rest_sec: Int? = 90, val effort_scale: String? = "off",

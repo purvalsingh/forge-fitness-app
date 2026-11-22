@@ -113,6 +113,8 @@ function Heatmap({ minutes, today }: { minutes: Record<string, number>; today: s
   )
 }
 
+const validDate = (d: string) => /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(new Date(`${d}T00:00:00`).getTime())
+
 function Backfill({ open, onClose, onGo, maxDate }: { open: boolean; onClose: () => void; onGo: (date: string, dayId: string) => void; maxDate: string }) {
   const s = useStore()
   const plan = s.plans.find(p => p.active) ?? s.plans[0]
@@ -129,7 +131,8 @@ function Backfill({ open, onClose, onGo, maxDate }: { open: boolean; onClose: ()
           </select>
         </Field>
         <Notice>Workouts added later never claim PRs against sessions that came after them.</Notice>
-        <Button disabled={!date} onClick={() => onGo(date, day)}>Open workout</Button>
+        {/* Some browsers let free text through a date input; a malformed date once crashed the Android app. */}
+        <Button disabled={!validDate(date) || date > maxDate} onClick={() => onGo(date, day)}>Open workout</Button>
       </div>
     </Sheet>
   )

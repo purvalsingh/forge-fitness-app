@@ -79,12 +79,9 @@ fun ProgressScreen(s: Store, nav: NavController) {
     }
 
     val allDates = remember(st) { Calc.activeDates(st) }
-    val curStreak = remember(allDates, today, st) {
-        Calc.streak(allDates, today) { d -> Calc.adherenceFor(st, d).score >= 0.6 }
-    }
-    val best = remember(allDates, st) {
-        Calc.bestStreak(allDates) { d -> Calc.adherenceFor(st, d).score >= 0.6 }
-    }
+    val streakResult = remember(st, today) { app.forge.fitness.logic.Streak.view(st, today, s.streakRepairs()).result }
+    val curStreak = streakResult.current
+    val best = streakResult.best
     val perfect = remember(allDates, st) {
         Calc.bestStreak(allDates) { d -> Calc.adherenceFor(st, d).score >= 0.999 }
     }

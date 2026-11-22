@@ -102,6 +102,12 @@ object Ai {
         val priorities: List<String>? = null,
         val equipment: String? = null,
         val experience: String? = null,
+        /** FORGE's deterministic plan for the same request, one line per day, for the AI to adapt. */
+        val baseline: String? = null,
+        /** The user's saved training limits. */
+        val notes: String? = null,
+        /** Revise mode: current plan (one line per day) and what to change. */
+        val revise: Boolean = false, val current: String? = null, val request: String? = null,
     )
 
     // ─── Public suspend functions ─────────────────────────────────────────────
@@ -173,9 +179,33 @@ object Ai {
             if (input.priorities != null) putJsonArray("priorities") { input.priorities.forEach { add(it) } }
             if (input.equipment != null) put("equipment", input.equipment)
             if (input.experience != null) put("experience", input.experience)
+            if (input.baseline != null) put("baseline", input.baseline)
+            if (!input.notes.isNullOrBlank()) put("notes", input.notes)
+            if (input.revise) { put("revise", true); put("current", input.current ?: ""); put("request", input.request ?: "") }
         }
         val result = api.ai("generate_workout_plan", payload)
         return decodeGeneratedPlan(result)
+    }
+
+    data class Swap(val id: String, val reason: String)
+    data class SwapCandidate(val id: String, val name: String, val equipment: String?)
+
+    /** Task `suggest_swap`: up to 3 replacements, chosen only from [candidates] (ids are re-checked here). */
+    suspend fun suggestSwap(api: Api, name: String, muscle: String?, target: String?, day: String, others: List<String>,
+                            notes: String, reason: String, candidates: List<SwapCandidate>): List<Swap> {
+        val payload = buildJsonObject {
+            putJsonObject("exercise") { put("name", name); muscle?.let { put("muscle", it) }; target?.let { put("target", it) } }
+            put("day", day); putJsonArray("others") { others.forEach { add(it) } }
+            put("notes", notes); put("reason", reason)
+            putJsonArray("candidates") { candidates.forEach { c -> addJsonObject { put("id", c.id); put("name", c.name); c.equipment?.let { put("equipment", it) } } } }
+        }
+        val ids = candidates.map { it.id }.toSet()
+        val r = api.ai("suggest_swap", payload)
+        return (r["swaps"] as? JsonArray).orEmpty().mapNotNull { el ->
+            val o = el as? JsonObject ?: return@mapNotNull null
+            val id = (o["id"] as? JsonPrimitive)?.contentOrNull ?: return@mapNotNull null
+            if (id !in ids) null else Swap(id, ((o["reason"] as? JsonPrimitive)?.contentOrNull ?: "").take(300))
+        }.take(3)
     }
 
     /**
@@ -198,8 +228,11 @@ object Ai {
         priorities: String,
         context: JsonElement? = null,
         previous: JsonElement? = null,
+        /** The user confirmed their own age is 18+ (checked again on the server against the saved age). */
+        ageConfirmed: Boolean = false,
     ): PhysiqueAnalysis {
         val payload = buildJsonObject {
+            put("age_confirmed", ageConfirmed)
             putJsonArray("photos") {
                 photos.forEach { p ->
                     addJsonObject { put("angle", p.angle); put("mimeType", p.mimeType); put("data", p.data) }
@@ -273,7 +306,7 @@ object Ai {
         val items = itemsArr.map { el ->
             val j = el.jsonObject
             val name     = j.str("name");   require(name.length in 1..80)
-            val qty      = j.dbl("qty");    require(qty > 0 && qty <= 50)
+            val qty      = j.dbl("qty");    require(qty > 0 && qty <= 2500) // g/ml amounts are the grams themselves; pieces are capped at 50 on the server
             val unit     = j.str("unit");   require(unit.length in 1..12)
             val sl       = j.strN("serving_label"); if (sl != null) require(sl.length <= 40)
             val grams    = j.dblN("grams"); if (grams != null) require(grams in 0.0..2500.0)

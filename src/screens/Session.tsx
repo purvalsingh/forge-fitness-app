@@ -7,6 +7,7 @@ import { bestE1rm, e1rm, exerciseHistory, kgToLb, lbToKg, nextTarget, platesPerS
 import { loadExercises, matchExercise, searchExercises, type LibExercise } from '../lib/exercises'
 import { Button, Field, Icon, Notice, Screen, Sheet } from '../ui'
 import { nameOf } from './Workout'
+import { ai, AIUnavailable } from '../lib/ai'
 import type { SessionExercise, WorkoutSession, WorkoutSet } from '../lib/types'
 
 const fmtClock = (s: number) => `${String(Math.floor(s / 3600)).padStart(2, '0')}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
@@ -26,6 +27,7 @@ export default function Session() {
   const existing = s.sessions.find(x => x.date === date && x.day_id === (freestyle ? 'freestyle' : dayId)) ?? null
   const [draft, setDraft] = useState<WorkoutSession | null>(existing)
   const [current, setCurrent] = useState(0)
+  const [confirmFinish, setConfirmFinish] = useState(false)
   const [restEnd, setRestEnd] = useState<number | null>(null)
   const [restTotal, setRestTotal] = useState(0)
   const [now, setNow] = useState(() => Date.now())
@@ -93,6 +95,7 @@ export default function Session() {
   }
 
   const finished = Boolean(session.finished_at)
+  const finish = async () => { setConfirmFinish(false); setRestEnd(null); await persist({ ...session, finished_at: new Date().toISOString() }); nav('/workout?done=' + session.id) }
   const doneSets = session.exercises.reduce((a, e) => a + working(e.sets).length, 0)
   const totalSets = session.exercises.reduce((a, e) => a + e.sets.filter(x => !x.warmup).length, 0)
   const elapsed = Math.floor(((finished ? new Date(session.finished_at!).getTime() : now) - new Date(session.started_at).getTime()) / 1000)
@@ -164,9 +167,19 @@ export default function Session() {
         </div>
         {!finished
           ? <button className="press rounded-full border px-4 py-2 text-[13px] font-extrabold uppercase" style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}
-              onClick={async () => { await persist({ ...session, finished_at: new Date().toISOString() }); nav('/workout?done=' + session.id) }}>Finish ✓</button>
+              onClick={() => { if (doneSets < totalSets) setConfirmFinish(true); else void finish() }}>Finish ✓</button>
           : <button className="chip press" onClick={() => void persist({ ...session, finished_at: null })}>Reopen</button>}
       </header>
+
+      <Sheet open={confirmFinish} onClose={() => setConfirmFinish(false)} title={`Finish with ${doneSets} of ${totalSets} sets?`}>
+        <p className="text-[13px] leading-snug" style={{ color: 'var(--text-dim)' }}>
+          Unticked sets count as skipped. Weight goes up next time only on exercises where every set was done.
+        </p>
+        <div className="mt-4 grid gap-2">
+          <Button onClick={() => void finish()}>Finish workout</Button>
+          <Button variant="ghost" onClick={() => setConfirmFinish(false)}>Keep going</Button>
+        </div>
+      </Sheet>
 
       <div className="mt-3 flex items-center justify-between">
         <span className="mono text-[12px]">Exercise <b>{Math.min(current + 1, session.exercises.length)}</b> of {session.exercises.length}</span>
@@ -207,6 +220,7 @@ export default function Session() {
                 </div>
                 <h2 className="title text-[24px] leading-tight">{cur.name}</h2>
               </div>
+              {!finished && <button onClick={() => setPicker({ mode: 'swap', index: i })} className="chip press shrink-0">Swap</button>}
               <button aria-label="Exercise options" onClick={() => setMenu(i)} className="press grid h-10 w-10 shrink-0 place-items-center rounded-full" style={{ background: 'var(--surface-raised)' }}><Icon name="more" size={18} /></button>
             </div>
             {(cur.target || cur.note) && (
@@ -356,10 +370,18 @@ export default function Session() {
           setMenu(null)
         }} />
 
-      <ExercisePicker open={picker !== null} lib={lib} onClose={() => setPicker(null)} onPick={x => {
+      <ExercisePicker open={picker !== null} lib={lib} onClose={() => setPicker(null)}
+        swap={picker?.mode === 'swap' ? { ex: session.exercises[picker.index], day: session.day_name, others: session.exercises.filter((_, k) => k !== picker.index).map(e => e.name), planId: session.plan_id } : undefined}
+        onPick={(x, keep) => {
         if (picker?.mode === 'swap') {
           const i = picker.index
-          void patchEx(i, { exercise_id: x.id, name: x.name, kind: x.kind, muscle: x.muscle, target: '', note: `Swapped in for ${session.exercises[i].name}` })
+          const old = session.exercises[i]
+          void patchEx(i, { exercise_id: x.id, name: x.name, kind: x.kind, muscle: x.muscle, target: '', note: `Swapped in for ${old.name}` })
+          // "Use this from now on": the plan's slot changes too, so the next Day N starts with the new exercise.
+          const plan = s.plans.find(p => p.id === session.plan_id)
+          if (keep && plan) void s.save('workout_plans', { ...plan, days: plan.days.map(d => d.id !== session.day_id ? d : { ...d,
+            exercises: d.exercises.map(w => w.id !== old.workout_exercise_id ? w : { ...w, exercise_id: x.id, name: x.name,
+              reps: (x as { per_side?: boolean }).per_side ? w.reps : w.reps.replace(/\s*per (leg|side|arm)$/i, ''), note: undefined }) }) } as never)
         } else addExercise(x)
         setPicker(null)
       }} />
@@ -414,7 +436,11 @@ function ExerciseMenu({ open, onClose, session, index, onPatch, onRemove, onSwap
   )
 }
 
-export function ExercisePicker({ open, lib, onClose, onPick }: { open: boolean; lib: LibExercise[]; onClose: () => void; onPick: (x: LibExercise) => void }) {
+interface SwapCtx { ex: SessionExercise; day: string; others: string[]; planId: string }
+
+export function ExercisePicker({ open, lib, onClose, onPick: pick, swap }: { open: boolean; lib: LibExercise[]; onClose: () => void; onPick: (x: LibExercise, keepInPlan: boolean) => void; swap?: SwapCtx }) {
+  const [keep, setKeep] = useState(true)
+  const onPick = (x: LibExercise) => pick(x, !!swap && keep)
   const s = useStore()
   const [q, setQ] = useState('')
   const [muscle, setMuscle] = useState('')
@@ -423,9 +449,11 @@ export function ExercisePicker({ open, lib, onClose, onPick }: { open: boolean; 
   const res = useMemo(() => searchExercises(all, q, { muscle: muscle || undefined }, favs).slice(0, 80), [all, q, muscle, favs])
   const muscles = ['chest', 'back', 'shoulders', 'upper arms', 'upper legs', 'lower legs', 'waist', 'cardio']
   return (
-    <Sheet open={open} onClose={onClose} title="Pick an exercise">
+    <Sheet open={open} onClose={onClose} title={swap ? `Swap ${swap.ex.name}` : 'Pick an exercise'}>
       <div className="grid gap-3">
-        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search 1,324 exercises" aria-label="Search exercises" />
+        {swap && <label className="flex min-h-[44px] items-center gap-2 text-[13px]"><input type="checkbox" checked={keep} onChange={e => setKeep(e.target.checked)} /> Use this from now on (updates your plan)</label>}
+        {swap && <SwapSuggest key={swap.ex.workout_exercise_id} swap={swap} lib={all} onPick={onPick} />}
+        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search 1,334 exercises" aria-label="Search exercises" />
         <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1">
           {muscles.map(m => <button key={m} className="chip press shrink-0" aria-pressed={muscle === m} onClick={() => setMuscle(muscle === m ? '' : m)}>{m}</button>)}
         </div>
@@ -441,5 +469,60 @@ export function ExercisePicker({ open, lib, onClose, onPick }: { open: boolean; 
         </div>
       </div>
     </Sheet>
+  )
+}
+
+/**
+ * AI swap inside the plan's own rules: the notes the plan was made with (editable, saved back to the plan) plus an
+ * optional reason. The AI may only choose real library exercises for the same muscle.
+ */
+function SwapSuggest({ swap, lib, onPick }: { swap: SwapCtx; lib: LibExercise[]; onPick: (x: LibExercise) => void }) {
+  const s = useStore()
+  const plan = s.plans.find(p => p.id === swap.planId)
+  const [notes, setNotes] = useState(s.settings.training_notes ?? plan?.brief ?? '')
+  const [reason, setReason] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const [res, setRes] = useState<{ x: LibExercise; reason: string }[] | null>(null)
+  // AI plans can name lifts the library spells differently ("Dumbbell Reverse Lunge"): fall back to its last words.
+  const words = swap.ex.name.split(' ')
+  const cur = lib.find(x => x.id === swap.ex.exercise_id) ?? matchExercise(lib, swap.ex.name)
+    ?? matchExercise(lib, words.slice(-2).join(' ')) ?? matchExercise(lib, words.slice(-1).join(' '))
+  const muscle = swap.ex.muscle ?? cur?.muscle
+  const ask = async () => {
+    setBusy(true); setErr(null); setRes(null)
+    // Saved on the account: every later plan, revision and swap uses the same limits.
+    if (notes.trim() !== (s.settings.training_notes ?? '')) void s.save('settings', { ...s.settings, training_notes: notes.trim().slice(0, 1200) || null } as never)
+    const taken = new Set([swap.ex.name, ...swap.others])
+    const RANK: Record<string, number> = { barbell: 0, dumbbell: 0, machine: 0, cable: 0, 'smith machine': 1, bodyweight: 1, kettlebell: 2, band: 2 }
+    const candidates = lib
+      .filter(x => x.id !== swap.ex.exercise_id && !taken.has(x.name) && (x.muscle === muscle || (muscle && (x as { secondary?: string[] }).secondary?.includes(muscle) && x.muscle !== 'abs')))
+      .sort((a, b) => (a.muscle === muscle ? 0 : 1) - (b.muscle === muscle ? 0 : 1) || (RANK[a.equipment ?? ''] ?? 3) - (RANK[b.equipment ?? ''] ?? 3) || a.name.length - b.name.length)
+      .slice(0, 80)
+    try {
+      const r = await ai.suggestSwap({ exercise: { name: swap.ex.name, muscle, target: swap.ex.target }, day: swap.day, others: swap.others, notes, reason,
+        candidates: candidates.map(x => ({ id: x.id, name: x.name, equipment: x.equipment })) })
+      const byId = new Map(candidates.map(x => [x.id, x]))
+      const out = r.swaps.flatMap(w => { const x = byId.get(w.id); return x ? [{ x, reason: w.reason }] : [] })
+      if (!out.length) setErr('No good match found. Pick one from the list below.')
+      setRes(out)
+    } catch (e) { setErr(e instanceof AIUnavailable ? e.message : "Couldn't get suggestions. Pick one from the list below.") }
+    setBusy(false)
+  }
+  return (
+    <div className="grid gap-2 rounded-2xl p-3" style={{ background: 'var(--surface-high)' }}>
+      <Field label="Your limits" hint="Told once, used for every plan, change and swap.">
+        <textarea rows={2} value={notes} onChange={e => setNotes(e.target.value)} placeholder="e.g. no lunges: flat feet, knees cave in" />
+      </Field>
+      <input value={reason} onChange={e => setReason(e.target.value)} placeholder="Why swap now? (optional, e.g. machine taken)" aria-label="Why swap now" />
+      <Button disabled={busy} onClick={() => void ask()}>{busy ? 'Finding swaps…' : 'Suggest swaps'}</Button>
+      {err && <Notice tone="info">{err}</Notice>}
+      {res?.map(({ x, reason: why }) => (
+        <button key={x.id} onClick={() => onPick(x)} className="raised press grid gap-0.5 p-3 text-left">
+          <span className="text-[14px] font-semibold">{x.name}</span>
+          <span className="text-[12px] leading-snug" style={{ color: 'var(--text-dim)' }}>{why}</span>
+        </button>
+      ))}
+    </div>
   )
 }

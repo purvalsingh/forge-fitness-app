@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { createHash } from 'node:crypto'
 import { extractJson } from './prompts.js'
 
 const ENDPOINT = (model: string) => `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
 
-/** Warm-instance memory: a key that just hit its quota is skipped for a minute. Keyed by hash-free suffix + model. */
+/** Short one-way tag for a key. Module-level state never holds a raw key, only this. */
+const tag = (key: string) => createHash('sha256').update(key).digest('hex').slice(0, 12)
+/** Warm-instance memory: a key that just hit its quota is skipped for a minute. Keyed by model + key tag. */
 const cooldowns = new Map<string, number>()
 
 export class Quota extends Error {}
@@ -27,11 +30,11 @@ function forModel(model: string, body: any): any {
 }
 const withoutThinking = (body: any) => { const { thinkingConfig: _t, ...gc } = body.generationConfig ?? {}; return { ...body, generationConfig: gc } }
 
-async function attempt(model: string, key: string, body: any, deadline: number, abort: AbortSignal): Promise<Outcome> {
-  const slot = `${model}:${key.slice(-8)}`
+async function attempt(model: string, key: string, slotNo: number, body: any, deadline: number, abort: AbortSignal): Promise<Outcome> {
+  const slot = `${model}:${tag(key)}`
   const t0 = Date.now()
-  // Timing only, never the key: which model, which key slot (#index), status and milliseconds.
-  const log = (what: string) => console.log(`[ai] ${model} key#${keyIndex.get(key) ?? '?'} ${what} ${Date.now() - t0}ms`)
+  // Timing only, never the key or any content: which model, which key slot (#n in this request), status, milliseconds.
+  const log = (what: string) => console.log(`[ai] ${model} key#${slotNo} ${what} ${Date.now() - t0}ms`)
   let payload = forModel(model, body)
   try {
     for (let tries = 0; ; tries++) {
@@ -44,10 +47,16 @@ async function attempt(model: string, key: string, body: any, deadline: number, 
       log(`http ${res.status}`)
       // This model rejects the thinking field: retry the same call at once without it.
       if (res.status === 400 && payload?.generationConfig?.thinkingConfig && tries === 0) { payload = withoutThinking(payload); continue }
-      if (res.status === 429) { cooldowns.set(slot, Date.now() + 60_000); return { quota: true } }
+      if (res.status === 429) {
+        // Free tier: full Flash models allow ~20 requests a day per project. Google says when to come back; honour it
+        // (up to a day) instead of re-trying every minute and paying a wasted round trip on each request.
+        const wait = Number((await res.text().catch(() => '')).match(/"retryDelay":\s*"(\d+)(?:\.\d+)?s"/)?.[1] ?? 60)
+        cooldowns.set(slot, Date.now() + Math.min(86_400, Math.max(60, wait)) * 1000)
+        return { quota: true }
+      }
       if (res.status >= 500) { cooldowns.set(slot, Date.now() + 30_000); return { overloaded: true } }
       if (res.status === 404) { deadModels.add(model); return { skipModel: true } }
-      if (res.status === 403) { log(`403 ${(await res.text().catch(() => '')).slice(0, 160).replace(/\s+/g, ' ')}`); return { fail: true } }
+      if (res.status === 403) return { fail: true }
       if (!res.ok) return { fail: true }
       const out = extractJson(await res.json().catch(() => null))
       return out !== null ? { out } : { fail: true }
@@ -59,14 +68,14 @@ async function attempt(model: string, key: string, body: any, deadline: number, 
   }
 }
 
-const keyIndex = new Map<string, number>()
-
 /** (model, key) pairs, models in preference order, keys rotated so neighbouring calls use different models AND keys. */
 function plan(keys: string[], models: string[]): (readonly [string, string])[] {
   const live = models.filter(m => !deadModels.has(m))
   const all: (readonly [string, string])[] = []
   for (let r = 0; r < keys.length; r++) live.forEach((m, i) => all.push([m, keys[(i + r) % keys.length]] as const))
-  const ready = all.filter(([m, k]) => (cooldowns.get(`${m}:${k.slice(-8)}`) ?? 0) <= Date.now())
+  const now = Date.now()
+  for (const [slot, until] of cooldowns) if (until <= now) cooldowns.delete(slot)
+  const ready = all.filter(([m, k]) => (cooldowns.get(`${m}:${tag(k)}`) ?? 0) <= now)
   // Everything cooling down (a bad minute at Google): try anyway rather than fail instantly.
   return ready.length ? [...ready, ...all.filter(c => !ready.includes(c))] : all
 }
@@ -75,10 +84,12 @@ function plan(keys: string[], models: string[]): (readonly [string, string])[] {
  * Hedged Gemini call. BURST calls start at once on different models; every HEDGE_MS without an answer, or right after
  * a failure, the next candidate joins. A model that answers 503 (overloaded) is moved to the back of the queue. The
  * first valid answer wins and the rest are aborted, so one slow or overloaded model never holds the user.
+ * hedgeMs = Infinity, burst = 1 and maxAttempts = 2 send a photo once, plus one retry only after an error or quota.
  */
-export async function callGemini(keys: string[], body: unknown, models: string[], budgetMs = BUDGET_MS, hedgeMs = HEDGE_MS, burst = BURST): Promise<any> {
+export async function callGemini(keys: string[], body: unknown, models: string[], budgetMs = BUDGET_MS, hedgeMs = HEDGE_MS, burst = BURST, maxAttempts = Infinity): Promise<any> {
+  let attempts = 0
   const deadline = Date.now() + budgetMs
-  keys.forEach((k, i) => keyIndex.set(k, i + 1))
+  const slotNo = new Map(keys.map((k, i) => [k, i + 1])) // per request, dropped when it returns
   const queue = plan(keys, models)
   const stop = new AbortController()
   let sawQuota = false
@@ -90,11 +101,11 @@ export async function callGemini(keys: string[], body: unknown, models: string[]
     const launch = () => {
       while (queue.length && deadModels.has(queue[0][0])) queue.shift()
       if (done) return
-      if (!queue.length) { if (running === 0) giveUp(); return }
+      if (!queue.length || attempts >= maxAttempts) { if (running === 0) giveUp(); return }
       const [model, key] = queue.shift()!
-      running++
-      clearTimeout(hedge); hedge = setTimeout(launch, hedgeMs)
-      attempt(model, key, body, deadline, stop.signal).then(r => {
+      running++; attempts++
+      clearTimeout(hedge); if (Number.isFinite(hedgeMs)) hedge = setTimeout(launch, hedgeMs)
+      attempt(model, key, slotNo.get(key) ?? 0, body, deadline, stop.signal).then(r => {
         running--
         if ('out' in r) return finish(r.out)
         if ('quota' in r) sawQuota = true

@@ -30,7 +30,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import app.forge.fitness.data.Store
@@ -47,6 +46,7 @@ enum class CameraStage { CAPTURE, ANALYSING, REVIEW }
 @Composable
 fun CameraScreen(s: Store, nav: NavController) {
     val context = LocalContext.current
+    var privacyOk by remember { mutableStateOf(s.flag(app.forge.fitness.logic.Privacy.PHOTO_SEEN)) }
     val st by s.state.collectAsStateWithLifecycle()
     val date by s.date.collectAsStateWithLifecycle()
     // Pick the meal whose time is closest to now (breakfast in the morning, dinner at night), not always lunch.
@@ -65,10 +65,9 @@ fun CameraScreen(s: Store, nav: NavController) {
     var rejected by remember { mutableStateOf<List<Ai.RejectedItem>>(emptyList()) }
     var err by remember { mutableStateOf<String?>(null) }
 
-    val photoFile = remember { File(context.cacheDir, "camera_capture.jpg") }
-    val photoUri = remember {
-        FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", photoFile)
-    }
+    // In-app camera; photos go to FORGE's private cache and are auto-deleted after a day unless the user keeps them.
+    var showCamera by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { app.forge.fitness.logic.FoodPhotos.cleanup(context, keep = s.flag(app.forge.fitness.logic.FoodPhotos.KEEP_FLAG)) }
 
     suspend fun processImage(rawBytes: ByteArray) {
         err = null
@@ -82,16 +81,13 @@ fun CameraScreen(s: Store, nav: NavController) {
         }
     }
 
-    val takePictureLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success && photoFile.exists()) {
-            scope.launch {
-                val bytes = photoFile.readBytes()
-                processImage(bytes)
-            }
+    if (showCamera) InAppCamera(onDismiss = { showCamera = false }, hint = "Whole plate, from above", onCaptured = { bytes ->
+        showCamera = false
+        scope.launch {
+            app.forge.fitness.logic.FoodPhotos.save(context, bytes)
+            processImage(bytes)
         }
-    }
+    })
 
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -109,9 +105,10 @@ fun CameraScreen(s: Store, nav: NavController) {
     fun analyse() {
         val b64 = previewBase64 ?: return
         if (st.localMode) {
-            err = "AI analysis needs Gemini keys. Use Search or Barcode offline."
+            err = "AI analysis needs an account. Use Search or Barcode offline."
             return
         }
+        s.setFlag(app.forge.fitness.logic.Privacy.PHOTO_SEEN); privacyOk = true
         stage = CameraStage.ANALYSING
         err = null
         scope.launch {
@@ -282,7 +279,12 @@ fun CameraScreen(s: Store, nav: NavController) {
         }
 
         if (st.localMode) {
-            Notice("AI food photo analysis requires Gemini keys. Add them in You > AI keys.", tone = Tone.Info)
+            Notice("AI food photos need an account. Sign in to use them.", tone = Tone.Info)
+        }
+
+        if (!privacyOk) {
+            Notice(app.forge.fitness.logic.Privacy.PHOTO, tone = Tone.Info)
+            FButton("Got it", Modifier.fillMaxWidth(), Variant.Quiet) { s.setFlag(app.forge.fitness.logic.Privacy.PHOTO_SEEN); privacyOk = true }
         }
 
         if (err != null) {
@@ -296,7 +298,7 @@ fun CameraScreen(s: Store, nav: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FButton(
-                    text = "Photo",
+                    text = "Gallery",
                     variant = Variant.Ghost,
                     onClick = { pickImageLauncher.launch("image/*") },
                     modifier = Modifier.weight(1f)
@@ -311,9 +313,7 @@ fun CameraScreen(s: Store, nav: NavController) {
                         .clip(CircleShape)
                         .background(F.accent)
                         .border(4.dp, F.text, CircleShape)
-                        .clickable {
-                            takePictureLauncher.launch(photoUri)
-                        },
+                        .clickable { showCamera = true },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(Icons.Filled.CameraAlt, contentDescription = "Take picture", tint = F.accentInk, modifier = Modifier.size(30.dp))

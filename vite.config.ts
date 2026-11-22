@@ -59,6 +59,6 @@ export default defineConfig(({ mode }) => {
         },
       })]),
     ],
-    test: { environment: 'happy-dom', include: ['src/**/*.test.ts'] },
+    test: { environment: 'happy-dom', include: ['src/**/*.test.ts', 'api/_tests/*.test.ts'] },
   }
 })

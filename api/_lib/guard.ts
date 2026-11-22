@@ -107,10 +107,13 @@ export function postCheckFood(raw: { is_food_request?: boolean; rejection_reason
     if (kcal > 40 && Math.abs(macroKcal - kcal) > Math.max(40, kcal * 0.3)) {
       rejected.push({ name, reason: 'Calories and macros disagree.' }); continue
     }
+    const unit = String(it.unit ?? 'serving').slice(0, 12)
+    // Weight/volume units: the amount IS the grams ("200 g paneer" must not be clamped to 50 like a piece count).
+    const byWeight = /^(g|gm|gms|gram|grams|ml)$/i.test(unit.trim())
     items.push({
       name, grams: Math.round(grams),
-      qty: clampNum(it.qty, 0.1, 50) || 1,
-      unit: String(it.unit ?? 'serving').slice(0, 12),
+      qty: byWeight ? Math.round(grams) : clampNum(it.qty, 0.1, 50) || 1,
+      unit,
       serving_label: it.serving_label ? String(it.serving_label).slice(0, 40) : undefined,
       calories: Math.round(kcal), protein_g: round1(p), carbs_g: round1(c), fat_g: round1(f),
       fiber_g: Number.isFinite(clampNum(it.fiber_g, 0, 200)) ? round1(clampNum(it.fiber_g, 0, 200)) : undefined,

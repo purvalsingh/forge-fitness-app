@@ -14,6 +14,7 @@ import app.forge.fitness.ui.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,7 @@ fun AdherenceScreen(s: Store, nav: NavController) {
     val today = remember { Calc.today() }
 
     var yearMonth by remember {
-        val d = LocalDate.parse(today)
+        val d = app.forge.fitness.logic.Calc.safeDate(today)
         mutableStateOf(Pair(d.year, d.monthValue - 1)) // month 0-indexed for monthGrid
     }
 
@@ -61,15 +62,43 @@ fun AdherenceScreen(s: Store, nav: NavController) {
 
     val cells = remember(year, month0) { Calc.monthGrid(year, month0) }
     val monthDates = remember(cells, today) { cells.filterNotNull().filter { it <= today } }
-    val scores = remember(monthDates, st) { monthDates.map { Calc.adherenceFor(st, it).score } }
-    val avgScore = remember(scores) { if (scores.isNotEmpty()) scores.sum() / scores.size else 0.0 }
-    val perfectDays = remember(scores) { scores.count { it >= 0.999 } }
+    var repairTick by remember { mutableIntStateOf(0) }
+    val sv = remember(st, today, repairTick) { app.forge.fitness.logic.Streak.view(st, today, s.streakRepairs()) }
+    val late = remember(st, today) { app.forge.fitness.logic.Streak.lateDays(app.forge.fitness.logic.Streak.input(st, today, emptySet())) }
+    // Days the user actually logged something (food, a workout, steps), not every calendar day.
+    val logged = remember(st) { (st.foodLogs.map { it.date } + st.sessions.map { it.date } + st.steps.filter { it.steps > 0 }.map { it.date }).toSet() }
+    val stats = remember(monthDates, st, sv) { app.forge.fitness.logic.Streak.monthStats(monthDates, logged, sv.result.days, today) { Calc.adherenceFor(st, it).score } }
+    val avgScore = stats.avg
+    val perfectDays = stats.perfect
+    var info by remember { mutableStateOf(false) }
 
     Screen(
         title = "Monthly adherence",
         sub = "Consistency",
         back = { nav.popBackStack() }
     ) {
+        // Streak: one line plus one small line; the rules live behind (i).
+        Card {
+            val r = sv.result
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text("${r.current} day${if (r.current == 1) "" else "s"} 🔥", color = F.text, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Text("  · ${r.freezesLeft} freeze${if (r.freezesLeft == 1) "" else "s"} left", color = F.mute, fontSize = 13.sp, modifier = Modifier.weight(1f))
+                Box(Modifier.size(36.dp).clip(CircleShape).background(F.high).clickable { info = !info }, contentAlignment = Alignment.Center) {
+                    Text("i", color = F.text, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+            Text("Best ${r.best} day${if (r.best == 1) "" else "s"}", color = F.mute, fontSize = 12.sp)
+            if (info) {
+                Spacer(Modifier.height(8.dp))
+                Body("A day counts when you log food, finish a workout or hit your steps. Planned rest days never break it (they keep it, but only days you show up add to it). Missing a day uses a freeze (2 a month, automatic). If a streak of 3+ days breaks with no freeze left, you can repair it once a month within 2 days by logging 3 meals plus a workout or your step goal.", F.mute, 12)
+            }
+            sv.repairOffer?.let { offer ->
+                Spacer(Modifier.height(10.dp))
+                if (sv.repairEarned) FButton("Repair your ${offer.previous}-day streak", Modifier.fillMaxWidth()) { s.addStreakRepair(offer.days, today); repairTick++ }
+                else Body("Streak broke. Finish today's 3 meals + workout or steps to repair it.", F.text, 13)
+            }
+        }
+
         // Calendar Card (Paper)
         Card(paper = true) {
             // Month navigation
@@ -117,6 +146,9 @@ fun AdherenceScreen(s: Store, nav: NavController) {
                                 if (dateStr != null) {
                                     val isFuture = dateStr > today
                                     val adh = if (isFuture) null else Calc.adherenceFor(st, dateStr)
+                                    val kind = sv.result.days[dateStr]
+                                    val covered = kind == app.forge.fitness.logic.Streak.Kind.Rest || kind == app.forge.fitness.logic.Streak.Kind.Frozen || kind == app.forge.fitness.logic.Streak.Kind.Repaired
+                                    val isLate = dateStr in late && kind != app.forge.fitness.logic.Streak.Kind.Shown
                                     val dayNum = dateStr.takeLast(2).toIntOrNull()?.toString() ?: ""
 
                                     Column(
@@ -130,11 +162,15 @@ fun AdherenceScreen(s: Store, nav: NavController) {
                                             .padding(2.dp)
                                     ) {
                                         // Fill circle with day number (Rule 6 compliant: circle FILL indicates score, text is day number)
-                                        FillCircle(
-                                            value = if (isFuture) 0f else (adh?.score?.toFloat() ?: 0f),
-                                            size = 30.dp,
-                                            label = dayNum
-                                        )
+                                        Box(if (isLate) Modifier.alpha(0.35f) else Modifier) {
+                                            FillCircle(
+                                                value = if (isFuture || covered) 0f else (adh?.score?.toFloat() ?: 0f),
+                                                size = 30.dp,
+                                                label = dayNum
+                                            )
+                                            val mark = when (kind) { app.forge.fitness.logic.Streak.Kind.Rest -> "R"; app.forge.fitness.logic.Streak.Kind.Frozen, app.forge.fitness.logic.Streak.Kind.Repaired -> "❄"; else -> null }
+                                            if (mark != null) Text(mark, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = F.paperDim, modifier = Modifier.align(Alignment.TopEnd))
+                                        }
 
                                         Spacer(Modifier.height(3.dp))
                                         // 3 activity dots
@@ -172,14 +208,15 @@ fun AdherenceScreen(s: Store, nav: NavController) {
                 }
             }
             Spacer(Modifier.height(4.dp))
-            Text("Circle fill = day completion", fontSize = 12.sp, color = F.paperDim)
+            Text("Fill = day completion · R rest day · ❄ freeze · Empty = missed", fontSize = 12.sp, color = F.paperDim)
+            if (late.any { it in monthDates }) Text("Faded = logged over a week late, not counted", fontSize = 12.sp, color = F.paperDim)
         }
 
         // Summary Stats
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Stat(label = "Month average", value = "${(avgScore * 100).toInt()}%", modifier = Modifier.weight(1f))
             Stat(label = "Perfect days", value = "$perfectDays", modifier = Modifier.weight(1f))
-            Stat(label = "Days logged", value = "${monthDates.size}", modifier = Modifier.weight(1f))
+            Stat(label = "Days logged", value = "${stats.loggedDays}", modifier = Modifier.weight(1f))
         }
     }
 }

@@ -19,14 +19,16 @@ let pendingSex: 'male' | 'female' | null = null
 const KEY_RE = /^(AIza[0-9A-Za-z_-]{35}|AQ\.[0-9A-Za-z_-]{30,120})$/
 
 /**
- * Auth gate. With Supabase configured it enforces a real session AND at least two Gemini keys on
- * the account (the AI runs on the user's own quota). Without Supabase — or in explicit offline
- * demo mode — the app runs against local storage with AI switched off.
+ * Auth gate. With Supabase configured it enforces a real session; Gemini keys are optional (without them the
+ * AI runs on FORGE's shared key pool). Without Supabase — or in explicit offline demo mode — the app runs
+ * against local storage with AI switched off.
  */
 export function AuthGate({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [checking, setChecking] = useState(supabaseConfigured)
   const [keys, setKeys] = useState<'unknown' | 'missing' | 'ok'>('unknown')
+  // When a scheduled account deletion happens (ISO), or null. Missing migration / offline = treated as not scheduled.
+  const [deleting, setDeleting] = useState<string | null>(null)
   const [demo, setDemo] = useState(() => { try { return localStorage.getItem('forge:demo') === '1' } catch { return false } })
 
   useEffect(() => {
@@ -35,6 +37,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
     return () => sub.subscription.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    if (!session || !supabase) { setDeleting(null); return }
+    supabase.rpc('account_deletion_status').then(({ data }) => setDeleting(typeof data === 'string' ? data : null), () => {})
+  }, [session])
 
   useEffect(() => {
     if (!session) { setKeys('unknown'); return }
@@ -65,9 +72,35 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (local) return <>{children}</>
   if (checking) return <Spinner label="Checking session" />
   if (!session) return <AuthScreen onDemo={() => { try { localStorage.setItem('forge:demo', '1') } catch { /* private mode */ } setDemo(true) }} />
+  if (deleting) return <RestoreAccount at={deleting} onRestored={() => setDeleting(null)} />
   if (keys === 'unknown') return <Spinner label="Loading your account" />
-  // No keys yet is fine: the app works without AI, and each AI feature explains how to add a key (You → My Gemini AI keys).
+  // No keys yet is fine: AI runs on FORGE's shared key pool until the user adds their own.
   return <>{children}</>
+}
+
+/** Signed in during the 15-day grace period: bring the account back, or leave it scheduled and sign out. */
+function RestoreAccount({ at, onRestored }: { at: string; onRestored: () => void }) {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const when = new Date(at).toLocaleDateString(undefined, { day: 'numeric', month: 'long' })
+  return (
+    <Shell>
+      <div className="grid gap-3">
+        <div className="text-[19px] font-semibold">Your account is scheduled for deletion</div>
+        <p className="text-[14px] leading-snug" style={{ color: 'var(--text-dim)' }}>
+          It and all your data will be deleted on {when}. Restore it to keep everything as it was.
+        </p>
+        <Button disabled={busy} onClick={async () => {
+          setBusy(true)
+          const { error } = await supabase!.rpc('restore_my_account')
+          if (error) { setErr("Couldn't restore right now. Try again."); setBusy(false); return }
+          onRestored()
+        }}>Restore my account</Button>
+        <Button variant="ghost" onClick={async () => { await forgetDevice(); await supabase!.auth.signOut() }}>Keep it deleted and sign out</Button>
+        {err && <Notice tone="error">{err}</Notice>}
+      </div>
+    </Shell>
+  )
 }
 
 function Shell({ children }: { children: ReactNode }) {
@@ -180,7 +213,7 @@ function AuthScreen({ onDemo }: { onDemo: () => void }) {
             </Field>
           )}
           {mode === 'signup' && (
-            <Field label="Gender" hint="Used for your calorie maths and the body shown on your muscle map.">
+            <Field label="Sex" hint="Used for your calorie maths and the body shown on your muscle map.">
               <div className="grid grid-cols-2 gap-2">
                 {(['male', 'female'] as const).map(g => (
                   <button key={g} type="button" className="chip press !min-h-[44px] justify-center" aria-pressed={sex === g} onClick={() => setSex(g)}>
@@ -295,8 +328,8 @@ export function KeySetup({ required, onSaved }: { required?: boolean; onSaved?: 
       <div>
         <div className="title text-[22px]">{required ? 'One last step' : 'AI keys'}</div>
         <div className="mt-1 text-[13px]" style={{ color: 'var(--text-dim)' }}>
-          FORGE's AI (food camera, meal parsing, coach, plans) runs on your own free Gemini keys, so it stays free and
-          nobody else's usage slows you down.
+          Optional. FORGE's AI (food camera, meal parsing, coach, plans) already works on FORGE's free keys, up to 80 requests
+          a day. Your own free Gemini key gives you 400 a day and never waits on other users.
         </div>
       </div>
       {status && status.count > 0 && (
@@ -309,7 +342,7 @@ export function KeySetup({ required, onSaved }: { required?: boolean; onSaved?: 
         <Button variant="danger" onClick={async () => { await aiKeys.remove(); setStatus({ count: 0, hints: [] }) }}>Delete my keys</Button>
       )}
       {required && (
-        <button className="text-[12px] underline" style={{ color: 'var(--text-mute)' }} onClick={() => { forgetDevice(); supabase?.auth.signOut() }}>Sign out</button>
+        <button className="text-[12px] underline" style={{ color: 'var(--text-mute)' }} onClick={async () => { await forgetDevice(); await supabase?.auth.signOut() }}>Sign out</button>
       )}
     </div>
   )

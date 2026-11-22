@@ -32,6 +32,10 @@ fun DietScreen(s: Store, nav: NavController) {
     val scope = rememberCoroutineScope()
 
     var addMealId by remember { mutableStateOf<String?>(null) }
+    var editing by remember { mutableStateOf<app.forge.fitness.data.FoodLog?>(null) }
+    var undo by remember { mutableStateOf<app.forge.fitness.data.FoodLog?>(null) }
+    LaunchedEffect(undo) { if (undo != null) { kotlinx.coroutines.delay(6000); undo = null } }
+    val remove = { l: app.forge.fitness.data.FoodLog -> scope.launch { s.del(Tables.foodLogs, l.id) }; undo = l; editing = null }
 
     val logs = remember(st.foodLogs, date) { st.foodLogs.filter { it.date == date } }
     val totals = remember(logs) { Calc.sumTotals(logs) }
@@ -44,7 +48,7 @@ fun DietScreen(s: Store, nav: NavController) {
 
     Screen(
         title = "Diet",
-        sub = java.time.LocalDate.parse(date).format(java.time.format.DateTimeFormatter.ofPattern("EEE, d MMM")),
+        sub = app.forge.fitness.logic.Calc.safeDate(date).format(java.time.format.DateTimeFormatter.ofPattern("EEE, d MMM")),
         back = { nav.popBackStack() }
     ) {
         // Target Card (Paper)
@@ -130,6 +134,16 @@ fun DietScreen(s: Store, nav: NavController) {
                         }
                     }
 
+                    undo?.takeIf { it.meal_type_id == m.id }?.let { u ->
+                        Spacer(Modifier.height(8.dp))
+                        Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(F.high).padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically) {
+                            Text("Deleted ${u.name}", color = F.text, fontSize = 13.sp, modifier = Modifier.weight(1f), maxLines = 1)
+                            Text("Undo", color = F.accent, fontSize = 13.sp, fontWeight = FontWeight.Bold,
+                                modifier = Modifier.clickable { s.save(Tables.foodLogs, u); undo = null }.padding(8.dp))
+                        }
+                    }
+
                     if (mLogs.isNotEmpty()) {
                         Spacer(Modifier.height(10.dp))
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -141,7 +155,7 @@ fun DietScreen(s: Store, nav: NavController) {
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Column(Modifier.weight(1f)) {
+                                    Column(Modifier.weight(1f).clickable { editing = l }) {
                                         Text(l.name, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = F.text)
                                         val sub = buildString {
                                             append("${Calc.round1(l.qty)} ${l.unit} · P${Calc.round1(l.protein_g)} C${Calc.round1(l.carbs_g)} F${Calc.round1(l.fat_g)}")
@@ -156,7 +170,7 @@ fun DietScreen(s: Store, nav: NavController) {
                                     ) {
                                         Text("${Math.round(l.calories)}", fontFamily = Mono, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = F.text)
                                         IconButton(
-                                            onClick = { scope.launch { s.del(Tables.foodLogs, l.id) } },
+                                            onClick = { remove(l) },
                                             modifier = Modifier.size(24.dp)
                                         ) {
                                             Icon(Icons.Filled.Delete, contentDescription = "Delete ${l.name}", tint = F.mute, modifier = Modifier.size(16.dp))
@@ -194,10 +208,11 @@ fun DietScreen(s: Store, nav: NavController) {
         // Summary Stats
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Stat(label = "Entries", value = "${logs.size}", modifier = Modifier.weight(1f))
-            Stat(label = "Protein", value = "${Math.round(totals.protein_g)}g", modifier = Modifier.weight(1f))
             val loggedMealCount = st.mealTypes.count { byMeal[it.id] != null }
             Stat(label = "Meals logged", value = "$loggedMealCount/${st.mealTypes.size}", modifier = Modifier.weight(1f))
         }
+
+        editing?.let { l -> EditFoodSheet(l, onClose = { editing = null }, onSave = { s.save(Tables.foodLogs, it); editing = null }, onDelete = { remove(l) }) }
 
         if (addMealId != null) {
             AddFoodSheet(
@@ -209,5 +224,27 @@ fun DietScreen(s: Store, nav: NavController) {
                 nav = nav
             )
         }
+    }
+}
+
+/** Change the amount of a logged food; nutrition scales with it. */
+@Composable
+private fun EditFoodSheet(log: app.forge.fitness.data.FoodLog, onClose: () -> Unit, onSave: (app.forge.fitness.data.FoodLog) -> Unit, onDelete: () -> Unit) {
+    var qty by remember(log.id) { mutableStateOf(Calc.round1(log.qty).toString().removeSuffix(".0")) }
+    val n = qty.toDoubleOrNull()
+    val ok = n != null && n > 0 && n <= 2500
+    val k = if (ok && log.qty > 0) n!! / log.qty else 1.0
+    val kcal = Math.round(log.calories * k).toDouble()
+    Sheet(true, log.name, onClose) {
+        Field("Amount (${log.unit})", if (ok) "${kcal.toInt()} kcal · P${Calc.round1(log.protein_g * k)} C${Calc.round1(log.carbs_g * k)} F${Calc.round1(log.fat_g * k)}" else "Enter an amount above 0.") {
+            Input(qty, { qty = it }, number = true)
+        }
+        Spacer(Modifier.height(16.dp))
+        FButton("Save", Modifier.fillMaxWidth(), enabled = ok) {
+            onSave(log.copy(qty = n!!, calories = kcal, protein_g = Calc.round1(log.protein_g * k), carbs_g = Calc.round1(log.carbs_g * k),
+                fat_g = Calc.round1(log.fat_g * k), serving_label = if (k == 1.0) log.serving_label else null))
+        }
+        Spacer(Modifier.height(8.dp))
+        FButton("Delete", Modifier.fillMaxWidth(), Variant.Danger) { onDelete() }
     }
 }

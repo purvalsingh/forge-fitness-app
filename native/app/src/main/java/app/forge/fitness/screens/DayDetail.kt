@@ -26,7 +26,7 @@ import kotlin.math.max
 
 private fun formatDayTitle(dateStr: String): String {
     return runCatching {
-        val d = LocalDate.parse(dateStr)
+        val d = app.forge.fitness.logic.Calc.safeDate(dateStr)
         val dow = d.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val month = d.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         "$dow, $month ${d.dayOfMonth}"

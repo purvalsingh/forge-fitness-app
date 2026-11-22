@@ -96,6 +96,8 @@ export interface FoodLog {
   note?: string
   source: 'manual' | 'search' | 'recipe' | 'ai_text' | 'ai_photo' | 'barcode' | 'copy'
   serving_label?: string
+  /** Set when first saved; the streak's back-fill rule reads it. */
+  created_at?: string
 }
 
 export type Equipment =
@@ -168,6 +170,8 @@ export interface WorkoutPlan {
   /** Deload plans never become the baseline the next regular session progresses from. */
   deload?: boolean
   progression?: ProgressionRule
+  /** What the user told FORGE when the plan was made (injuries, limits, likes). AI swaps keep to it. */
+  brief?: string
 }
 
 export interface WorkoutSet {
@@ -219,6 +223,8 @@ export interface WeightLog { id: ID; date: ISODate; weight_kg: number }
 export interface StepLog { id: ID; date: ISODate; steps: number }
 export interface Settings {
   id: ID
+  /** Training limits told once (injuries, conditions, dislikes); every AI plan, revision and swap keeps to them. */
+  training_notes?: string
   step_goal: number
   rest_days: number[] // 0=Sun
   adherence_weights: { diet: number; workout: number; steps: number }

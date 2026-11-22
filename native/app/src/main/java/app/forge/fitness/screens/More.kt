@@ -98,10 +98,10 @@ fun MoreScreen(s: Store, nav: NavController) {
                         .background(F.raised)
                         .padding(10.dp)
                 ) {
-                    Eyebrow("Backend")
+                    Eyebrow("Your data")
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        if (s.api.configured && !st.localMode) "Supabase" else "Local device",
+                        if (s.api.configured && !st.localMode) "Synced to your account" else "On this phone only",
                         color = F.text,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
@@ -117,7 +117,7 @@ fun MoreScreen(s: Store, nav: NavController) {
                     Eyebrow("AI")
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        if (s.api.configured && !st.localMode) "Your Gemini keys" else "Off (offline mode)",
+                        if (s.api.configured && !st.localMode) "On" else "Off without an account",
                         color = F.text,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp

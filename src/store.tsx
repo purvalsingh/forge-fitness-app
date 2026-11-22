@@ -147,7 +147,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
    * Optimistic writes: the UI updates in the same frame, the network write follows. A failed write
    * reloads from the source of truth so the screen never shows data that was not stored.
    */
-  const save = useCallback(async <T extends db.Row>(table: db.Table, row: T) => {
+  const save = useCallback(async <T extends db.Row>(table: db.Table, input: T) => {
+    // New food logs get created_at = now (the streak's back-fill rule needs it).
+    const row = table === 'food_logs' && !(input as { created_at?: string }).created_at ? { ...input, created_at: new Date().toISOString() } : input
     setState(s => applyLocal(s, table, row))
     try {
       await db.put(table, row)

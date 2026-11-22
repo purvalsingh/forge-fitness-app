@@ -50,6 +50,7 @@ import app.forge.fitness.logic.Exercises
 import app.forge.fitness.logic.Training
 import app.forge.fitness.ui.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.Instant
 import kotlin.math.ceil
 import kotlin.math.max
@@ -125,7 +126,7 @@ fun SessionScreen(s: Store, nav: NavController, dayId: String) {
             notifyPerm.launch(android.Manifest.permission.POST_NOTIFICATIONS)
     }
     LaunchedEffect(restEnd) {
-        restEnd.let { if (it != null) app.forge.fitness.data.RestAlarm.schedule(context, it) else app.forge.fitness.data.RestAlarm.cancel(context) }
+        restEnd.let { if (it != null && draft?.finished_at == null) app.forge.fitness.data.RestAlarm.schedule(context, it) else app.forge.fitness.data.RestAlarm.cancel(context) }
     }
     DisposableEffect(Unit) { onDispose { if (restEnd == null) app.forge.fitness.data.RestAlarm.cancel(context) } }
 
@@ -322,6 +323,17 @@ fun SessionScreen(s: Store, nav: NavController, dayId: String) {
         }
     }
 
+    var confirmFinish by remember { mutableStateOf(false) }
+    // Finishing ends any running rest too, or its locked-phone alarm still says "Rest over" after the workout.
+    val finish = { confirmFinish = false; restEnd = null; app.forge.fitness.data.RestAlarm.cancel(context); persist(session.copy(finished_at = nowIso())); nav.popBackStack() }
+    Sheet(confirmFinish, "Finish with $doneSets of $totalSets sets?", { confirmFinish = false }) {
+        Body("Unticked sets count as skipped. Weight goes up next time only on exercises where every set was done.", F.dim, 13)
+        Spacer(Modifier.height(16.dp))
+        FButton("Finish workout", Modifier.fillMaxWidth()) { finish() }
+        Spacer(Modifier.height(8.dp))
+        FButton("Keep going", Modifier.fillMaxWidth(), Variant.Ghost) { confirmFinish = false }
+    }
+
     fun patchEx(i: Int, patch: (SessionExercise) -> SessionExercise) {
         val updated = session.exercises.mapIndexed { idx, ex -> if (idx == i) patch(ex) else ex }
         persist(session.copy(exercises = updated))
@@ -474,8 +486,7 @@ fun SessionScreen(s: Store, nav: NavController, dayId: String) {
                         variant = Variant.Primary,
                         modifier = Modifier.heightIn(min = 44.dp)
                     ) {
-                        persist(session.copy(finished_at = nowIso()))
-                        nav.popBackStack()
+                        if (doneSets < totalSets) confirmFinish = true else finish()
                     }
                 } else {
                     Chip(text = "Reopen", selected = false) {
@@ -593,6 +604,7 @@ fun SessionScreen(s: Store, nav: NavController, dayId: String) {
                                 }
                                 Title(cur.name, 22)
                             }
+                            if (!isFinished) Chip(text = "Swap", selected = false) { picker = PickerMode.Swap(current) }
                             IconButton(onClick = { menu = current }) {
                                 Icon(Icons.Filled.MoreVert, contentDescription = "Exercise options", tint = F.mute)
                             }
@@ -1049,11 +1061,19 @@ fun SessionScreen(s: Store, nav: NavController, dayId: String) {
                 lib = lib,
                 customExercises = state.customExercises,
                 onClose = { picker = null },
-                onPick = { chosen ->
+                swap = (pMode as? PickerMode.Swap)?.let { sw -> session.exercises.getOrNull(sw.index)?.let { ex ->
+                    SwapCtx(ex, session.day_name, session.exercises.filterIndexed { k, _ -> k != sw.index }.map { it.name }, session.plan_id, s) } },
+                onPick = { chosen, keep ->
                     when (pMode) {
                         is PickerMode.Add -> addExercise(chosen)
                         is PickerMode.Swap -> {
                             val i = pMode.index
+                            val old = session.exercises[i]
+                            // "Use this from now on": the plan's slot changes too, so the next session starts with the new exercise.
+                            val plan = state.plans.firstOrNull { it.id == session.plan_id }
+                            if (keep && plan != null) s.save(Tables.plans, plan.copy(days = plan.days.map { d -> if (d.id != session.day_id) d else d.copy(
+                                exercises = d.exercises.map { w -> if (w.id != old.workout_exercise_id) w else w.copy(exercise_id = chosen.id, name = chosen.name,
+                                    reps = if (chosen.per_side == true) w.reps else w.reps.replace(Regex("\\s*per (leg|side|arm)$", RegexOption.IGNORE_CASE), ""), note = null) }) }))
                             patchEx(i) {
                                 it.copy(
                                     exercise_id = chosen.id,
@@ -1213,8 +1233,10 @@ private fun ExercisePickerSheet(
     lib: List<Exercises.LibExercise>,
     customExercises: List<Exercise>,
     onClose: () -> Unit,
-    onPick: (Exercises.LibExercise) -> Unit
+    onPick: (Exercises.LibExercise, Boolean) -> Unit,
+    swap: SwapCtx? = null,
 ) {
+    var keep by remember { mutableStateOf(true) }
     var q by remember { mutableStateOf("") }
     var muscle by remember { mutableStateOf("") }
 
@@ -1240,9 +1262,16 @@ private fun ExercisePickerSheet(
         ).take(80)
     }
 
-    Sheet(open = open, title = "Pick an exercise", onClose = onClose) {
+    Sheet(open = open, title = swap?.let { "Swap ${it.ex.name}" } ?: "Pick an exercise", onClose = onClose) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Input(value = q, onChange = { q = it }, placeholder = "Search 1,324 exercises")
+            if (swap != null) {
+                Row(Modifier.fillMaxWidth().heightIn(min = 44.dp).clickable { keep = !keep }, verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(checked = keep, onCheckedChange = { keep = it })
+                    Text("Use this from now on (updates your plan)", color = F.text, fontSize = 13.sp)
+                }
+                SwapSuggest(swap, all) { onPick(it, keep) }
+            }
+            Input(value = q, onChange = { q = it }, placeholder = "Search 1,334 exercises")
 
             Row(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -1265,7 +1294,7 @@ private fun ExercisePickerSheet(
             ) {
                 res.forEach { x ->
                     val isFav = favs.contains(x.id)
-                    Card(onClick = { onPick(x) }) {
+                    Card(onClick = { onPick(x, swap != null && keep) }) {
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -1282,6 +1311,64 @@ private fun ExercisePickerSheet(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+private data class SwapCtx(val ex: SessionExercise, val day: String, val others: List<String>, val planId: String, val store: Store)
+
+/**
+ * AI swap inside the plan's own rules: the notes the plan was made with (editable, saved back to the plan) plus an
+ * optional reason. The AI may only choose real library exercises for the same muscle.
+ */
+@Composable
+private fun SwapSuggest(swap: SwapCtx, lib: List<Exercises.LibExercise>, onPick: (Exercises.LibExercise) -> Unit) {
+    val s = swap.store
+    val st by s.state.collectAsStateWithLifecycle()
+    val plan = st.plans.firstOrNull { it.id == swap.planId }
+    var notes by remember(swap.ex.workout_exercise_id) { mutableStateOf(st.settings.training_notes ?: plan?.brief ?: "") }
+    var reason by remember(swap.ex.workout_exercise_id) { mutableStateOf("") }
+    var busy by remember { mutableStateOf(false) }
+    var err by remember { mutableStateOf<String?>(null) }
+    var res by remember { mutableStateOf<List<Pair<Exercises.LibExercise, String>>>(emptyList()) }
+    val scope = rememberCoroutineScope()
+    // AI plans can name lifts the library spells differently ("Dumbbell Reverse Lunge"): fall back to its last words.
+    val words = swap.ex.name.split(" ")
+    val muscle = swap.ex.muscle ?: (lib.firstOrNull { it.id == swap.ex.exercise_id } ?: Exercises.matchExercise(lib, swap.ex.name)
+        ?: Exercises.matchExercise(lib, words.takeLast(2).joinToString(" ")) ?: Exercises.matchExercise(lib, words.last()))?.muscle
+    val rank = mapOf("barbell" to 0, "dumbbell" to 0, "machine" to 0, "cable" to 0, "smith machine" to 1, "bodyweight" to 1, "kettlebell" to 2, "band" to 2)
+    Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(F.high).padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Field("Your limits", "Told once, used for every plan, change and swap.") {
+            Input(notes, { notes = it }, placeholder = "e.g. no lunges: flat feet, knees cave in", singleLine = false)
+        }
+        Input(reason, { reason = it }, placeholder = "Why swap now? (optional, e.g. machine taken)")
+        FButton(if (busy) "Finding swaps…" else "Suggest swaps", Modifier.fillMaxWidth(), enabled = !busy) {
+            busy = true; err = null; res = emptyList()
+            // Saved on the account: every later plan, revision and swap uses the same limits.
+            if (notes.trim() != (st.settings.training_notes ?: "")) s.save(Tables.settings, st.settings.copy(training_notes = notes.trim().take(1200).ifBlank { null }))
+            val taken = (swap.others + swap.ex.name).toSet()
+            val candidates = lib.filter { x -> x.id != swap.ex.exercise_id && x.name !in taken &&
+                (x.muscle == muscle || (muscle != null && x.secondary?.contains(muscle) == true && x.muscle != "abs")) }
+                .sortedWith(compareBy<Exercises.LibExercise>({ if (it.muscle == muscle) 0 else 1 }, { rank[it.equipment] ?: 3 }, { it.name.length }))
+                .take(80)
+            scope.launch {
+                try {
+                    val out = app.forge.fitness.logic.Ai.suggestSwap(s.api, swap.ex.name, muscle, swap.ex.target, swap.day, swap.others, notes, reason,
+                        candidates.map { app.forge.fitness.logic.Ai.SwapCandidate(it.id, it.name, it.equipment) })
+                    val byId = candidates.associateBy { it.id }
+                    res = out.mapNotNull { w -> byId[w.id]?.let { it to w.reason } }
+                    if (res.isEmpty()) err = "No good match found. Pick one from the list below."
+                } catch (e: Exception) { err = e.message?.takeIf { it.isNotBlank() } ?: "Couldn't get suggestions. Pick one from the list below." }
+                busy = false
+            }
+        }
+        err?.let { Notice(it, Tone.Info) }
+        res.forEach { (x, why) ->
+            Card(onClick = { onPick(x) }) {
+                Text(x.name, color = F.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.height(2.dp))
+                Body(why, F.dim, 12)
             }
         }
     }

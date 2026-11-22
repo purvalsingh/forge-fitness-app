@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Area, AreaChart, Bar as RBar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useStore, useToday } from '../store'
 import { daysBack, sumTotals, sessionVolume, trend, streak, bestStreak } from '../lib/calc'
+import { streakFor } from '../lib/streak'
 import { adherenceFor, activeDates } from '../lib/derive'
 import { Button, Card, Empty, Field, Screen, Sheet, Tabs } from '../ui'
 import { uid } from '../lib/db'
@@ -42,8 +43,9 @@ export default function Progress() {
     .filter(w => dates.includes(w.date))
     .sort((a, b) => a.date.localeCompare(b.date)))
   const all = activeDates(src)
-  const curStreak = streak(all, today, d => adherenceFor(src, d).score >= 0.6)
-  const best = bestStreak(all, d => adherenceFor(src, d).score >= 0.6)
+  const st = streakFor(s, today)
+  const curStreak = st.current
+  const best = st.best
   const perfect = bestStreak(all, d => adherenceFor(src, d).score >= 0.999)
   const dietStreak = streak(all, today, d => adherenceFor(src, d).diet === 'complete')
   const workoutStreak = streak(all, today, d => adherenceFor(src, d).workout !== 'incomplete')
@@ -109,6 +111,8 @@ export default function Progress() {
       </ChartCard>
 
       <ChartCard title="Calories">
+        {!series.some(x => (x.calories ?? 0) > 0) ? <Empty title="Nothing logged in this range" body="Log a meal and your daily calories chart here." />
+          : (
         <ResponsiveContainer width="100%" height={160}>
           <AreaChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
@@ -117,11 +121,13 @@ export default function Progress() {
             <Tooltip contentStyle={tooltip} formatter={fmtTip('kcal')} cursor={cursor} />
             <Area dataKey="calories" name="Calories" stroke="var(--accent)" fill="rgba(169,93,112,0.16)" strokeWidth={2} connectNulls activeDot={{ r: 5 }} />
           </AreaChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer>)}
         <Peak data={series.map(x => ({ date: x.date, v: x.calories }))} unit="kcal" />
       </ChartCard>
 
       <ChartCard title="Protein">
+        {!series.some(x => (x.protein ?? 0) > 0) ? <Empty title="No protein logged yet" body="Every meal you log adds to this line." />
+          : (
         <ResponsiveContainer width="100%" height={160}>
           <LineChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
@@ -130,11 +136,13 @@ export default function Progress() {
             <Tooltip contentStyle={tooltip} formatter={fmtTip('g')} cursor={cursor} />
             <Line dataKey="protein" name="Protein" stroke="var(--accent)" dot={false} strokeWidth={2} connectNulls activeDot={{ r: 5 }} />
           </LineChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer>)}
         <Peak data={series.map(x => ({ date: x.date, v: x.protein }))} unit="g" />
       </ChartCard>
 
       <ChartCard title="Steps">
+        {!series.some(x => (x.steps ?? 0) > 0) ? <Empty title="No steps yet" body="Log steps from the Today tile, or let the Android app count them." />
+          : (
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
@@ -143,11 +151,13 @@ export default function Progress() {
             <Tooltip contentStyle={tooltip} formatter={fmtTip('steps')} cursor={cursor} />
             <RBar dataKey="steps" name="Steps" fill="var(--accent)" radius={[3, 3, 0, 0]} />
           </BarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer>)}
         <Peak data={series.map(x => ({ date: x.date, v: x.steps }))} unit="steps" />
       </ChartCard>
 
       <ChartCard title="Adherence">
+        {!series.some(x => (x.adherence ?? 0) > 0) ? <Empty title="No active days yet" body="Log food, steps or a workout and each day gets a score." />
+          : (
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
@@ -156,11 +166,13 @@ export default function Progress() {
             <Tooltip contentStyle={tooltip} formatter={fmtTip('%')} cursor={cursor} />
             <RBar dataKey="adherence" name="Adherence" fill="var(--accent-strong)" radius={[3, 3, 0, 0]} />
           </BarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer>)}
         <Peak data={series.map(x => ({ date: x.date, v: x.adherence || null }))} unit="%" />
       </ChartCard>
 
       <ChartCard title={`Training volume · ${trained} sessions`}>
+        {trained === 0 ? <Empty title="No finished workouts in this range" body="Finish a session and its total kg lifted shows here." />
+          : (
         <ResponsiveContainer width="100%" height={160}>
           <BarChart data={series} margin={{ left: -18, right: 6, top: 6 }}>
             <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="2 4" />
@@ -169,7 +181,7 @@ export default function Progress() {
             <Tooltip contentStyle={tooltip} formatter={fmtTip('kg')} cursor={cursor} />
             <RBar dataKey="volume" name="Volume" fill="var(--accent)" radius={[3, 3, 0, 0]} />
           </BarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer>)}
         <Peak data={series.map(x => ({ date: x.date, v: x.volume }))} unit="kg" />
       </ChartCard>
 
@@ -246,6 +258,6 @@ const fmtTip = (unit: string) => (v: unknown, name: unknown) => [typeof v === 'n
 /** "Highest: 2,340 kcal on 12 Nov", so the peak is readable without tapping. */
 function Peak({ data, unit }: { data: { date: string; v: number | null | undefined }[]; unit: string }) {
   const best = data.filter(d => d.v != null).reduce<{ date: string; v: number } | null>((b, d) => (!b || d.v! > b.v ? { date: d.date, v: d.v! } : b), null)
-  if (!best) return null
+  if (!best || best.v <= 0) return null
   return <p className="mt-2 text-[12px]" style={{ color: 'var(--text-dim)' }}>Highest: {exact(best.v)} {unit} on {best.date}. Tap the chart to see any day.</p>
 }

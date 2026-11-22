@@ -20,7 +20,7 @@ export const aiConfigured = true
 
 export const ParsedFood = z.object({
   name: z.string().min(1).max(80),
-  qty: z.number().positive().max(50),
+  qty: z.number().positive().max(2500), // g/ml amounts are the grams themselves ("200 ml thums up"); pieces are capped at 50 on the server
   unit: z.string().min(1).max(12),
   serving_label: z.string().max(40).optional(),
   grams: z.number().min(0).max(2500).optional(),
@@ -33,7 +33,7 @@ export const ParsedFood = z.object({
 })
 export type ParsedFood = z.infer<typeof ParsedFood>
 
-const FoodListResponse = z.object({
+export const FoodListResponse = z.object({
   items: z.array(ParsedFood).max(25),
   rejected: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
 })
@@ -158,6 +158,8 @@ export const GeneratedPlan = z.object({
 })
 export type GeneratedPlan = z.infer<typeof GeneratedPlan>
 
+export const SwapResponse = z.object({ swaps: z.array(z.object({ id: z.string().max(80), reason: z.string().max(300).catch('') })).max(3) })
+
 export const ai = {
   configured: aiConfigured,
   parseFoodText: (text: string) => call('parse_food_text', { text }, FoodListResponse),
@@ -166,12 +168,18 @@ export const ai = {
   coach: (messages: { role: 'user' | 'model'; text: string }[]) => call('coach_chat', { messages }, CoachResponse),
   targetAdvice: (input: unknown) => call('target_advice', input, TargetAdviceResponse),
   generatePlan: (input: {
+    /** FORGE's deterministic plan for the same request, one line per day, for the AI to adapt. */
+    baseline?: string
     days_per_week: number
     focus: string
     preferences?: string
     priorities?: string[]
     equipment?: string
     experience?: string
+    /** The user's saved training limits. */
+    notes?: string
+    /** Revise mode: the current plan (one line per day) and what to change. */
+    revise?: boolean; current?: string; request?: string
   }) => call('generate_workout_plan', input, GeneratedPlan),
   physique: (input: {
     photos: PhysiquePhoto[]
@@ -180,6 +188,13 @@ export const ai = {
     priorities: string
     context?: unknown
     previous?: unknown
+    /** The user confirmed their own age is 18+ (checked again on the server against the saved age). */
+    age_confirmed?: boolean
   }) => call('physique_analysis', input, PhysiqueAnalysisSchema),
+  suggestSwap: (input: {
+    exercise: { name: string; muscle?: string; target?: string }
+    day?: string; others?: string[]; notes?: string; reason?: string
+    candidates: { id: string; name: string; equipment?: string }[]
+  }) => call('suggest_swap', input, SwapResponse),
   insights: (input: unknown) => call('insights', input, InsightsResponse).then(r => r.insights),
 }

@@ -299,6 +299,7 @@ private fun Heatmap(minutes: Map<String, Int>, today: String) {
     }
 }
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 private fun BackfillSheet(
     open: Boolean,
@@ -318,12 +319,29 @@ private fun BackfillSheet(
 
     Sheet(open = open, title = "Log a past workout", onClose = onClose) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            // A calendar, not free text: a typo like "2026-12026-11-16" once saved and crashed History and Progress.
+            var picking by remember { mutableStateOf(false) }
             Field(label = "Date") {
-                Input(
-                    value = date,
-                    onChange = { date = it },
-                    placeholder = "YYYY-MM-DD"
-                )
+                FButton(app.forge.fitness.logic.Calc.safeDate(date).format(java.time.format.DateTimeFormatter.ofPattern("EEE, d MMM yyyy")),
+                    Modifier.fillMaxWidth(), Variant.Quiet) { picking = true }
+            }
+            if (picking) {
+                val maxMillis = app.forge.fitness.logic.Calc.safeDate(maxDate).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+                val pickerState = androidx.compose.material3.rememberDatePickerState(
+                    initialSelectedDateMillis = app.forge.fitness.logic.Calc.safeDate(date).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli(),
+                    selectableDates = object : androidx.compose.material3.SelectableDates {
+                        override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis <= maxMillis
+                    })
+                androidx.compose.material3.DatePickerDialog(
+                    onDismissRequest = { picking = false },
+                    confirmButton = {
+                        androidx.compose.material3.TextButton(onClick = {
+                            pickerState.selectedDateMillis?.let { date = java.time.Instant.ofEpochMilli(it).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString() }
+                            picking = false
+                        }) { Text("OK", color = F.accent) }
+                    },
+                    dismissButton = { androidx.compose.material3.TextButton(onClick = { picking = false }) { Text("Cancel", color = F.mute) } },
+                ) { androidx.compose.material3.DatePicker(state = pickerState) }
             }
 
             Field(label = "Workout") {
@@ -365,7 +383,7 @@ private fun BackfillSheet(
 
             FButton(
                 text = "Open workout",
-                enabled = date.isNotBlank(),
+                enabled = app.forge.fitness.logic.Calc.isIsoDate(date) && date <= maxDate,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 onGo(date, dayId)

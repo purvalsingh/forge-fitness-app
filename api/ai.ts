@@ -2,26 +2,67 @@
 import { ensureCoverage } from './_lib/coverage.js'
 import { caller, json, preflight, readBody } from './_lib/http.js'
 import { decryptKeys } from './_lib/crypto.js'
-import { buildRequest, extractJson } from './_lib/prompts.js'
+import { buildRequest } from './_lib/prompts.js'
 import { postCheckFood, preCheckFoodText } from './_lib/guard.js'
 import { callGemini, Quota } from './_lib/gemini.js'
 
 /**
- * The only route that talks to Gemini. It uses the CALLER's own keys (2–5, decrypted per request,
- * never logged or returned), rotates through them on quota errors, rate-limits per user, and runs
- * every food answer through the plausibility guard before the app sees it.
+ * The only route that talks to Gemini. It uses the caller's own keys when they saved some (decrypted per request,
+ * never logged or returned), otherwise FORGE's shared pool. Rate limits are atomic in the database (ai_take).
+ * Photos live only in this request's memory: never stored, logged or uploaded anywhere but the one Gemini call.
+ * Every food answer goes through the plausibility guard before the app sees it.
  */
 export const OPTIONS = preflight
 export const maxDuration = 30
 
-const MODELS = (process.env.GEMINI_MODELS ?? 'gemini-3.6-flash,gemini-flash-latest,gemini-2.5-flash,gemini-flash-lite-latest,gemini-2.5-flash-lite')
+const MODELS = (process.env.GEMINI_MODELS ?? 'gemini-3-flash-preview,gemini-3.5-flash-lite,gemini-3.6-flash,gemini-3.1-flash-lite')
   .split(',').map(m => m.trim()).filter(Boolean)
 
 const TASKS = new Set(['parse_food_text', 'analyze_food_photo', 'target_advice', 'insights', 'physique_analysis',
-  'generate_workout_plan', 'coach_chat', 'training_review', 'coach_session'])
-const PER_MINUTE = 12
-const PER_DAY = 400
+  'generate_workout_plan', 'coach_chat', 'training_review', 'coach_session', 'suggest_swap'])
+/** FORGE's own key pool (Vercel env, comma-separated) for users who never added a key. Tighter per-user limits keep one user from draining it. */
+const SHARED_KEYS = (process.env.FORGE_SHARED_KEYS ?? '').split(',').map(k => k.trim()).filter(Boolean)
+/**
+ * The shared pool runs on Flash-Lite only. Measured 2026-11-21 on the free keys: 15 requests/minute and 500/day per key
+ * per Lite model. FORGE_SHARED_DAILY_CAP=1360 / FORGE_SHARED_HOURLY_CAP=227 come from scripts/simulate-shared-pool.mjs,
+ * which budgets on 3.5-flash-lite alone (3.1-flash-lite returns 503 on ~40 % of calls and is spare capacity). gemini-flash-lite-latest is an alias that shares
+ * 3.5-flash-lite's quota, so it is not listed twice.
+ */
+const SHARED_MODELS = (process.env.FORGE_SHARED_MODELS ?? 'gemini-3.5-flash-lite,gemini-3.1-flash-lite').split(',').map(m => m.trim()).filter(Boolean)
+/** Shared-pool requests across ALL users, per day and per rolling hour (0 = no cap). Per-user limits live in ai_take(). */
+const SHARED_DAILY_CAP = Math.max(0, Number(process.env.FORGE_SHARED_DAILY_CAP ?? 0) || 0)
+const SHARED_HOURLY_CAP = Math.max(0, Number(process.env.FORGE_SHARED_HOURLY_CAP ?? 0) || 0)
+const BUSY = 'FORGE\'s free AI is busy right now. Try again in a minute, or add your own free Gemini key in You → AI keys.'
 const FOOD_TASKS = new Set(['parse_food_text', 'analyze_food_photo'])
+const PHOTO_TASKS = new Set(['analyze_food_photo', 'physique_analysis'])
+
+/** Pre-0009 rate limit: count this user's recent rows, then record the request. Not atomic; replaced by ai_take(). */
+const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
+const MAX_IMAGE_B64 = 4_000_000 // ≈ 3 MB of image bytes
+const imageOk = (mime: unknown, data: unknown) =>
+  IMAGE_TYPES.has(String(mime ?? 'image/jpeg')) && typeof data === 'string' && data.length > 0 && data.length <= MAX_IMAGE_B64
+export function imagesOk(task: string, payload: any): boolean {
+  if (task === 'analyze_food_photo') return imageOk(payload?.mimeType, payload?.image)
+  if (task === 'physique_analysis') {
+    const photos: unknown[] = Array.isArray(payload?.photos) ? payload.photos : []
+    if (photos.length > 4) return false
+    const all = [...photos, ...(payload?.reference ? [payload.reference] : [])] as { mimeType?: unknown; data?: unknown }[]
+    return all.every(p => imageOk(p?.mimeType, p?.data))
+  }
+  return true
+}
+
+async function legacyTake(db: any, userId: string, task: string, shared: boolean) {
+  const now = Date.now()
+  const [{ count: m }, { count: d }] = await Promise.all([
+    db.from('ai_usage').select('id', { count: 'exact', head: true }).gte('created_at', new Date(now - 60_000).toISOString()),
+    db.from('ai_usage').select('id', { count: 'exact', head: true }).gte('created_at', new Date(now - 86_400_000).toISOString()),
+  ])
+  if ((m ?? 0) >= (shared ? 6 : 12)) return { ok: false, reason: 'minute', shared }
+  if ((d ?? 0) >= (shared ? 60 : 400)) return { ok: false, reason: 'day', shared }
+  await db.from('ai_usage').insert({ user_id: userId, task }).then(() => undefined, () => undefined)
+  return { ok: true, shared }
+}
 
 export async function POST(req: Request) {
   const who = await caller(req).catch(() => null)
@@ -41,43 +82,81 @@ export async function POST(req: Request) {
     if (!Array.isArray(msgs) || msgs.length === 0 || msgs.length > 20) return json(req, { error: 'bad_request' }, 400)
   }
 
-  // Rate limit (counted under RLS; the owner cannot delete these rows).
-  const now = Date.now()
-  // Rate-limit counts and the key row are fetched together: one database round trip instead of two.
-  const [{ count: lastMin }, { count: lastDay }, { data: row }] = await Promise.all([
-    who.db.from('ai_usage').select('id', { count: 'exact', head: true }).gte('created_at', new Date(now - 60_000).toISOString()),
-    who.db.from('ai_usage').select('id', { count: 'exact', head: true }).gte('created_at', new Date(now - 86_400_000).toISOString()),
-    who.db.from('user_ai_keys').select('ciphertext').maybeSingle(),
-  ])
-  if ((lastMin ?? 0) >= PER_MINUTE) return json(req, { error: 'rate_limited', message: 'Slow down — too many AI requests this minute.' }, 429)
-  if ((lastDay ?? 0) >= PER_DAY) return json(req, { error: 'rate_limited', message: 'Daily AI limit reached. It resets in 24 hours.' }, 429)
+  // Images only (no PDFs or other documents on FORGE's shared key), each at most ~3 MB of base64.
+  if (!imagesOk(task, body.payload)) return json(req, { error: 'bad_image', message: 'Send a JPEG, PNG or WebP photo under 3 MB.' }, 400)
 
-  if (!row?.ciphertext) return json(req, { error: 'no_keys', message: 'Add your Gemini API keys in Settings → AI keys.' }, 412)
-  let keys: string[]
-  try { keys = decryptKeys(who.userId, row.ciphertext) } catch {
-    return json(req, { error: 'no_keys', message: 'Your saved keys could not be read. Add them again in Settings → AI keys.' }, 412)
-  }
-
+  // Validate everything that needs no quota BEFORE ai_take records the request, so a bad payload or an under-18
+  // physique request never counts against the user's limits or the shared daily cap.
   const request = buildRequest(task, body.payload)
   if (!request) return json(req, { error: 'unknown_task' }, 400)
-  // The app's language: explanations and chat come back in it. Food and exercise names stay English so they match the catalog.
+  if (task === 'physique_analysis') {
+    // The profile age defaults to 25, so a number alone proves nothing: the app sends the user's own age confirmation
+    // (self-declared, like the age itself) and the saved age must be 18+.
+    if (body.payload?.age_confirmed !== true) return json(req, { error: 'age_unconfirmed', message: 'Confirm your age in the physique check-in first.' }, 403)
+    const { data: prof } = await who.db.from('profiles').select('age').maybeSingle()
+    const p = prof as { age?: unknown } | null
+    if (!(Number(p?.age) >= 18)) return json(req, { error: 'age_restricted', message: 'Physique check-ins are for people 18 and over.' }, 403)
+  }
+  // The language: explanations and chat come back in it. Food and exercise names stay English so they match the catalog.
   const LANG_NAME: Record<string, string> = { hi: 'Hindi', mr: 'Marathi' }
   const lang = LANG_NAME[String((body as { lang?: unknown }).lang ?? '')]
   const part = (request as any).contents?.[0]?.parts?.find((p: any) => typeof p.text === 'string')
   if (lang && !FOOD_TASKS.has(task) && part) part.text += `\n\nWrite every human-readable sentence in simple everyday ${lang} (Devanagari script). Keep food names, exercise names, units and numbers in English.`
-  // Logged alongside the Gemini call rather than before it, so it adds no wait.
-  const logged = who.db.from('ai_usage').insert({ user_id: who.userId, task }).then(() => undefined, () => undefined)
+
+  // One database round trip: the atomic rate limit (records this request, then checks; migration 0009) and the key row.
+  const [rpc, { data: row }] = await Promise.all([
+    who.db.rpc('ai_take', { p_task: task, p_global_cap: SHARED_DAILY_CAP, p_global_hour_cap: SHARED_HOURLY_CAP }),
+    who.db.from('user_ai_keys').select('ciphertext').maybeSingle(),
+  ])
+  // Until migration 0009 is applied ai_take() doesn't exist: fall back to per-user counting (no global cap).
+  const take = rpc.error && /ai_take|PGRST202|42883/.test(`${rpc.error.code} ${rpc.error.message}`)
+    ? { data: await legacyTake(who.db, who.userId, task, !row?.ciphertext), error: null }
+    : rpc
+  if (take.error || !take.data) return json(req, { error: 'ai_unavailable' }, 503)
+  const shared = take.data.shared === true
+  if (!take.data.ok) {
+    const reason = take.data.reason
+    if (reason === 'global') return json(req, { error: 'quota_exhausted', message: BUSY }, 429)
+    if (reason === 'minute') return json(req, { error: 'rate_limited', message: 'Slow down — too many AI requests this minute.' }, 429)
+    if (reason === 'hour') return json(req, { error: 'rate_limited', message: 'That\'s a lot of AI this hour. It frees up again within the hour.' }, 429)
+    return json(req, { error: 'rate_limited', message: shared ? 'Daily free AI limit reached. It resets in 24 hours, or add your own free Gemini key in You → AI keys for more.' : 'Daily AI limit reached. It resets in 24 hours.' }, 429)
+  }
+  // Body photos never go through FORGE's shared keys: those run on Google's free tier, where Google may use inputs
+  // to improve its products and people may review them. Physique analysis needs the user's own key.
+  if (task === 'physique_analysis' && shared) {
+    return json(req, { error: 'needs_own_key', message: 'Physique analysis needs your own free Gemini key (You → AI keys), so your body photos never go through FORGE\'s shared AI. Your roadmap below is calculated without AI.' }, 403)
+  }
+  let keys: string[] = SHARED_KEYS
+  if (!shared) {
+    try { keys = decryptKeys(who.userId, row?.ciphertext ?? '') } catch {
+      return json(req, { error: 'no_keys', message: 'Your saved keys could not be read. Add them again in You → AI keys.' }, 412)
+    }
+  }
+  if (!keys.length) return json(req, { error: 'no_keys', message: 'Add your Gemini API keys in You → AI keys.' }, 412)
 
   let result: any
   // Food (typed, spoken or photo) is recognition work: the lite model answers in a few seconds and is accurate enough,
   // with the full model as fallback. Everything else starts with the full model.
-  const order = FOOD_TASKS.has(task) ? [...MODELS.filter(m => m.includes('lite')), ...MODELS.filter(m => !m.includes('lite'))] : MODELS
+  // Free-tier Flash allows only 20 requests a day per project, Flash-Lite far more. The shared pool is Lite-only;
+  // users with their own keys get Lite first for food and full Flash first for plans, reviews and physique.
+  const order = shared ? SHARED_MODELS
+    : FOOD_TASKS.has(task) || task === 'suggest_swap' ? [...MODELS.filter(m => m.includes('lite')), ...MODELS.filter(m => !m.includes('lite'))] : MODELS
   const t0 = Date.now()
-  try { result = await callGemini(keys, request, order, undefined, undefined, FOOD_TASKS.has(task) ? 3 : 2); console.log(`[ai] ${task} done ${result === null ? 'no answer' : 'ok'} ${Date.now() - t0}ms, ${keys.length} keys`) } catch (e) {
-    if (e instanceof Quota) return json(req, { error: 'quota_exhausted', message: 'All your Gemini keys are out of free quota right now. Try later or add another key.' }, 429)
-    return json(req, { error: 'ai_unavailable' }, 503)
+  // Photos: no parallel burst, no hedge, and at most 2 sends in total (a second only after an error or quota).
+  // The shared pool starts one call at a time to save quota. Own keys keep the hedged race.
+  const photo = PHOTO_TASKS.has(task)
+  const burst = photo || shared ? 1 : FOOD_TASKS.has(task) ? 3 : 2
+  // Food text answers in ~1.2 s on Lite: a second call after 1.5 s cuts the slow tail.
+  const hedge = photo ? Infinity : FOOD_TASKS.has(task) ? 1_500 : undefined
+  let quota = false
+  // Google only: no second AI company ever sees a request. 22 s budget; the phone waits 28 s.
+  try { result = await callGemini(keys, request, order, undefined, hedge, burst, photo ? 2 : undefined) } catch (e) {
+    if (!(e instanceof Quota)) return json(req, { error: 'ai_unavailable' }, 503)
+    quota = true; result = null
   }
-  await logged // finished long before Gemini answers; awaited so the serverless instance doesn't drop it
+  console.log(`[ai] ${task} ${result === null ? 'no answer' : 'ok'} ${Date.now() - t0}ms ${shared ? 'shared' : 'own'}`)
+  if (result === null && quota) return json(req, { error: 'quota_exhausted', message: shared ? BUSY : 'All your Gemini keys are out of free quota right now. Try later or add another key.' }, 429)
+  if (result === null && shared) return json(req, { error: 'ai_busy', message: BUSY }, 429) // 429 so both apps show this message, not "too slow"
   if (result === null) return json(req, { error: 'ai_slow', message: 'The AI didn\'t answer in time. Try again, or log it manually.' }, 503)
 
   if (FOOD_TASKS.has(task)) {
@@ -89,10 +168,18 @@ export async function POST(req: Request) {
     const reply = String(result?.reply ?? '').slice(0, 2000)
     return json(req, { reply: reply || 'I can only help with training, nutrition and the FORGE app.', on_topic: result?.on_topic !== false })
   }
+  if (task === 'suggest_swap') {
+    // Only real library exercises from the candidate list, never one the model made up.
+    const ids = new Set((Array.isArray(body.payload?.candidates) ? body.payload.candidates : []).map((c: any) => String(c?.id)))
+    const swaps = (Array.isArray(result?.swaps) ? result.swaps : []).filter((x: any) => ids.has(String(x?.id)))
+      .slice(0, 3).map((x: any) => ({ id: String(x.id), reason: String(x.reason ?? '').slice(0, 300) }))
+    return json(req, { swaps })
+  }
   if (task === 'generate_workout_plan') {
     // Pure strength plans on 1-3 days stay lean on purpose; everything else must train every muscle.
     const lean = /strength|power/i.test(String(body.payload?.focus ?? '')) && Number(body.payload?.days_per_week) < 4
-    if (!lean) result = ensureCoverage(result)
+    // A revision does exactly what the user asked ("less abs"), so FORGE doesn't re-add muscles on top.
+    if (!lean && body.payload?.revise !== true) result = ensureCoverage(result)
   }
   return json(req, result)
 }

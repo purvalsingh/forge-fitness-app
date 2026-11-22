@@ -159,7 +159,7 @@ fun WorkoutScreen(s: Store, nav: NavController) {
 
                         Column(Modifier.weight(1f)) {
                             Text(
-                                ex.name ?: nameOf(ex.exercise_id),
+                                se?.name ?: ex.name ?: nameOf(ex.exercise_id), // a swap shows what was really done
                                 color = F.text,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold

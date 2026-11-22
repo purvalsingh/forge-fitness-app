@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ageConfirmed } from '../lib/privacy'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
@@ -80,7 +81,7 @@ export default function Goals() {
               </Field>
               <Field label="Age">
                 <DraftInput type="number" value={s.profile.age} ariaLabel="Age"
-                  onCommit={v => s.save('profiles', { ...s.profile!, age: Math.min(90, Math.max(13, Number(v) || s.profile!.age)) } as never)} />
+                  onCommit={v => { void s.save('profiles', { ...s.profile!, age: Math.min(100, Math.max(13, Number(v) || s.profile!.age)) } as never); ageConfirmed.mark() }} />
               </Field>
               <Field label="Sex">
                 <select value={s.profile.sex}

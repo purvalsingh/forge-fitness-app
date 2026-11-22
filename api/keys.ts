@@ -7,7 +7,7 @@ import { GEMINI_KEY_RE } from './_lib/guard.js'
  *   GET    -> { count, hints }            never returns a key
  *   POST   { keys: string[], mode?: 'add' } -> validates each with Google, encrypts, stores.
  *          mode 'add' merges the new keys into the saved ones (so adding a 3rd key never asks for the first two again);
- *          without it the list replaces what is saved. The saved total must end up 2–5.
+ *          without it the list replaces what is saved. The saved total must end up 1–5.
  *   DELETE ?hint=…abcd                   -> removes the one key with that hint (no hint: removes all)
  *   DELETE                               -> removes them
  */
@@ -45,6 +45,13 @@ export async function POST(req: Request) {
   const keys = [...existing, ...fresh]
   if (keys.length > 5) return json(req, { error: 'bad_count', message: `You can save up to 5 keys. You already have ${existing.length}; remove one first.` }, 400)
   if (keys.length < 1) return json(req, { error: 'bad_count', message: 'Add a Gemini API key.' }, 400)
+  // Each save checks keys with Google: cap it so FORGE can't be used as a free key-validity checker.
+  if (fresh.length) {
+    const { count } = await who.db.from('ai_usage').select('id', { count: 'exact', head: true })
+      .eq('task', 'save_keys').gte('created_at', new Date(Date.now() - 3_600_000).toISOString())
+    if ((count ?? 0) >= 10) return json(req, { error: 'rate_limited', message: 'Too many key checks this hour. Try again later.' }, 429)
+    await who.db.from('ai_usage').insert({ user_id: who.userId, task: 'save_keys' }).then(() => undefined, () => undefined)
+  }
   const malformed = fresh.findIndex(k => !GEMINI_KEY_RE.test(k))
   if (malformed >= 0) {
     return json(req, { error: 'malformed', index: malformed, message: `Key ${malformed + 1} doesn't look like a Gemini API key (Gemini keys start with "AIza" or "AQ.").` }, 400)

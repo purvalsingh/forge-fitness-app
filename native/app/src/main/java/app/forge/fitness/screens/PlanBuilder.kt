@@ -17,6 +17,7 @@ import app.forge.fitness.ui.Card
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -235,6 +236,8 @@ fun PlanBuilderScreen(s: Store, nav: NavController) {
                 11
             )
         }
+
+        RevisePlan(s, plan) { savePlan(it) }
 
         Tabs(
             value = day.id,
@@ -586,7 +589,7 @@ private fun NewPlanSheet(
             Templates.GenerateOptions(
                 focus = focus,
                 daysPerWeek = daysCount.coerceIn(3, 6), // built-in templates exist for 3–6 days; AI handles 2–7
-                emphasis = emptyList()
+                emphasis = listOf(preferences) // "bigger shoulders" adds volume for those muscles, with or without AI
             )
         )
     }
@@ -598,7 +601,7 @@ private fun NewPlanSheet(
                 s.save(Tables.plans, it.copy(active = false))
             }
         }
-        val ready = p.copy(active = replaceActive, source = source)
+        val ready = p.copy(active = replaceActive, source = source, brief = preferences.trim().take(1200).ifBlank { null })
         s.save(Tables.plans, ready)
         onCreated(ready.id)
     }
@@ -664,6 +667,10 @@ private fun NewPlanSheet(
                     }
                 }
             }
+
+            if (daysCount !in 3..6) Body("Built-in plans cover 3–6 days. AI builds a $daysCount-day plan; the preview below is the ${daysCount.coerceIn(3, 6)}-day plan.", F.mute, 12)
+
+            TrainingNotes(s)
 
             Field(
                 label = "Tell FORGE about you and your goal",
@@ -755,7 +762,8 @@ private fun NewPlanSheet(
                                     daysPerWeek = daysCount,
                                     preferences = aboutMe(state, preferences),
                                     equipment = equipment.ifBlank { null },
-                                    experience = experience
+                                    experience = experience,
+                                    notes = state.settings.training_notes,
                                 ),
                                 localMode = state.localMode
                             )
@@ -893,4 +901,74 @@ private fun aboutMe(st: app.forge.fitness.data.State, words: String): String? {
     )
     val about = if (facts.isEmpty()) "" else "About me: " + facts.joinToString(", ") + ".\n"
     return (about + words.trim()).ifBlank { null }
+}
+
+/** Your training limits, told once: every AI plan, revision and swap keeps to them. */
+@Composable
+fun TrainingNotes(s: Store) {
+    val st by s.state.collectAsStateWithLifecycle()
+    var v by remember(st.settings.training_notes) { mutableStateOf(st.settings.training_notes ?: "") }
+    Field("Your limits", "Told once, used for every plan, change and swap.") {
+        Input(v, { v = it }, placeholder = "e.g. no lunges: flat feet, knees cave in", singleLine = false,
+            modifier = Modifier.onFocusChanged { f: androidx.compose.ui.focus.FocusState -> if (!f.isFocused && v.trim() != (st.settings.training_notes ?: ""))
+                s.save(Tables.settings, st.settings.copy(training_notes = v.trim().take(1200).ifBlank { null })) })
+    }
+}
+
+/** "Ask FORGE to change this plan": AI rewrites the plan within your limits; nothing changes until you apply it. */
+@Composable
+private fun RevisePlan(s: Store, plan: WorkoutPlan, onApply: (WorkoutPlan) -> Unit) {
+    val st by s.state.collectAsStateWithLifecycle()
+    var request by remember(plan.id) { mutableStateOf("") }
+    var busy by remember { mutableStateOf(false) }
+    var err by remember { mutableStateOf<String?>(null) }
+    var draft by remember(plan.id) { mutableStateOf<Planner.Revision?>(null) }
+    val scope = rememberCoroutineScope()
+    val before = remember(plan) { plan.days.flatMap { d -> d.exercises.map { (it.name ?: "").lowercase() } }.toSet() }
+    Card {
+        Text("Ask FORGE to change this plan", color = F.text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(10.dp))
+        TrainingNotes(s)
+        Spacer(Modifier.height(8.dp))
+        Field("What should change?") {
+            Input(request, { request = it }, placeholder = "e.g. add more back work, less abs, shorter Day 3", singleLine = false)
+        }
+        Spacer(Modifier.height(8.dp))
+        FButton(if (busy) "Changing your plan…" else "Suggest changes", Modifier.fillMaxWidth(), enabled = !busy && request.trim().length >= 3) {
+            busy = true; err = null; draft = null
+            scope.launch {
+                try { draft = Planner.revisePlan(s.api, plan, request.trim(), st.settings.training_notes) }
+                catch (e: Exception) { err = e.message?.takeIf { it.isNotBlank() } ?: "Couldn't change the plan right now. Try again." }
+                busy = false
+            }
+        }
+        err?.let { Spacer(Modifier.height(8.dp)); Notice(it, Tone.Error) }
+        draft?.let { r ->
+            Spacer(Modifier.height(10.dp))
+            Body(r.rationale, F.dim, 13)
+            r.plan.days.forEach { d ->
+                Spacer(Modifier.height(8.dp))
+                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(F.raised).padding(12.dp)) {
+                    Text(d.name, color = F.text, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.height(4.dp))
+                    Text(androidx.compose.ui.text.buildAnnotatedString {
+                        d.exercises.forEachIndexed { i, e ->
+                            if (i > 0) append(", ")
+                            val isNew = (e.name ?: "").lowercase() !in before
+                            if (isNew) pushStyle(androidx.compose.ui.text.SpanStyle(color = F.accent, fontWeight = FontWeight.SemiBold))
+                            append("${e.name} ${e.sets}×${e.reps}")
+                            if (isNew) pop()
+                        }
+                    }, color = F.dim, fontSize = 12.sp)
+                }
+            }
+            Spacer(Modifier.height(10.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FButton("Apply changes", Modifier.weight(1f)) { onApply(r.plan); draft = null; request = "" }
+                FButton("Discard", Modifier.weight(1f), Variant.Ghost) { draft = null }
+            }
+            Spacer(Modifier.height(6.dp))
+            Body("New exercises are highlighted. Your workout history is never changed.", F.mute, 11)
+        }
+    }
 }

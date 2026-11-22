@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { uid } from '../lib/db'
 import { Button, Card, DraftInput, Field, Icon, Notice, Screen, Sheet, Spinner, Tabs } from '../ui'
-import { requestPlan } from '../lib/planner'
-import { ai } from '../lib/ai'
+import { requestPlan, revisePlan } from '../lib/planner'
+import { ai, AIUnavailable } from '../lib/ai'
 import { nameOf } from './Workout'
 import { SEED_PLAN } from '../lib/seed'
 import { FOCUS_LABELS, FREQUENCIES, generatePlan } from '../lib/templates'
@@ -86,6 +86,8 @@ export default function PlanBuilder() {
           Changing or replacing a plan never touches your workout history — past sessions are stored separately.
         </p>
       </Card>
+
+      <RevisePlan key={plan.id} plan={plan} onApply={savePlan} />
 
       <div className="mt-3">
         <Tabs value={day.id} onChange={setDayId} options={plan.days.map((d, i) => ({ value: d.id, label: `Day ${i + 1}` }))} />
@@ -250,7 +252,7 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
 
   async function activate(plan: WorkoutPlan, source: 'ai' | 'template') {
     if (replace) for (const p of s.plans.filter(p => p.active)) await s.save('workout_plans', { ...p, active: false } as never)
-    await s.save('workout_plans', { ...plan, active: replace, source } as never)
+    await s.save('workout_plans', { ...plan, active: replace, source, brief: preferences.trim().slice(0, 1200) || undefined } as never)
     onCreated?.(plan.id)
     onClose()
   }
@@ -284,6 +286,8 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
           </div>
         </div>
 
+        <TrainingNotes />
+
         <Field label="What do you want from this plan?"
           hint="Example: bigger shoulders and wider back, keep bench heavy, no barbell squats — my knee dislikes them.">
           <textarea rows={3} value={preferences} onChange={e => { setPreferences(e.target.value); setProposal(null) }} />
@@ -305,7 +309,7 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
         {busy ? <Spinner label="Designing your plan" /> : (
           <Button disabled={!ai.configured} onClick={async () => {
             setBusy(true); setNote(null)
-            const r = await requestPlan({ focus, daysPerWeek: days, preferences, equipment, experience })
+            const r = await requestPlan({ focus, daysPerWeek: days, preferences, equipment, experience, notes: s.settings.training_notes })
             setProposal(r.plan); setRationale(r.rationale ?? null)
             setAiUsed(r.source === 'ai'); setNote(r.fallbackReason ?? null)
             setBusy(false)
@@ -367,5 +371,62 @@ function NewPlanSheet({ open, onClose, onCreated }: { open: boolean; onClose: ()
         }}>Start from an empty plan</Button>
       </div>
     </Sheet>
+  )
+}
+
+/** Your training limits, told once: every AI plan, revision and swap keeps to them. */
+export function TrainingNotes() {
+  const s = useStore()
+  return (
+    <Field label="Your limits" hint="Told once, used for every plan, change and swap.">
+      <DraftInput value={s.settings.training_notes ?? ''} ariaLabel="Your training limits" placeholder="e.g. no lunges: flat feet, knees cave in"
+        onCommit={v => s.save('settings', { ...s.settings, training_notes: v.trim().slice(0, 1200) || null } as never)} />
+    </Field>
+  )
+}
+
+/** "Ask FORGE to change this plan": AI rewrites the plan within your limits; nothing changes until you apply it. */
+function RevisePlan({ plan, onApply }: { plan: WorkoutPlan; onApply: (p: WorkoutPlan) => void }) {
+  const s = useStore()
+  const [request, setRequest] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const [draft, setDraft] = useState<{ plan: WorkoutPlan; rationale: string } | null>(null)
+  const before = new Set(plan.days.flatMap(d => d.exercises.map(e => (e.name ?? '').toLowerCase())))
+  return (
+    <Card className="mt-3">
+      <div className="text-[15px] font-semibold">Ask FORGE to change this plan</div>
+      <div className="mt-3 grid gap-2">
+        <TrainingNotes />
+        <Field label="What should change?">
+          <textarea rows={2} value={request} onChange={e => setRequest(e.target.value)} placeholder="e.g. add more back work, less abs, shorter Day 3" />
+        </Field>
+        <Button disabled={busy || request.trim().length < 3} onClick={async () => {
+          setBusy(true); setErr(null); setDraft(null)
+          try { setDraft(await revisePlan(plan, request.trim(), s.settings.training_notes)) }
+          catch (e) { setErr(e instanceof AIUnavailable ? e.message : "Couldn't change the plan right now. Try again.") }
+          setBusy(false)
+        }}>{busy ? 'Changing your plan…' : 'Suggest changes'}</Button>
+        {err && <Notice tone="error">{err}</Notice>}
+        {draft && (
+          <div className="grid gap-2">
+            <p className="text-[13px] leading-snug" style={{ color: 'var(--text-dim)' }}>{draft.rationale}</p>
+            {draft.plan.days.map(d => (
+              <div key={d.id} className="raised p-3">
+                <div className="text-[13px] font-semibold">{d.name}</div>
+                <div className="mt-1 text-[12px] leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+                  {d.exercises.map((e, i) => <span key={e.id}>{i ? ', ' : ''}<span style={before.has((e.name ?? '').toLowerCase()) ? undefined : { color: 'var(--accent)', fontWeight: 600 }}>{e.name} {e.sets}×{e.reps}</span></span>)}
+                </div>
+              </div>
+            ))}
+            <div className="grid grid-cols-2 gap-2">
+              <Button onClick={() => { onApply(draft.plan); setDraft(null); setRequest('') }}>Apply changes</Button>
+              <Button variant="ghost" onClick={() => setDraft(null)}>Discard</Button>
+            </div>
+            <p className="text-[11px]" style={{ color: 'var(--text-mute)' }}>New exercises are highlighted. Your workout history is never changed.</p>
+          </div>
+        )}
+      </div>
+    </Card>
   )
 }

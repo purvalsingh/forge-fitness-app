@@ -107,7 +107,13 @@ class Store(app: Application) : AndroidViewModel(app) {
         return rows
     }
 
-    private suspend fun <T : Row> putRemote(t: Table<T>, rows: List<T>) {
+    /** New food logs get created_at = now: the streak's back-fill rule needs it, and the column is NOT NULL (we write nulls explicitly). */
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Row> stamp(row: T): T =
+        if (row is FoodLog && row.created_at == null) row.copy(created_at = java.time.Instant.now().toString()) as T else row
+
+    private suspend fun <T : Row> putRemote(t: Table<T>, input: List<T>) {
+        val rows = input.map { stamp(it) }
         if (localMode) { val m = readLocal(t).associateBy { it.id }.toMutableMap(); rows.forEach { m[it.id] = it }; writeLocal(t, m.values.toList()); return }
         rows.forEach { api.upsert(t.name, jsonWrite.encodeToJsonElement(t.ser, it).jsonObject) }
     }
@@ -171,7 +177,8 @@ class Store(app: Application) : AndroidViewModel(app) {
     private suspend fun <T : Row> load(s: State, t: Table<T>) = t.set(s, fetch(t))
     private suspend fun <T : Row> loader(t: Table<T>): (State) -> State { val rows = fetch(t); return { st -> t.set(st, rows) } }
 
-    fun <T : Row> save(t: Table<T>, row: T) {
+    fun <T : Row> save(t: Table<T>, input: T) {
+        val row = stamp(input)
         _state.update { s -> t.set(s, t.get(s).filter { it.id != row.id } + row) }
         cache(t)
         viewModelScope.launch {
@@ -214,6 +221,7 @@ class Store(app: Application) : AndroidViewModel(app) {
         _pending.value = 0
         // Private physique photos, the step baseline and day picks belong to the previous person, not the next one.
         java.io.File(getApplication<Application>().filesDir, "photos").deleteRecursively()
+        java.io.File(getApplication<Application>().cacheDir, "food_photos").deleteRecursively() // meal photos too
         getApplication<Application>().getSharedPreferences("forge_steps", Context.MODE_PRIVATE).edit().clear().apply()
         prefs.edit().apply { prefs.all.keys.filter { it.startsWith("pick:") }.forEach(::remove) }.remove("owner").apply()
         dayPicks.value = emptyMap(); Calc.dayPicks = emptyMap()
@@ -296,6 +304,15 @@ class Store(app: Application) : AndroidViewModel(app) {
     /** True once the user has picked an effort scale themselves; until then RPE is on by default. */
     val rpeChosen get() = prefs.getBoolean("rpe_chosen", false)
     fun markRpeChosen() = prefs.edit().putBoolean("rpe_chosen", true).apply()
+
+    /** Days covered by a completed streak repair, plus "yyyy-MM#used" markers (one repair a month), per device. */
+    fun streakRepairs(): Set<String> = prefs.getStringSet("streak_repairs", emptySet()) ?: emptySet()
+    fun addStreakRepair(days: List<String>, today: String) =
+        prefs.edit().putStringSet("streak_repairs", streakRepairs() + days + "${today.take(7)}#used").apply()
+
+    /** Small per-device flags: one-time notices, "don't ask again" choices. */
+    fun flag(key: String) = prefs.getBoolean(key, false)
+    fun setFlag(key: String, on: Boolean = true) = prefs.edit().putBoolean(key, on).apply()
 
     // ---------- powerlifting wave settings per plan (device setting) ----------
     fun waveStart(planId: String): String = prefs.getString("wave_start:$planId", null) ?: Calc.today().also { setWaveStart(planId, it) }

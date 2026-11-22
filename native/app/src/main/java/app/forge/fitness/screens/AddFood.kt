@@ -90,14 +90,14 @@ fun LogTarget(
         val isOther = value.date != t && value.date != y
         Tabs(
             value = if (isOther) "other" else value.date,
-            options = listOf(t to "Today", y to "Yesterday", "other" to if (isOther) LocalDate.parse(value.date).format(java.time.format.DateTimeFormatter.ofPattern("d MMM")) else "Pick a day"),
+            options = listOf(t to "Today", y to "Yesterday", "other" to if (isOther) app.forge.fitness.logic.Calc.safeDate(value.date).format(java.time.format.DateTimeFormatter.ofPattern("d MMM")) else "Pick a day"),
             onChange = { if (it == "other") showDatePicker = true else onChange(value.copy(date = it)) }
         )
     }
 
     if (showDatePicker) {
         val initialMillis = runCatching {
-            LocalDate.parse(value.date).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            app.forge.fitness.logic.Calc.safeDate(value.date).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         }.getOrNull() ?: System.currentTimeMillis()
 
         val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillis)
@@ -147,7 +147,7 @@ fun AddFoodSheet(
             value = currentTab,
             options = listOf(
                 Triple("search", "Search", Icons.Filled.Search),
-                Triple("describe", "Speak", Icons.Filled.Mic),
+                Triple("describe", "Type or say", Icons.Filled.Mic),
                 Triple("barcode", "Barcode", Icons.Filled.QrCodeScanner),
                 Triple("recipes", "Meals", Icons.Filled.AutoAwesome),
                 Triple("custom", "Custom", Icons.Filled.Edit)
@@ -206,7 +206,9 @@ private suspend fun logFood(
 fun PortionPicker(
     food: Food,
     onAdd: suspend (grams: Double, label: String?) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    /** When given, a home-cooked dish gets the oil/ghee question and its line is logged here. */
+    oilTarget: Triple<Store, String, String>? = null,
 ) {
     val g = food.serving_g
     val label = food.serving_label ?: "1 serving"
@@ -313,6 +315,9 @@ fun PortionPicker(
 
         MacroRow(n = n)
 
+        val oil = oilTarget?.let { (st, _, _) -> rememberOilStep(st, listOf(OilFood(food.name, if (food.unit == "100g" || food.unit == "100ml") food.fat_g else null))) }
+        oil?.let { OilQuestion(it) }
+
         val isValid = totalGrams > 0.0 && totalGrams <= 5000.0
         FButton(
             text = if (busy) "Adding…" else "Add to meal",
@@ -323,6 +328,7 @@ fun PortionPicker(
                 scope.launch {
                     try {
                         val lbl = if (mode == "serving" && g != null && g > 0) labelFor(servings) else null
+                        oilTarget?.let { (_, date, meal) -> oil?.save(date, meal) }
                         onAdd(Calc.round1(totalGrams), lbl)
                     } finally {
                         busy = false
@@ -372,13 +378,13 @@ fun ReviewItems(
     var target by remember { mutableStateOf(LogTargetValue(date, mealTypeId)) }
     val scope = rememberCoroutineScope()
 
-    // Oil, ghee and tadka are the biggest blind spot in Indian food logging: ask once per meal.
-    var oilG by remember { mutableStateOf(0) }
-    val oilKcal = oilG * 9.0
-    val totalKcal = oilKcal + rows.sumOf { (it.customKcal ?: (it.item.calories * it.factor)) }
+    // Oil, ghee and tadka are the biggest blind spot in Indian food logging: ask once per meal (OilStep.kt).
+    val oil = rememberOilStep(s, rows.map { r -> OilFood(r.customName ?: r.item.name, r.item.grams?.takeIf { it > 0 }?.let { r.item.fatG / it * 100 }) })
+    val oilLine = oil.line
+    val totalKcal = (oilLine?.calories ?: 0.0) + rows.sumOf { (it.customKcal ?: (it.item.calories * it.factor)) }
     val totalP = rows.sumOf { (it.customP ?: (it.item.proteinG * it.factor)) }
     val totalC = rows.sumOf { (it.customC ?: (it.item.carbsG * it.factor)) }
-    val totalF = oilG + rows.sumOf { (it.customF ?: (it.item.fatG * it.factor)) }
+    val totalF = (oilLine?.grams ?: 0.0) + rows.sumOf { (it.customF ?: (it.item.fatG * it.factor)) }
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(
@@ -387,7 +393,7 @@ fun ReviewItems(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("We found ${rows.size} item${if (rows.size == 1) "" else "s"}", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = F.text)
-            Chip(text = "AI estimate", selected = true, onClick = {})
+            Chip(text = if (rows.all { it.item.confidence == null && it.item.matched != null }) "FORGE database" else "AI estimate", selected = true, onClick = {})
         }
 
         if (rejected.isNotEmpty()) {
@@ -395,11 +401,9 @@ fun ReviewItems(
         }
         Notice("Portions are estimated — adjust with − / + before logging.", tone = Tone.Warn)
 
+        // No inner scroll box: the sheet scrolls, so the Total row never sits on top of a clipped item card.
         Column(
-            Modifier
-                .fillMaxWidth()
-                .heightIn(max = 340.dp)
-                .verticalScroll(rememberScrollState()),
+            Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             rows.forEachIndexed { i, r ->
@@ -561,18 +565,12 @@ fun ReviewItems(
             }
         }
 
-        Text("Extra oil or ghee?", color = F.text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
-        Body("Tadka, ghee on roti, fried or oily dishes. It's easy to miss.", F.mute, 12)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf(0 to "None", 5 to "1 tsp", 15 to "1 tbsp", 30 to "2 tbsp").forEach { (g, l) ->
-                Chip(l, oilG == g, Modifier.weight(1f)) { oilG = g }
-            }
-        }
+        OilQuestion(oil)
 
         LogTarget(value = target, s = s, onChange = { target = it })
 
         FButton(
-            text = if (busy) "Saving…" else "Log ${rows.size} item${if (rows.size == 1) "" else "s"}",
+            text = if (busy) "Saving…" else "Log ${rows.size} item${if (rows.size == 1) "" else "s"}${oilLine?.let { " + " + it.name.lowercase() } ?: ""}",
             modifier = Modifier.fillMaxWidth(),
             enabled = !busy && rows.isNotEmpty(),
             onClick = {
@@ -607,10 +605,7 @@ fun ReviewItems(
                                 )
                             )
                         }
-                        if (oilG > 0) s.save(Tables.foodLogs, FoodLog(id = uid(), date = target.date, meal_type_id = target.mealTypeId,
-                            name = "Cooking oil / ghee", qty = oilG.toDouble(), unit = "g", source = source,
-                            serving_label = when (oilG) { 5 -> "1 tsp"; 15 -> "1 tbsp"; else -> "2 tbsp" },
-                            calories = oilKcal, protein_g = 0.0, carbs_g = 0.0, fat_g = oilG.toDouble()))
+                        oil.save(target.date, target.mealTypeId)
                         onDone()
                     } finally {
                         busy = false
@@ -685,6 +680,7 @@ private fun SearchTab(
         PortionPicker(
             food = pickedFood!!,
             onBack = { pickedFood = null },
+            oilTarget = Triple(s, target.date, target.mealTypeId),
             onAdd = { grams, label ->
                 logFood(s, pickedFood!!, grams, target.date, target.mealTypeId, "search", label)
                 onDone()
@@ -742,7 +738,7 @@ private fun SearchTab(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             if (catalog != null && q.isNotBlank() && results.isEmpty()) {
-                Text("No matches. Try “AI describe”, or add it under “Custom”.", fontSize = 13.sp, color = F.mute)
+                Text("No matches. Try “Type or say”, or add it under “Custom”.", fontSize = 13.sp, color = F.mute)
             }
             results.forEach { f ->
                 FoodRowItem(food = f, onPick = { pickedFood = it })
@@ -801,29 +797,51 @@ private fun DescribeTab(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
+    // Instant and offline: what the local Hinglish parser understands, refreshed shortly after typing stops.
+    var cat by remember { mutableStateOf<List<Catalog.CatalogFood>?>(null) }
+    LaunchedEffect(Unit) { cat = runCatching { Catalog.loadCatalog(context) }.getOrNull() }
+    val hinglish = remember { app.forge.fitness.logic.Hinglish(app.forge.fitness.logic.Portions.get(context)) }
+    var local by remember { mutableStateOf<app.forge.fitness.logic.Hinglish.Result?>(null) }
+    LaunchedEffect(text, cat) {
+        val c = cat
+        if (c == null || text.trim().length < 2) { local = null; return@LaunchedEffect }
+        kotlinx.coroutines.delay(250)
+        local = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { hinglish.parse(c, text) }
+    }
+    var usedAi by remember { mutableStateOf(false) }
+
     fun analyse() {
         if (text.trim().length < 2 || busy) return
         busy = true; err = null
         scope.launch {
             try {
-                val cat = runCatching { Catalog.loadCatalog(context) }.getOrNull()
+                val c = cat ?: runCatching { Catalog.loadCatalog(context) }.getOrNull()
+                val found = if (c != null) kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { hinglish.parse(c, text) }
+                    else app.forge.fitness.logic.Hinglish.Result(emptyList(), listOf(text))
+                fun why(t: String) = if (t in found.tooLarge) "that amount looks too large, check it" else if (s.localMode) "not recognised offline" else "the AI could not read it just now"
+                // Every phrase matched exactly: no AI, no wait.
+                if (found.unmatched.isEmpty() && found.partial.isEmpty() && found.items.isNotEmpty()) { usedAi = false; items = found.items; rejected = emptyList(); return@launch }
                 if (s.localMode) {
-                    // No AI without an account: match the words against the bundled catalog instead.
-                    val local = if (cat != null) app.forge.fitness.logic.VoiceMeal.localParse(cat, text) else emptyList()
-                    if (local.isEmpty()) err = "Couldn't match those foods. Try simpler names, or use Search." else items = local
+                    if (found.items.isEmpty()) err = "Couldn't match those foods. Try simpler names, or use Search."
+                    else { usedAi = false; items = found.items; rejected = found.unmatched.map { Ai.RejectedItem(it, why(it)) } }
                     return@launch
                 }
-                val out = Ai.parseFoodText(s.api, text)
-                if (out.items.isEmpty()) err = "No foods recognised. Name the foods, or use Search."
-                else {
-                    items = out.items.map { rawItem ->
-                        val g = Catalog.Grounded(name = rawItem.name, qty = rawItem.qty, unit = rawItem.unit, grams = rawItem.grams,
-                            servingLabel = rawItem.servingLabel, calories = rawItem.calories, proteinG = rawItem.proteinG,
-                            carbsG = rawItem.carbsG, fatG = rawItem.fatG, confidence = rawItem.confidence, matched = null)
-                        if (cat != null) Catalog.groundItem(cat, g) else g
-                    }
-                    rejected = out.rejected ?: emptyList()
+                // Anything unclear: the AI reads the WHOLE meal, because words like "with butter a lot" or "restaurant style"
+                // change the other items. Its answer is then grounded to the catalog.
+                val out = try { Ai.parseFoodText(s.api, text) } catch (e: Exception) {
+                    // Say WHY the AI failed (offline, slow, quota, signed out...) instead of hiding it behind the offline guess.
+                    val reason = (e as? app.forge.fitness.data.ApiError)?.message ?: "the AI could not be reached (${e.javaClass.simpleName})."
+                    if (found.items.isNotEmpty()) { usedAi = false; items = found.items; rejected = listOf(Ai.RejectedItem("AI", "$reason Showing the offline guess.")) + found.unmatched.map { Ai.RejectedItem(it, why(it)) }; return@launch }
+                    throw e
                 }
+                val got = out.items.map { rawItem ->
+                    val g = Catalog.Grounded(name = rawItem.name, qty = rawItem.qty, unit = rawItem.unit, grams = rawItem.grams,
+                        servingLabel = rawItem.servingLabel, calories = rawItem.calories, proteinG = rawItem.proteinG,
+                        carbsG = rawItem.carbsG, fatG = rawItem.fatG, confidence = rawItem.confidence, matched = null)
+                    if (c != null) Catalog.groundItem(c, g) else g
+                }
+                if (got.isEmpty()) err = "No foods recognised. Name the foods, or use Search."
+                else { usedAi = true; items = got; rejected = out.rejected ?: emptyList() }
             } catch (e: Exception) {
                 err = e.message ?: "Could not analyse that. Enter it manually."
             } finally { busy = false }
@@ -836,7 +854,7 @@ private fun DescribeTab(
             rejected = rejected,
             date = target.date,
             mealTypeId = target.mealTypeId,
-            source = if (s.localMode) "manual" else "ai_text",
+            source = if (usedAi) "ai_text" else "search",
             s = s,
             onCancel = { items = null },
             onDone = onDone
@@ -847,7 +865,7 @@ private fun DescribeTab(
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Field(
             label = "What did you eat?",
-            hint = "Say it like you'd tell a friend: “2 roti, dal tadka and a vada pav”. No quantity = one normal serving."
+            hint = "Type it like you'd say it: “2 roti, 1 katori dal, thoda ghee, chai”. No quantity = one normal serving."
         ) {
             OutlinedTextField(
                 value = text,
@@ -855,7 +873,7 @@ private fun DescribeTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(96.dp),
-                placeholder = { Text("2 roti, 1 katori dal tadka, 1 vada pav", color = F.mute) },
+                placeholder = { Text("2 roti, 1 katori dal, thoda ghee, chai", color = F.mute) },
                 shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = F.accent,
@@ -868,21 +886,47 @@ private fun DescribeTab(
             )
         }
 
-        // Speak instead of typing: Android's own speech recogniser (Indian English; Hindi words like "do roti" work too).
+        // Live preview of what was understood without AI; leftover words are listed so the user knows what goes to the AI.
+        local?.let { r ->
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                r.items.forEach { i ->
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("${i.name} · ${i.servingLabel ?: ""}", fontFamily = Mono, fontSize = 12.sp, color = F.text, maxLines = 1, modifier = Modifier.weight(1f))
+                        Text("${i.calories.toInt()} kcal", fontFamily = Mono, fontSize = 12.sp, color = F.text)
+                    }
+                }
+                if (r.unmatched.isNotEmpty() || r.partial.isNotEmpty()) Body(
+                    if (s.localMode) "Not found offline: ${r.unmatched.joinToString(", ")}"
+                    else "Unclear: ${(r.unmatched + r.partial).joinToString(", ")}. The AI will read the whole meal.", F.mute, 12)
+            }
+        }
+
+        // Speak instead of typing: Android's own speech recogniser. Indian English is the default (it handles
+        // Hinglish like "do roti"); in the Hindi/Marathi app a Hindi option is offered too.
+        var hindiVoice by remember { mutableStateOf(false) }
+        var voiceSeen by remember { mutableStateOf(s.flag(app.forge.fitness.logic.Privacy.VOICE_SEEN)) }
         val speak = androidx.activity.compose.rememberLauncherForActivityResult(
             androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()) { r ->
             val said = r.data?.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
-            if (!said.isNullOrBlank()) { text = said; analyse() }
+            if (!said.isNullOrBlank()) text = if (text.isBlank()) said else "${text.trim()}, $said"
+        }
+        if (app.forge.fitness.ui.I18n.lang == "hi" || app.forge.fitness.ui.I18n.lang == "mr") {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Chip("Voice: Hinglish", !hindiVoice, Modifier.weight(1f)) { hindiVoice = false }
+                Chip("Voice: हिन्दी", hindiVoice, Modifier.weight(1f)) { hindiVoice = true }
+            }
         }
         FButton("Speak your meal", Modifier.fillMaxWidth(), Variant.Quiet) {
+            s.setFlag(app.forge.fitness.logic.Privacy.VOICE_SEEN); voiceSeen = true
             val i = android.content.Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
                 .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL, android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE, when (app.forge.fitness.ui.I18n.lang) { "hi" -> "hi-IN"; "mr" -> "mr-IN"; else -> "en-IN" })
-                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, "Say what you ate, e.g. \"2 roti and dal tadka\"")
+                .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE, if (hindiVoice) "hi-IN" else "en-IN")
+                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, "Say what you ate, e.g. \"do roti aur ek katori dal\"")
             try { speak.launch(i) } catch (e: android.content.ActivityNotFoundException) {
                 err = "This phone has no speech recogniser. Install or enable the Google app, or type instead."
             }
         }
+        if (!voiceSeen) Body(app.forge.fitness.logic.Privacy.VOICE, F.mute, 12)
 
         if (s.state.collectAsStateWithLifecycle().value.localMode) {
             Notice("No account, so FORGE matches words to its food list without AI. Check amounts before saving.", tone = Tone.Info)
@@ -896,7 +940,7 @@ private fun DescribeTab(
             Spinner("Reading your meal")
         } else {
             FButton(
-                text = if (s.localMode) "Find these foods" else "Analyse with AI",
+                text = if (local?.let { it.unmatched.isEmpty() && it.partial.isEmpty() && it.items.isNotEmpty() } == true || s.localMode) "Review and log" else "Analyse",
                 modifier = Modifier.fillMaxWidth(),
                 enabled = text.trim().length >= 2 && !busy,
                 onClick = { analyse() }
@@ -1040,7 +1084,7 @@ private fun RecipeTab(
                     scope.launch {
                         try {
                             yesterdayLogs.forEach { l ->
-                                s.save(Tables.foodLogs, l.copy(id = uid(), date = target.date, source = "copy"))
+                                s.save(Tables.foodLogs, l.copy(id = uid(), date = target.date, source = "copy", created_at = null))
                             }
                             onDone()
                         } finally {

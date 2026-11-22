@@ -1,4 +1,5 @@
 import { forgetDevice } from '../lib/db'
+import { PHOTO_PRIVACY } from '../lib/privacy'
 import { LANGS, currentLang, setLang } from '../lib/i18n'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -44,7 +45,7 @@ function ConnectionStatus() {
         {state ? state.label : 'FORGE tries this site first and moves to a backup host if one stops answering.'}
       </div>
       {state && <div className="eyebrow">Checked {state.detail}</div>}
-      <Button variant="quiet" disabled={busy} onClick={probe}>{busy ? 'Checking…' : 'Check backends'}</Button>
+      <Button variant="quiet" disabled={busy} onClick={probe}>{busy ? 'Checking…' : 'Test connection'}</Button>
     </div>
   )
 }
@@ -75,7 +76,7 @@ export default function SettingsScreen() {
               onCommit={v => s.profile && s.save('profiles', { ...s.profile, display_name: v } as never)} />
           </Field>
           <div className="mt-2">
-            <Field label="Gender" hint="Sets your calorie math and muscle map body.">
+            <Field label="Sex" hint="Used for your calorie maths and the body on your muscle map.">
               <div className="grid grid-cols-2 gap-2">
                 {(['male', 'female'] as const).map(g => (
                   <button key={g} className="chip press !min-h-[44px] justify-center" aria-pressed={s.profile?.sex === g}
@@ -294,7 +295,7 @@ export default function SettingsScreen() {
             {!isNative && <a href="https://forgefit-india.vercel.app/#download"
               className="grid min-h-[48px] place-items-center rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em]"
               style={{ background: 'var(--accent-strong)', color: 'var(--accent-ink)', borderColor: 'transparent' }}>
-              Download the Android / iPhone app
+              Download the Android app
             </a>}
             <a href="https://forgefit-india.vercel.app/#install"
               className="grid min-h-[48px] place-items-center rounded-xl border px-4 text-[12px] font-bold uppercase tracking-[0.16em]"
@@ -305,8 +306,16 @@ export default function SettingsScreen() {
         </Card>
 
         <Card>
-          <div className="eyebrow mb-2">Connection</div>
+          <div className="eyebrow mb-2">Troubleshooting</div>
           <ConnectionStatus />
+        </Card>
+
+        <Card>
+          <div className="eyebrow mb-2">Privacy</div>
+          <p className="text-[13px] leading-snug" style={{ color: 'var(--text-dim)' }}>{PHOTO_PRIVACY}</p>
+          <p className="mt-2 text-[13px] leading-snug" style={{ color: 'var(--text-dim)' }}>
+            Physique check-in photos stay on this device and ask for your consent each time they are analysed.
+          </p>
         </Card>
 
         <Card>
@@ -314,7 +323,7 @@ export default function SettingsScreen() {
           {supabaseConfigured ? (
             <Button variant="danger" onClick={async () => {
               localStorage.removeItem('forge:demo')
-              forgetDevice()
+              await forgetDevice()
               await supabase?.auth.signOut()
               location.reload()
             }}>Sign out</Button>
@@ -344,7 +353,7 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
   )
 }
 
-/** Permanently deletes the account and every row it owns (the database cascades). Two taps, so it can't happen by accident. */
+/** Schedules deletion of the account and every row it owns, after 15 days (sign in before then to restore). Two taps. */
 function DeleteAccount() {
   const [armed, setArmed] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -352,14 +361,14 @@ function DeleteAccount() {
     <div className="mt-4 border-t pt-4" style={{ borderColor: 'var(--line)' }}>
       <div className="text-[15px] font-semibold">Delete my account</div>
       <p className="mt-1 text-[12px] leading-snug" style={{ color: 'var(--text-mute)' }}>
-        Permanently deletes your account and all your data: meals, workouts, weight, plans and saved keys. This can't be undone.
+        Deletes your account and all your data: meals, workouts, weight, plans and saved keys. You have 15 days to change your mind: sign in again to restore it. After that it can't be undone.
       </p>
       <div className="mt-3">
         <Button variant={armed ? 'danger' : 'ghost'} onClick={async () => {
           if (!armed) { setArmed(true); return }
           const { error } = await supabase!.rpc('delete_my_account')
           if (error) { setErr("Couldn't delete your account right now. Try again later."); setArmed(false); return }
-          forgetDevice(); localStorage.clear(); await supabase!.auth.signOut(); location.reload()
+          await forgetDevice(); localStorage.clear(); await supabase!.auth.signOut(); location.reload()
         }}>{armed ? 'Yes, delete everything' : 'Delete my account'}</Button>
       </div>
       {err && <div className="mt-2"><Notice tone="error">{err}</Notice></div>}

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { supabaseConfigured } from '../lib/supabase'
+import { localMode } from '../lib/db'
 import { Card, Icon, Screen } from '../ui'
 
 const GROUPS: { title: string; items: { to: string; label: string; icon: string }[] }[] = [
@@ -48,16 +49,16 @@ export default function More() {
         <div className="eyebrow">Profile</div>
         <div className="title mt-1 text-[22px]">{s.profile?.display_name || 'Athlete'}</div>
         <div className="text-[12px]" style={{ color: 'var(--paper-ink-dim)' }}>
-          {s.goal ? `${s.goal.mode.toUpperCase()} · ${s.goal.current_weight_kg} kg → ${s.goal.target_weight_kg} kg` : 'No goal set'}
+          {s.goal ? `${s.goal.mode[0].toUpperCase()}${s.goal.mode.slice(1)} · ${s.goal.current_weight_kg} kg → ${s.goal.target_weight_kg} kg` : <Link to="/more/goals" style={{ color: 'var(--accent)' }}>Set a goal →</Link>}
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
           <div className="paper-inset p-2.5">
-            <div className="eyebrow">Backend</div>
-            <div className="font-bold">{supabaseConfigured ? 'Supabase' : 'Local device'}</div>
+            <div className="eyebrow">Your data</div>
+            <div className="font-bold">{supabaseConfigured && !localMode ? 'Synced to your account' : 'On this phone only'}</div>
           </div>
           <div className="paper-inset p-2.5">
             <div className="eyebrow">AI</div>
-            <div className="font-bold">{supabaseConfigured ? 'Your Gemini keys' : 'Off (offline mode)'}</div>
+            <div className="font-bold">{supabaseConfigured && !localMode ? 'On' : 'Off without an account'}</div>
           </div>
         </div>
       </Card>

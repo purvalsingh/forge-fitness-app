@@ -124,8 +124,14 @@ object Catalog {
     private val RAW = Regex("\\braw\\b", RegexOption.IGNORE_CASE)
 
     fun searchFoods(foods: List<CatalogFood>, query: String, limit: Int = 60): List<CatalogFood> {
+        if (normalise(query).isEmpty()) return foods.filter { it.src != "sr" }.take(limit)
+        return searchScored(foods, query, limit).map { it.first }
+    }
+
+    /** Same ranking as [searchFoods], with each hit's score (the local meal parser only trusts strong matches). */
+    fun searchScored(foods: List<CatalogFood>, query: String, limit: Int = 60): List<Pair<CatalogFood, Int>> {
         val raw = normalise(query)
-        if (raw.isEmpty()) return foods.filter { it.src != "sr" }.take(limit)
+        if (raw.isEmpty()) return emptyList()
 
         val aliased = ALIASES[squash(raw)]
         val q = if (aliased != null) normalise(aliased) else raw
@@ -156,7 +162,7 @@ object Catalog {
             if (out.size > 4000) break
         }
 
-        return out.sortedByDescending { it.score }.take(limit).map { it.food }
+        return out.sortedByDescending { it.score }.take(limit).map { it.food to it.score }
     }
 
     // ─── Region browse ────────────────────────────────────────────────────────

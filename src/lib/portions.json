@@ -1,0 +1,451 @@
+{
+  "version": 1,
+  "about": "Indian serving sizes in grams, per food. Loaded by the web app (src/lib/portions.ts) and copied to the Android app (native/app/src/main/assets/portions.json, logic/Portions.kt). One file, both clients.",
+  "numbers": {
+    "a": 1,
+    "an": 1,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+    "half": 0.5,
+    "quarter": 0.25,
+    "ek": 1,
+    "do": 2,
+    "teen": 3,
+    "tin": 3,
+    "char": 4,
+    "chaar": 4,
+    "paanch": 5,
+    "panch": 5,
+    "paach": 5,
+    "chhe": 6,
+    "che": 6,
+    "saha": 6,
+    "saat": 7,
+    "sat": 7,
+    "aath": 8,
+    "aat": 8,
+    "nau": 9,
+    "das": 10,
+    "don": 2,
+    "aadha": 0.5,
+    "adha": 0.5,
+    "aadhi": 0.5,
+    "adhi": 0.5,
+    "ardha": 0.5,
+    "ardhi": 0.5,
+    "dedh": 1.5,
+    "derh": 1.5,
+    "deed": 1.5,
+    "dhai": 2.5,
+    "dhaai": 2.5,
+    "adich": 2.5,
+    "sava": 1.25,
+    "paune": 0.75,
+    "pauna": 0.75
+  },
+  "vague": {
+    "thoda": 0.5,
+    "thodi": 0.5,
+    "thode": 0.5,
+    "thodasa": 0.5,
+    "little": 0.5,
+    "zara": 0.5,
+    "zyada": 1.5,
+    "jyada": 1.5,
+    "zyaada": 1.5,
+    "bahut": 2,
+    "extra": 1.5,
+    "lot": 1.5,
+    "lots": 1.5
+  },
+  "sizes": {
+    "small": "small",
+    "chhota": "small",
+    "chota": "small",
+    "chhoti": "small",
+    "lahan": "small",
+    "medium": "medium",
+    "large": "large",
+    "big": "large",
+    "bada": "large",
+    "badi": "large",
+    "mota": "large",
+    "motha": "large",
+    "bade": "large",
+    "badey": "large",
+    "mote": "large",
+    "chhote": "small",
+    "chote": "small"
+  },
+  "units": {
+    "katori": [
+      "katori",
+      "katoris",
+      "katora",
+      "kator",
+      "bowl",
+      "bowls",
+      "vati",
+      "vaati",
+      "wati",
+      "vatya"
+    ],
+    "plate": [
+      "plate",
+      "plates",
+      "thali"
+    ],
+    "glass": [
+      "glass",
+      "glasses",
+      "gilas",
+      "glas"
+    ],
+    "cup": [
+      "cup",
+      "cups",
+      "mug",
+      "kap"
+    ],
+    "tsp": [
+      "tsp",
+      "teaspoon",
+      "teaspoons",
+      "chamach",
+      "chammach",
+      "chamcha",
+      "chamche",
+      "spoon",
+      "spoons",
+      "chamchya"
+    ],
+    "tbsp": [
+      "tbsp",
+      "tablespoon",
+      "tablespoons"
+    ],
+    "piece": [
+      "piece",
+      "pieces",
+      "pc",
+      "pcs",
+      "nos",
+      "number"
+    ],
+    "slice": [
+      "slice",
+      "slices"
+    ],
+    "scoop": [
+      "scoop",
+      "scoops"
+    ],
+    "g": [
+      "g",
+      "gm",
+      "gms",
+      "gram",
+      "grams",
+      "gr"
+    ],
+    "ml": [
+      "ml",
+      "mls"
+    ]
+  },
+  "filler": [
+    "of",
+    "ka",
+    "ki",
+    "ke",
+    "some",
+    "had",
+    "ate",
+    "khaya",
+    "khayi",
+    "khaye",
+    "i",
+    "me",
+    "maine",
+    "serving",
+    "servings",
+    "sa",
+    "si",
+    "se",
+    "wala",
+    "wali",
+    "mein",
+    "with",
+    "total",
+    "in",
+    "a",
+    "styled",
+    "style"
+  ],
+  "default_grams": {
+    "katori": 150,
+    "plate": 300,
+    "glass": 250,
+    "cup": 150,
+    "tsp": 5,
+    "tbsp": 15,
+    "scoop": 30,
+    "slice": 30
+  },
+  "foods": [
+    {
+      "match": "\\bpav\\s*bhaji\\b",
+      "plate": 300,
+      "default_unit": "plate",
+      "restaurant": true
+    },
+    {
+      "match": "\\b(whey|protein powder|protein shake)\\b",
+      "scoop": 30,
+      "default_unit": "scoop"
+    },
+    {
+      "match": "\\b(roti|chapati|chapathi|phulka|fulka|chapatti|poli)\\b",
+      "piece": 40,
+      "sizes": {
+        "small": 30,
+        "medium": 40,
+        "large": 55
+      },
+      "default_unit": "piece"
+    },
+    {
+      "match": "\\b(paratha|parantha|prantha|thepla)\\b",
+      "piece": 80,
+      "sizes": {
+        "small": 60,
+        "medium": 80,
+        "large": 110
+      },
+      "default_unit": "piece",
+      "home_cooked": true
+    },
+    {
+      "match": "\\b(puri|poori)\\b",
+      "piece": 25,
+      "default_unit": "piece"
+    },
+    {
+      "match": "\\b(naan|kulcha)\\b",
+      "piece": 90,
+      "default_unit": "piece",
+      "restaurant": true
+    },
+    {
+      "match": "\\bidli\\b",
+      "piece": 40,
+      "default_unit": "piece"
+    },
+    {
+      "match": "\\b(dosa|uttapam)\\b",
+      "piece": 100,
+      "default_unit": "piece"
+    },
+    {
+      "match": "\\b(egg|eggs|anda|ande|anda bhurji)\\b",
+      "piece": 50,
+      "default_unit": "piece"
+    },
+    {
+      "match": "(?<!vada |misal |dabeli |keema |bhurji |omelette )\\b(bread|toast|pav|pao)\\b(?!\\s*(bhaji|bhajji))",
+      "slice": 30,
+      "piece": 40,
+      "default_unit": "piece"
+    },
+    {
+      "match": "\\b(dal|daal|dhal|sambar|sambhar|rasam|kadhi|rajma|chole|chhole|chana|varan|amti|usal|misal)\\b",
+      "katori": 150,
+      "default_unit": "katori",
+      "home_cooked": true
+    },
+    {
+      "match": "\\b(sabzi|sabji|subzi|bhaji|bhajji|curry|aloo|gobi|bhindi|palak|baingan|matar|kofta|korma|keema|bharta|thoran|poriyal|usli)\\b",
+      "katori": 120,
+      "default_unit": "katori",
+      "home_cooked": true
+    },
+    {
+      "match": "\\b(paneer butter masala|butter chicken|kadai|tikka masala|shahi paneer|dal makhani)\\b",
+      "katori": 150,
+      "default_unit": "katori",
+      "home_cooked": true,
+      "restaurant": true
+    },
+    {
+      "match": "\\b(rice|chawal|bhaat|bhat|pulao|jeera rice|khichdi|khichadi)\\b",
+      "katori": 130,
+      "plate": 250,
+      "default_unit": "katori"
+    },
+    {
+      "match": "\\b(biryani|biriyani|fried rice)\\b",
+      "plate": 300,
+      "katori": 150,
+      "default_unit": "plate",
+      "restaurant": true
+    },
+    {
+      "match": "\\b(curd|dahi|yogurt|raita)\\b",
+      "katori": 150,
+      "default_unit": "katori"
+    },
+    {
+      "match": "\\b(poha|upma|sheera|halwa)\\b",
+      "plate": 180,
+      "katori": 150,
+      "default_unit": "plate",
+      "home_cooked": true
+    },
+    {
+      "match": "\\b(milk|doodh|dudh|lassi|chaas|buttermilk|taak|juice|shake|smoothie)\\b",
+      "glass": 250,
+      "cup": 150,
+      "default_unit": "glass"
+    },
+    {
+      "match": "\\b(chai|tea|coffee|cutting)\\b",
+      "cup": 150,
+      "glass": 150,
+      "default_unit": "cup"
+    },
+    {
+      "match": "\\b(tadka|tarka)\\b",
+      "home_cooked": true
+    },
+    {
+      "match": "\\b(vada pav|pav bhaji|chole bhature|misal pav|manchurian|momos|pizza|burger|restaurant|hotel|dhaba)\\b",
+      "restaurant": true
+    },
+    {
+      "match": "\\b(fry|fried|pakora|pakoda|bhajiya|bhaji fry|samosa|kachori|vada|wada|fries|puri|poori|bhature|bhatura)\\b",
+      "already_fried": true
+    },
+    {
+      "match": "^(desi )?ghee\\b(?!\\s+(rice|roast|dosa|chicken|masala|paratha))",
+      "tsp": 5,
+      "tbsp": 15,
+      "default_unit": "tsp",
+      "fat": true
+    },
+    {
+      "match": "^(cooking |mustard |coconut |groundnut |sunflower )?(oil|tel|butter|makhan|white butter)\\b(?!\\s+(chicken|masala|paneer|naan|garlic|roti|dal|milk|paratha|scotch|cookie|biscuit))",
+      "tsp": 5,
+      "tbsp": 14,
+      "default_unit": "tsp",
+      "fat": true
+    }
+  ],
+  "oil": {
+    "levels": [
+      {
+        "id": "none",
+        "label": "None",
+        "tsp": 0
+      },
+      {
+        "id": "little",
+        "label": "A little (1 tsp)",
+        "tsp": 1
+      },
+      {
+        "id": "normal",
+        "label": "Normal (2 tsp)",
+        "tsp": 2
+      },
+      {
+        "id": "lot",
+        "label": "A lot (1 tbsp)",
+        "tsp": 3
+      }
+    ],
+    "grams_per_tsp": 5,
+    "kcal_per_g": 9,
+    "restaurant_default": "lot",
+    "home_default": "little"
+  },
+  "canonical": {
+    "chai": "dish-masala-chai-1-cup",
+    "tea": "dish-masala-chai-1-cup",
+    "cutting chai": "dish-masala-chai-1-cup",
+    "cutting": "dish-masala-chai-1-cup",
+    "masala chai": "dish-masala-chai-1-cup",
+    "chawal": "usda-2708408",
+    "rice": "usda-2708408",
+    "bhaat": "usda-2708408",
+    "bhat": "usda-2708408",
+    "plain rice": "usda-2708408",
+    "steamed rice": "usda-2708408",
+    "white rice": "usda-2708408",
+    "dal": "dish-dal-tadka",
+    "daal": "dish-dal-tadka",
+    "dhal": "dish-dal-tadka",
+    "dal tadka": "dish-dal-tadka",
+    "dal fry": "dish-dal-fry",
+    "moong dal": "dish-moong-dal",
+    "boiled egg": "indb-asc056",
+    "anda": "indb-asc056",
+    "egg": "indb-asc056",
+    "ubla anda": "indb-asc056",
+    "doodh": "usda-2705384",
+    "dudh": "usda-2705384",
+    "paratha": "dish-plain-paratha",
+    "plain paratha": "dish-plain-paratha",
+    "poha": "dish-poha-kanda-poha",
+    "kanda poha": "dish-poha-kanda-poha",
+    "whey": "off-whey-protein-concentrate-unflavoured-the-whole-truth-",
+    "whey protein": "off-whey-protein-concentrate-unflavoured-the-whole-truth-",
+    "protein": "off-whey-protein-concentrate-unflavoured-the-whole-truth-",
+    "idli": "usda-2708346",
+    "idli sambar": "dish-idli-sambar-2-idli",
+    "rajma": "dish-rajma-kidney-bean-curry",
+    "rajma curry": "dish-rajma-kidney-bean-curry",
+    "chole": "dish-chana-masala",
+    "chhole": "dish-chana-masala",
+    "chana masala": "dish-chana-masala",
+    "kadhi": "dish-kadhi-haryanvi",
+    "paneer butter masala": "dish-paneer-butter-masala",
+    "butter chicken": "dish-butter-chicken",
+    "pav bhaji": "dish-pav-bhaji",
+    "pav": "dish-pav-2-pieces",
+    "pao": "dish-pav-2-pieces",
+    "ladi pav": "dish-pav-2-pieces",
+    "butter pav": "dish-bun-maska",
+    "maska pav": "dish-bun-maska"
+  },
+  "plurals": {
+    "parathe": "paratha",
+    "paranthe": "paratha",
+    "rotiyan": "roti",
+    "rotiya": "roti",
+    "chapatiyan": "chapati",
+    "ande": "anda",
+    "eggs": "egg",
+    "samose": "samosa",
+    "kele": "kela",
+    "bananas": "banana",
+    "idlis": "idli",
+    "dosas": "dosa",
+    "puriyan": "puri",
+    "pooris": "puri",
+    "rotis": "roti",
+    "chapatis": "chapati",
+    "parathas": "paratha",
+    "samosas": "samosa",
+    "apples": "apple",
+    "pavs": "pav",
+    "paos": "pav"
+  }
+}

@@ -162,7 +162,7 @@ fun GoalsScreen(s: Store, nav: NavController) {
                             NumberInput(
                                 value = prof.age.toDouble(),
                                 onCommit = { v ->
-                                    if (v != null) s.save(Tables.profiles, prof.copy(age = v.toInt().coerceIn(13, 90)))
+                                    if (v != null) s.save(Tables.profiles, prof.copy(age = v.toInt().coerceIn(13, 100))); s.setFlag(app.forge.fitness.logic.Privacy.AGE_CONFIRMED)
                                 },
                                 placeholder = "25"
                             )

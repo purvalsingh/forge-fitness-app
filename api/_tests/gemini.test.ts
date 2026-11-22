@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { callGemini } from '../../api/_lib/gemini.js'
+import { callGemini } from '../_lib/gemini.js'
 
 const answer = (v: unknown) => ({ ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: JSON.stringify(v) }] } }] }) })
 const wait = (ms: number, signal?: AbortSignal) => new Promise<void>((r, j) => { const t = setTimeout(r, ms); signal?.addEventListener('abort', () => { clearTimeout(t); j(new Error('aborted')) }) })

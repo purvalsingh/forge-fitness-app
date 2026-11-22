@@ -289,13 +289,13 @@ object Training {
 
     /** Which week of the wave [today] falls in (0-based), counting whole weeks from [start]. */
     fun waveWeek(start: String, today: String, length: Int): Int {
-        val d = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDate.parse(start), java.time.LocalDate.parse(today))
+        val d = java.time.temporal.ChronoUnit.DAYS.between(app.forge.fitness.logic.Calc.safeDate(start), app.forge.fitness.logic.Calc.safeDate(today))
         return (Math.floorDiv(d, 7L) % length).toInt().let { if (it < 0) it + length else it }
     }
 
     /** Estimated max from the best working set in the last 8 weeks, RPE-aware (null when nothing usable). */
     fun estimatedMax(history: List<Pair<String, SessionExercise>>, today: String, weeks: Int = 8): Double? {
-        val since = java.time.LocalDate.parse(today).minusDays(7L * weeks).toString()
+        val since = app.forge.fitness.logic.Calc.safeDate(today).minusDays(7L * weeks).toString()
         return history.filter { it.first >= since }.flatMap { workingSets(it.second.sets) }
             .filter { (it.weight_kg ?: 0.0) > 0 && (it.reps ?: 0) in 1..12 }
             .maxOfOrNull { e1rmRpe(it.weight_kg!!, it.reps!!, it.effort.takeIf { _ -> it.effort_scale != "rir" }) }

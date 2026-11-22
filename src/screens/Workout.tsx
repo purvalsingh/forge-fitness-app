@@ -32,7 +32,7 @@ export default function Workout() {
       <div className="no-scrollbar -mx-1 mb-3 flex gap-2 overflow-x-auto px-1">
         <button className="chip press shrink-0" onClick={() => nav('/workout/session/freestyle')}><Icon name="bolt" size={14} /> Freestyle</button>
         <button className="chip press shrink-0" onClick={() => nav('/history')}><Icon name="calendar" size={14} /> History & muscle map</button>
-        <button className="chip press shrink-0" onClick={() => nav('/exercises')}><Icon name="search" size={14} /> 1,324 exercises</button>
+        <button className="chip press shrink-0" onClick={() => nav('/exercises')}><Icon name="search" size={14} /> 1,334 exercises</button>
         <button className="chip press shrink-0" onClick={() => nav('/more/plan')}><Icon name="workout" size={14} /> Plans</button>
       </div>
 
@@ -66,7 +66,7 @@ export default function Workout() {
                 {done && <Icon name="check" size={14} color="var(--noir)" />}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[14px] font-bold">{ex.name ?? nameOf(ex.exercise_id)}</span>
+                <span className="block truncate text-[14px] font-bold">{se?.name ?? ex.name ?? nameOf(ex.exercise_id)}</span>
                 <span className="block text-[11px]" style={{ color: 'var(--text-mute)' }}>
                   {ex.sets} × {ex.reps}{ex.target ? ` · ${ex.target}` : ''}
                 </span>

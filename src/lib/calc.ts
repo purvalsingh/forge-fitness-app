@@ -14,7 +14,7 @@ export const LEVEL_STEPS: Record<ActivityLevel, number> = {
 
 /** Mifflin-St Jeor. */
 export function bmr(sex: Sex, weightKg: number, heightCm: number, age: number): number {
-  const base = 10 * weightKg + 6.25 * heightCm - 5 * Math.min(90, Math.max(13, age))
+  const base = 10 * weightKg + 6.25 * heightCm - 5 * Math.min(100, Math.max(13, age))
   return Math.round(sex === 'male' ? base + 5 : base - 161)
 }
 
@@ -126,6 +126,19 @@ export function totalsByMeal(logs: FoodLog[]): Record<string, Totals> {
 
 export type Component = 'complete' | 'partial' | 'incomplete' | 'na'
 
+/** Working sets (warm-ups excluded) done vs planned in a session. */
+export function setProgress(s: Pick<WorkoutSession, 'exercises'>): { done: number; total: number } {
+  const sets = s.exercises.flatMap(e => e.sets).filter(x => !x.warmup)
+  return { done: sets.filter(x => x.done).length, total: sets.length }
+}
+
+/** A finished session: 80%+ of working sets = complete, some = partial, none = incomplete. No sets (cardio/class) = complete. */
+export function workoutCompletion(s: Pick<WorkoutSession, 'exercises'>): Component {
+  const { done, total } = setProgress(s)
+  if (total === 0 || done >= total * 0.8) return 'complete'
+  return done > 0 ? 'partial' : 'incomplete'
+}
+
 export interface DayAdherence {
   diet: Component
   workout: Component
@@ -138,7 +151,8 @@ export const DEFAULT_WEIGHTS = { diet: 0.4, workout: 0.4, steps: 0.2 }
 /**
  * Deterministic daily completion.
  * - diet: complete when calories AND protein are inside tolerance of target; partial at >=60% of calories.
- * - workout: complete when a session for that date is finished; rest day => 'na' (never counted as failed).
+ * - workout: complete when a finished session did >= 80% of its working sets; fewer = partial; none = incomplete.
+ *   Rest day => 'na' (never counted as failed).
  * - steps: complete at goal, partial at >=60%.
  * Weights of components that are 'na' are redistributed across the remaining components.
  */
@@ -171,7 +185,7 @@ export function dayAdherence(args: {
   // does not break the streak every weekend.
   const isRest = settings.rest_days.length ? settings.rest_days.includes(dow) : !!args.trainedRecently
   let workout: Component
-  if (session?.finished_at) workout = 'complete'
+  if (session?.finished_at) workout = workoutCompletion(session)
   else if (session) workout = 'partial'
   else workout = isRest ? 'na' : 'incomplete'
 

@@ -49,7 +49,7 @@ import kotlin.math.abs
 
 fun niceDate(dateStr: String): String {
     return runCatching {
-        val d = LocalDate.parse(dateStr)
+        val d = app.forge.fitness.logic.Calc.safeDate(dateStr)
         val dow = d.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
         val month = d.month.getDisplayName(TextStyle.SHORT, Locale.getDefault())
         "$dow, ${d.dayOfMonth} $month"
@@ -95,10 +95,9 @@ fun TodayScreen(s: Store, nav: NavController) {
         }
     }
 
-    val activeD = remember(st) { Calc.activeDates(st) }
-    val curStreak = remember(activeD, date, st) {
-        Calc.streak(activeD, date) { d -> Calc.adherenceFor(st, d).score >= 0.6 }
-    }
+    // Plan-aware, forgiving streak (logic/Streak.kt): always measured to the real today, not the day being viewed.
+    val streakView = remember(st, today) { app.forge.fitness.logic.Streak.view(st, today, s.streakRepairs()) }
+    val curStreak = streakView.result.current
 
     val t = st.target
     val pct = if (t != null && t.calories > 0) (totals.calories / t.calories).toFloat() else 0f
@@ -123,7 +122,7 @@ fun TodayScreen(s: Store, nav: NavController) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         // Older days: short "Mon 16" so the title never wraps beside the date switcher.
-                        text = if (isToday) "Today" else if (date == Calc.addDays(today, -1)) "Yesterday" else niceDate(date).substringBefore(",") + " " + LocalDate.parse(date).dayOfMonth,
+                        text = if (isToday) "Today" else if (date == Calc.addDays(today, -1)) "Yesterday" else niceDate(date).substringBefore(",") + " " + app.forge.fitness.logic.Calc.safeDate(date).dayOfMonth,
                         fontSize = if (date == Calc.addDays(today, -1)) 24.sp else 28.sp, maxLines = 1, softWrap = false,
                         fontWeight = FontWeight.Bold,
                         color = F.text
@@ -308,8 +307,8 @@ fun TodayScreen(s: Store, nav: NavController) {
                         }
                     }
 
-                    // Calorie hero arc ring
-                    CalorieArc(pct = pct)
+                    // Calorie hero arc ring (only with a target: "0% eaten" next to 728 kcal read as a bug)
+                    if (t != null) CalorieArc(pct = pct)
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -358,7 +357,7 @@ fun TodayScreen(s: Store, nav: NavController) {
                     value = "$curStreak",
                     unit = if (curStreak == 1) "day" else "days",
                     label = "Streak",
-                    sub = "Score ${(adh.score * 100).toInt()}%",
+                    sub = if (streakView.repairOffer != null) "Repair available" else "${streakView.result.freezesLeft} freeze${if (streakView.result.freezesLeft == 1) "" else "s"} left",
                     done = false,
                     accent = true,
                     onClick = { nav.navigate("adherence") },
@@ -525,7 +524,7 @@ fun TodayScreen(s: Store, nav: NavController) {
                                 )
                                 Spacer(Modifier.height(2.dp))
                                 val summary = if (items.isNotEmpty()) {
-                                    items.joinToString(", ") { if (!it.serving_label.isNullOrBlank()) "${it.name} (${it.serving_label})" else it.name }
+                                    items.joinToString(", ") { if (!it.serving_label.isNullOrBlank() && "(${it.serving_label})" !in it.name) "${it.name} (${it.serving_label})" else it.name }
                                 } else "Tap to add"
                                 Text(
                                     text = summary,
@@ -589,7 +588,7 @@ fun TodayScreen(s: Store, nav: NavController) {
     // DatePicker dialog
     if (showDatePicker) {
         val initialMillis = runCatching {
-            LocalDate.parse(date).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            app.forge.fitness.logic.Calc.safeDate(date).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         }.getOrNull() ?: System.currentTimeMillis()
 
         val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillis)

@@ -23,8 +23,8 @@ android {
         applicationId = "app.forge.fitness"
         minSdk = 26
         targetSdk = 36
-        versionCode = (project.findProperty("vc") as String?)?.toInt() ?: 35
-        versionName = "3.8.1"
+        versionCode = (project.findProperty("vc") as String?)?.toInt() ?: 44
+        versionName = "3.9.7"
         // The app talks to Supabase through the site's /sb proxy (supabase.co is DNS-blocked on some Indian ISPs).
         buildConfigField("String", "SITE", "\"https://forgefit-india.vercel.app\"")
         buildConfigField("String", "SUPABASE_KEY", "\"${env.getProperty("VITE_SUPABASE_PUBLISHABLE_KEY", "")}\"")
@@ -66,5 +66,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("androidx.fragment:fragment-ktx:1.8.9")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    // In-app camera: live preview and capture without leaving FORGE or touching the gallery.
+    implementation("androidx.camera:camera-camera2:1.4.2")
+    implementation("androidx.camera:camera-lifecycle:1.4.2")
+    implementation("androidx.camera:camera-view:1.4.2")
     testImplementation("junit:junit:4.13.2")
 }

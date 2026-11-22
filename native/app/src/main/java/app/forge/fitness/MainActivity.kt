@@ -25,6 +25,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import app.forge.fitness.data.Store
@@ -54,6 +56,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // Routine clean-up: food photos older than a day leave the app's cache (unless the user chose to keep them).
+        lifecycleScope.launch { app.forge.fitness.logic.FoodPhotos.cleanup(applicationContext, keep = store.flag(app.forge.fitness.logic.FoodPhotos.KEEP_FLAG)) }
         setContent {
             val theme by store.theme.collectAsStateWithLifecycle()
             val accent by store.accent.collectAsStateWithLifecycle()
@@ -68,6 +72,28 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable private fun RestoreAccount(store: Store, at: String, onRestored: () -> Unit) {
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    var busy by remember { mutableStateOf(false) }
+    var err by remember { mutableStateOf<String?>(null) }
+    // PostgREST timestamptz: "2026-12-07T10:00:00.123+00:00"
+    val whenText = runCatching { java.time.OffsetDateTime.parse(at).atZoneSameInstant(java.time.ZoneId.systemDefault()).format(java.time.format.DateTimeFormatter.ofPattern("d MMMM")) }
+        .getOrDefault("in 15 days")
+    Column(Modifier.fillMaxSize().statusBarsPadding().padding(24.dp), verticalArrangement = Arrangement.Center) {
+        Text("Your account is scheduled for deletion", color = F.text, fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
+        Spacer(Modifier.height(8.dp))
+        Body("It and all your data will be deleted ${if (whenText.startsWith("in")) whenText else "on $whenText"}. Restore it to keep everything as it was.", F.mute, 14)
+        Spacer(Modifier.height(16.dp))
+        FButton("Restore my account", Modifier.fillMaxWidth(), enabled = !busy) {
+            busy = true
+            scope.launch { try { store.api.restoreAccount(); onRestored() } catch (e: Exception) { err = "Couldn't restore right now. Try again."; busy = false } }
+        }
+        Spacer(Modifier.height(8.dp))
+        FButton("Keep it deleted and sign out", Modifier.fillMaxWidth(), Variant.Ghost) { store.signOut() }
+        err?.let { Spacer(Modifier.height(8.dp)); Notice(it, Tone.Error) }
+    }
+}
+
 private data class Tab(val route: String, val label: String, val icon: ImageVector)
 private val TABS = listOf(
     Tab("today", "Today", Icons.Rounded.Home), Tab("diet", "Food", Icons.Rounded.RamenDining),
@@ -79,6 +105,10 @@ private val TABS = listOf(
     val st by store.state.collectAsStateWithLifecycle()
     if (!st.ready) { Box(Modifier.fillMaxSize().background(F.bgBrush), contentAlignment = Alignment.Center) { Spinner("Loading") }; return }
     if (!st.signedIn) { Box(Modifier.fillMaxSize().background(F.bgBrush)) { AuthScreen(store) }; return }
+    // Signed in during the 15-day deletion grace period: offer to restore. Offline / no migration = not scheduled.
+    var deleting by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(st.signedIn) { deleting = if (st.localMode) null else runCatching { store.api.deletionStatus() }.getOrNull() }
+    deleting?.let { at -> Box(Modifier.fillMaxSize().background(F.bgBrush)) { RestoreAccount(store, at) { deleting = null } }; return }
     var update by remember { mutableStateOf<app.forge.fitness.data.Updater.Release?>(null) }
     LaunchedEffect(Unit) { update = app.forge.fitness.data.Updater.check() }
     val nav = rememberNavController()

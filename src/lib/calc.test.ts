@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import {
   bmr, tdee, calcTargets, isValidTarget, scaleFood, sumTotals, totalsByMeal,
-  dayAdherence, streak, bestStreak, addDays, daysBack, sessionVolume, sessionSets, trend,
-} from './calc'
+  dayAdherence, streak, bestStreak, addDays, daysBack, sessionVolume, sessionSets, trend, workoutCompletion } from './calc'
 import { ParsedFood, PhysiqueAnalysisSchema } from './ai'
 import { generatePlan, emphasisGroups } from './templates'
 import { localRoadmap, coerceFocus, reconcile } from './physique'
@@ -90,7 +89,7 @@ function session(date: string, finished: boolean): WorkoutSession {
       sets: [
         { set_no: 1, weight_kg: 60, reps: 5, done: true },
         { set_no: 2, weight_kg: 60, reps: 5, done: true },
-        { set_no: 3, weight_kg: 60, reps: 5, done: false },
+        { set_no: 3, weight_kg: 40, reps: 5, done: false, warmup: true },
       ],
     }],
   }
@@ -374,5 +373,18 @@ describe('audit fixes 3.8.1', () => {
   it('steps the activity level already covers add no calories', () => {
     expect(tdee('male', 70, 175, 30, 'moderate', 10000)).toBe(tdee('male', 70, 175, 30, 'moderate', 0))
     expect(tdee('male', 70, 175, 30, 'moderate', 12000) - tdee('male', 70, 175, 30, 'moderate', 10000)).toBe(56)
+  })
+})
+
+describe('partial workouts', () => {
+  const ses = (done: number, total: number, warm = 0) => ({ exercises: [{ sets: [
+    ...Array.from({ length: warm }, (_, i) => ({ set_no: i, weight_kg: 20, reps: 10, done: true, warmup: true })),
+    ...Array.from({ length: total }, (_, i) => ({ set_no: i, weight_kg: 60, reps: 8, done: i < done })),
+  ] }] }) as never
+  it('2 of 19 sets is not a complete workout', () => {
+    expect(workoutCompletion(ses(2, 19))).toBe('partial')
+    expect(workoutCompletion(ses(16, 19))).toBe('complete')
+    expect(workoutCompletion(ses(0, 5, 3))).toBe('incomplete') // warm-ups don't count
+    expect(workoutCompletion({ exercises: [] } as never)).toBe('complete') // cardio/class with no sets
   })
 })

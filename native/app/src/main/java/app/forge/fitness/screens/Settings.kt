@@ -141,7 +141,7 @@ fun SettingsScreen(s: Store, nav: NavController) {
                 }
             }
             Spacer(Modifier.height(10.dp))
-            Field(label = "Gender", hint = "Sets your calorie math and muscle map body.") {
+            Field(label = "Sex", hint = "Used for your calorie maths and the body on your muscle map.") {
                 Row(Modifier.fillMaxWidth().heightIn(min = 44.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Chip(
                         text = "Male",
@@ -508,7 +508,7 @@ fun SettingsScreen(s: Store, nav: NavController) {
         }
 
         Card {
-            Eyebrow("Connection")
+            Eyebrow("Troubleshooting")
             Spacer(Modifier.height(6.dp))
             Body(
                 probeState?.first ?: "FORGE tries the server first and moves to local backup if offline.",
@@ -521,7 +521,7 @@ fun SettingsScreen(s: Store, nav: NavController) {
             }
             Spacer(Modifier.height(8.dp))
             FButton(
-                text = if (probeBusy) "Checking…" else "Check backends",
+                text = if (probeBusy) "Checking…" else "Test connection",
                 modifier = Modifier.fillMaxWidth(),
                 variant = Variant.Quiet,
                 enabled = !probeBusy,
@@ -551,6 +551,48 @@ fun SettingsScreen(s: Store, nav: NavController) {
             )
         }
 
+        // Food photos taken in FORGE: private cache, auto-deleted after a day by default, exportable on request.
+        Card {
+            Eyebrow("Food photos")
+            Spacer(Modifier.height(10.dp))
+            var keep by remember { mutableStateOf(s.flag(app.forge.fitness.logic.FoodPhotos.KEEP_FLAG)) }
+            var count by remember { mutableIntStateOf(app.forge.fitness.logic.FoodPhotos.list(context).size) }
+            var photoMsg by remember { mutableStateOf<String?>(null) }
+            var armed by remember { mutableStateOf(false) }
+            fun export() = scope.launch {
+                val n = runCatching { app.forge.fitness.logic.FoodPhotos.exportToGallery(context) }.getOrDefault(-1)
+                photoMsg = if (n < 0) "Couldn't save to the gallery." else "Saved $n photo${if (n == 1) "" else "s"} to Pictures/FORGE."
+            }
+            val askWrite = androidx.activity.compose.rememberLauncherForActivityResult(
+                androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { ok -> if (ok) export() else photoMsg = "Gallery permission was refused." }
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f).padding(end = 12.dp)) {
+                    Text("Auto-delete after a day", color = F.text, fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.height(4.dp))
+                    Body("Removed the next time you open FORGE after 24 hours. Photos stay private to FORGE until you save them.", F.mute, 12)
+                }
+                androidx.compose.material3.Switch(!keep, { on ->
+                    keep = !on; s.setFlag(app.forge.fitness.logic.FoodPhotos.KEEP_FLAG, keep)
+                    if (on) scope.launch { app.forge.fitness.logic.FoodPhotos.cleanup(context, keep = false); count = app.forge.fitness.logic.FoodPhotos.list(context).size }
+                })
+            }
+            if (count > 0) {
+                Spacer(Modifier.height(14.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    FButton("Save $count to gallery", Modifier.weight(1f), Variant.Quiet) {
+                        if (android.os.Build.VERSION.SDK_INT < 29 && androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED)
+                            askWrite.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        else export()
+                    }
+                    FButton(if (armed) "Tap again to delete" else "Delete all", Modifier.weight(1f), if (armed) Variant.Danger else Variant.Ghost) {
+                        if (!armed) { armed = true; return@FButton }
+                        scope.launch { app.forge.fitness.logic.FoodPhotos.deleteAll(context); count = 0; armed = false; photoMsg = "Deleted." }
+                    }
+                }
+            }
+            photoMsg?.let { Spacer(Modifier.height(8.dp)); Body(it, F.mute, 12) }
+        }
+
         if (s.api.configured && !st.localMode) Card {
             Eyebrow("Privacy")
             Spacer(Modifier.height(10.dp))
@@ -564,6 +606,10 @@ fun SettingsScreen(s: Store, nav: NavController) {
             }
             Spacer(Modifier.height(10.dp))
             Body("Off by default. Other users can never see your data, whatever you choose here. Physique photos are never shared this way.", F.mute, 12)
+            Spacer(Modifier.height(10.dp))
+            Body(app.forge.fitness.logic.Privacy.PHOTO, F.mute, 12)
+            Spacer(Modifier.height(6.dp))
+            Body("Physique check-in photos stay on this phone and ask for your consent each time they are analysed.", F.mute, 12)
         }
 
         Card {
@@ -576,7 +622,7 @@ fun SettingsScreen(s: Store, nav: NavController) {
                 Spacer(Modifier.height(16.dp)); RowDivider(); Spacer(Modifier.height(16.dp))
                 Text("Delete my account", color = F.text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
-                Body("Permanently deletes your account and all your data: meals, workouts, weight, plans and saved keys. This can't be undone.", F.mute, 12)
+                Body("Deletes your account and all your data: meals, workouts, weight, plans and saved keys. You have 15 days to change your mind: sign in again to restore it. After that it can't be undone.", F.mute, 12)
                 Spacer(Modifier.height(10.dp))
                 var armed by remember { mutableStateOf(false) }
                 var delErr by remember { mutableStateOf<String?>(null) }

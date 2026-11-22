@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore, useActiveDate } from '../store'
 import { sumTotals, totalsByMeal, round1 } from '../lib/calc'
-import { Bar, Button, Card, Icon, Screen, Stat } from '../ui'
+import { Bar, Button, Card, Field, Icon, Screen, Sheet, Stat } from '../ui'
+import type { FoodLog } from '../lib/types'
 import { AddFoodSheet } from './AddFood'
 
 export default function Diet() {
@@ -10,6 +11,10 @@ export default function Diet() {
   const { date } = useActiveDate()
   const nav = useNavigate()
   const [add, setAdd] = useState<string | null>(null)
+  const [editing, setEditing] = useState<FoodLog | null>(null)
+  const [undo, setUndo] = useState<FoodLog | null>(null)
+  useEffect(() => { if (!undo) return; const t = setTimeout(() => setUndo(null), 6000); return () => clearTimeout(t) }, [undo])
+  const remove = (l: FoodLog) => { void s.del('food_logs', l.id); setUndo(l); setEditing(null) }
 
   const logs = s.foodLogs.filter(l => l.date === date)
   const totals = sumTotals(logs)
@@ -78,16 +83,16 @@ export default function Diet() {
                   {mLogs.map(l => (
                     <li key={l.id} className="flex items-center justify-between gap-2 border-b pb-1.5 last:border-0"
                       style={{ borderColor: 'var(--line)' }}>
-                      <div className="min-w-0">
+                      <button className="min-w-0 flex-1 text-left" aria-label={`Edit ${l.name}`} onClick={() => setEditing(l)}>
                         <div className="truncate text-[13px] font-semibold">{l.name}</div>
                         <div className="text-[11px]" style={{ color: 'var(--text-mute)' }}>
                           {round1(l.qty)} {l.unit} · P{round1(l.protein_g)} C{round1(l.carbs_g)} F{round1(l.fat_g)}
                           {l.source.startsWith('ai') ? ' · AI' : ''}
                         </div>
-                      </div>
+                      </button>
                       <div className="flex shrink-0 items-center gap-2">
                         <span className="text-[13px] font-bold">{Math.round(l.calories)}</span>
-                        <button aria-label={`Delete ${l.name}`} onClick={() => s.del('food_logs', l.id)}
+                        <button aria-label={`Delete ${l.name}`} onClick={() => remove(l)}
                           style={{ color: 'var(--text-mute)' }}><Icon name="trash" size={16} /></button>
                       </div>
                     </li>
@@ -105,13 +110,42 @@ export default function Diet() {
         })}
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-2">
+      <div className="mt-3 grid grid-cols-2 gap-2">
         <Stat label="Entries" value={logs.length} />
-        <Stat label="Protein" value={`${Math.round(totals.protein_g)}g`} />
         <Stat label="Meals logged" value={`${Object.keys(byMeal).length}/${s.mealTypes.length}`} />
       </div>
 
       {add && <AddFoodSheet open onClose={() => setAdd(null)} date={date} mealTypeId={add} />}
+      <EditFood log={editing} onClose={() => setEditing(null)} onSave={l => { void s.save('food_logs', l); setEditing(null) }} onDelete={remove} />
+      {undo && (
+        <div role="status" className="fixed inset-x-4 z-50 mx-auto flex max-w-[420px] items-center justify-between gap-3 rounded-2xl px-4 py-3 text-[13px]"
+          style={{ bottom: 'calc(88px + env(safe-area-inset-bottom))', background: 'var(--surface-high)' }}>
+          <span className="truncate">Deleted {undo.name}</span>
+          <button className="font-bold" style={{ color: 'var(--accent)' }} onClick={() => { void s.save('food_logs', undo); setUndo(null) }}>Undo</button>
+        </div>
+      )}
     </Screen>
+  )
+}
+
+/** Change the amount of a logged food; nutrition scales with it. */
+function EditFood({ log, onClose, onSave, onDelete }: { log: FoodLog | null; onClose: () => void; onSave: (l: FoodLog) => void; onDelete: (l: FoodLog) => void }) {
+  const [qty, setQty] = useState('')
+  useEffect(() => { if (log) setQty(String(round1(log.qty))) }, [log])
+  if (!log) return null
+  const n = Number(qty)
+  const ok = Number.isFinite(n) && n > 0 && n <= 2500
+  const k = ok && log.qty > 0 ? n / log.qty : 1
+  const kcal = Math.round(log.calories * k)
+  return (
+    <Sheet open onClose={onClose} title={log.name}>
+      <Field label={`Amount (${log.unit})`} hint={ok ? `${kcal} kcal · P${round1(log.protein_g * k)} C${round1(log.carbs_g * k)} F${round1(log.fat_g * k)}` : 'Enter an amount above 0.'}>
+        <input type="number" inputMode="decimal" min="0" step="any" value={qty} onChange={e => setQty(e.target.value)} />
+      </Field>
+      <div className="mt-4 grid gap-2">
+        <Button disabled={!ok} onClick={() => onSave({ ...log, qty: n, calories: kcal, protein_g: round1(log.protein_g * k), carbs_g: round1(log.carbs_g * k), fat_g: round1(log.fat_g * k), serving_label: k === 1 ? log.serving_label : undefined })}>Save</Button>
+        <Button variant="danger" onClick={() => onDelete(log)}>Delete</Button>
+      </div>
+    </Sheet>
   )
 }

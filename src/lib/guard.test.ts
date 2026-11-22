@@ -32,4 +32,23 @@ describe('food AI guard', () => {
       expect(preCheckFoodText(t).ok, t).toBe(true)
     expect(preCheckFoodText('a plate of nails').ok).toBe(false)
   })
+  it('keeps a gram amount instead of clamping it like a piece count', () => {
+    const r = postCheckFood({ is_food_request: true, items: [
+      { name: 'Paneer Bhurji', qty: 200, unit: 'g', grams: 200, calories: 420, protein_g: 28, carbs_g: 8, fat_g: 31, edible: true, confidence: 0.9 },
+    ] })
+    expect(r.items[0].qty).toBe(200)
+  })
+})
+
+// The app's schema must accept everything the server guard lets through: a "200 ml Thums Up" with qty 200 was rejected
+// by the app's old qty <= 50 limit, so the whole answer showed as "The AI returned an unexpected response".
+import { FoodListResponse } from './ai'
+describe('app schema matches the server guard', () => {
+  it('accepts gram/ml amounts the guard returns as qty', () => {
+    const out = postCheckFood({ is_food_request: true, items: [
+      { name: 'Thums Up', qty: 200, unit: 'ml', grams: 200, calories: 84, protein_g: 0, carbs_g: 21, fat_g: 0, edible: true, confidence: 0.9 },
+      { name: 'Pav', qty: 3, unit: 'piece', grams: 120, calories: 330, protein_g: 9, carbs_g: 60, fat_g: 7, edible: true, confidence: 0.9 },
+    ] })
+    expect(FoodListResponse.safeParse(out).success).toBe(true)
+  })
 })

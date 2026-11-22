@@ -146,7 +146,7 @@ fun KeysScreen(s: Store, nav: NavController) {
                     Eyebrow(if (saved > 0) "Add more keys" else "Add your Gemini keys")
                     Spacer(Modifier.height(2.dp))
                     Body(
-                        "One key is enough; add up to 5 so FORGE can switch when one hits its limit. Free at aistudio.google.com/apikey. Saved keys stay saved; you only paste new ones here.",
+                        if (saved > 0) "Add up to 5 so FORGE can switch when one hits its limit. Saved keys stay saved; you only paste new ones here." else "Optional. AI already works on FORGE's free keys (80 requests a day). Your own free key from aistudio.google.com/apikey gives you 400 a day and never waits on other users.",
                         color = F.mute,
                         size = 11
                     )

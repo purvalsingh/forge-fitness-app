@@ -6,6 +6,7 @@
  *   node scripts/build-exercises.mjs <path-to-exercises.json>
  */
 import fs from 'node:fs'
+import { withStaples } from './exercise-staples.mjs'
 
 const src = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'))
 const title = s => s.replace(/\b([a-z])/g, (m, c) => c.toUpperCase()).replace(/\bV\. /g, 'v. ')
@@ -35,6 +36,6 @@ const out = src.map(x => {
 })
 fs.writeFileSync(new URL('../public/exercises.json', import.meta.url), JSON.stringify({
   attribution: 'Exercise names, muscles and instructions: hasaneyldrm/exercises-dataset (MIT). No third-party media included.',
-  exercises: out,
+  exercises: withStaples(out),
 }))
 console.error(`exercises: ${out.length}`)

@@ -73,8 +73,15 @@ fun PhysiqueScreen(s: Store, nav: NavController) {
     var pendingId by remember { mutableStateOf<String?>(null) }
 
     val previous = remember(state.checkins) { state.checkins.firstOrNull() }
+    // Body photos are analysed only on the user's own Gemini key (the server refuses the shared pool): say so up front.
+    var ownKeys by remember { mutableStateOf<Int?>(null) }
+    LaunchedEffect(Unit) { if (s.api.configured && !state.localMode) ownKeys = runCatching { s.api.keys().count }.getOrNull() }
+    // Under 18: no physique photos and no AI analysis at all (the server refuses too).
+    val minor = (state.profile?.age ?: 18) < 18
+    var ageOk by remember { mutableStateOf(s.flag(app.forge.fitness.logic.Privacy.AGE_CONFIRMED)) }
 
     fun analyse() {
+        if (minor) return
         step = PhysiqueStep.Analysing
         err = null
         scope.launch {
@@ -112,10 +119,13 @@ fun PhysiqueScreen(s: Store, nav: NavController) {
                         goal = Templates.FOCUS_LABELS[goal] ?: goal,
                         priorities = priorities,
                         context = ctxJson,
-                        previous = prevJson
+                        previous = prevJson,
+                        ageConfirmed = s.flag(app.forge.fitness.logic.Privacy.AGE_CONFIRMED)
                     )
                     result = Physique.reconcile(out, local)
                     usedAI = true
+                } catch (e: app.forge.fitness.data.ApiError) {
+                    err = e.message ?: "Could not analyse those photos. Showing the calculated roadmap instead."
                 } catch (e: Exception) {
                     err = "Could not analyse those photos. Showing the calculated roadmap instead."
                 }
@@ -164,7 +174,7 @@ fun PhysiqueScreen(s: Store, nav: NavController) {
         PhysiqueStep.Analysing -> {
             Screen(title = "Physique Lab", sub = "Analysing", back = { step = PhysiqueStep.Goal }) {
                 Spinner("Reviewing your check-in")
-                Notice("Your photos are sent once to Google Gemini, using your own key, for this analysis. FORGE does not save them anywhere except this phone. With free Gemini keys, Google may use what you send to improve its products.")
+                Notice("Your photos go only to Google's Gemini AI, just for this analysis. FORGE never stores them on its servers; they stay on this phone. FORGE's free AI and free Gemini keys use Google's free tier, where Google may use what you send to improve its products.")
             }
         }
 
@@ -190,13 +200,16 @@ fun PhysiqueScreen(s: Store, nav: NavController) {
             }
         }
 
-        PhysiqueStep.Upload -> if ((state.profile?.age ?: 18) < 18) {
+        PhysiqueStep.Upload -> if (!ageOk) {
+            Screen(title = "New check-in", back = { step = PhysiqueStep.Timeline }) { AgeConfirm(s, state.profile) { ageOk = true } }
+        } else if (minor) {
             Screen(title = "New check-in", back = { step = PhysiqueStep.Timeline }) {
                 Notice("Physique check-ins are for people 18 and over. You can still track training, food and weight.")
             }
         } else {
             Screen(title = "New check-in", sub = "Step 1 · Photos", back = { step = PhysiqueStep.Timeline }) {
                 Notice("Your photos stay on this device. They are sent to the AI only when you run an analysis, and are deleted with the check-in.")
+                if (ownKeys == 0) Notice("AI analysis of body photos needs your own free Gemini key (You → My Gemini AI keys), so they never go through FORGE's shared AI. Without one you still get a calculated roadmap.", Tone.Warn)
 
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     ANGLES.chunked(2).forEach { row ->
@@ -744,6 +757,21 @@ private fun ResultScreen(
 
 private data class NutritionValues(val calories: Double, val protein: Double, val carbs: Double, val fat: Double, val maintenance: Int)
 
+/** Physique check-ins are 18+. The stored age defaults to 25, so the user confirms their real age once. */
+@Composable
+private fun AgeConfirm(s: Store, profile: app.forge.fitness.data.Profile?, onDone: () -> Unit) {
+    var age by remember { mutableStateOf(profile?.age?.toString() ?: "") }
+    val n = age.toIntOrNull()
+    val scope = rememberCoroutineScope()
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Notice("Physique check-ins are for people 18 and over. Confirm your age to continue.")
+        Field(label = "Your age") { Input(value = age, onChange = { age = it.filter(Char::isDigit).take(3) }, placeholder = "25", number = true) }
+        FButton("Confirm my age", Modifier.fillMaxWidth(), enabled = profile != null && n != null && n in 13..100) {
+            scope.launch { s.save(Tables.profiles, profile!!.copy(age = n!!)); s.setFlag(app.forge.fitness.logic.Privacy.AGE_CONFIRMED); onDone() }
+        }
+    }
+}
+
 @Composable
 private fun PhotoSlot(
     label: String,
@@ -757,25 +785,26 @@ private fun PhotoSlot(
     val scope = rememberCoroutineScope()
     var err by remember { mutableStateOf<String?>(null) }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-        if (uri == null) return@rememberLauncherForActivityResult
+    fun accept(bytes: ByteArray?) {
         scope.launch {
             try {
                 err = null
-                val bytes = context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
                 if (bytes != null) {
                     val downscaled = Photos.downscale(bytes)
-                    val b64 = Base64.encodeToString(downscaled, Base64.NO_WRAP)
-                    val dataUrl = "data:image/jpeg;base64,$b64"
-                    onPick(dataUrl)
-                } else {
-                    err = "Could not read that image."
-                }
+                    onPick("data:image/jpeg;base64," + Base64.encodeToString(downscaled, Base64.NO_WRAP))
+                } else err = "Could not read that image."
             } catch (_: Exception) {
                 err = "Could not read that image."
             }
         }
     }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+        if (uri != null) accept(context.contentResolver.openInputStream(uri)?.use { it.readBytes() })
+    }
+    // Take it inside FORGE: the photo goes straight into the check-in, never into the phone's gallery.
+    var showCamera by remember { mutableStateOf(false) }
+    if (showCamera) InAppCamera(onDismiss = { showCamera = false }, hint = "$label · full body, good light",
+        onCaptured = { showCamera = false; accept(it) })
 
     val bmp = remember(value) {
         if (!value.isNullOrBlank()) {
@@ -793,9 +822,7 @@ private fun PhotoSlot(
                 .clip(RoundedCornerShape(14.dp))
                 .background(F.surface)
                 .border(1.dp, F.line, RoundedCornerShape(14.dp))
-                .clickable {
-                    launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                },
+                .clickable { showCamera = true },
             contentAlignment = Alignment.Center
         ) {
             if (bmp != null) {
@@ -814,11 +841,19 @@ private fun PhotoSlot(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Text("Tap to add", color = F.mute, fontSize = 11.sp)
+                    Text("Tap to take", color = F.mute, fontSize = 11.sp)
                 }
             }
         }
 
+        if (value == null) {
+            TextButton(
+                onClick = { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
+                modifier = Modifier.fillMaxWidth().height(32.dp)
+            ) {
+                Text("From gallery", color = F.mute, fontSize = 12.sp)
+            }
+        }
         if (value != null) {
             TextButton(
                 onClick = onClear,

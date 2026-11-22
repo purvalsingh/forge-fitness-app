@@ -5,7 +5,7 @@ export interface LibExercise extends Exercise { steps?: string[]; steps_hi?: str
 let cache: LibExercise[] | null = null
 let inflight: Promise<LibExercise[]> | null = null
 
-/** The bundled 1,324-exercise library, fetched on first use and cached by the service worker. */
+/** The bundled 1,334-exercise library, fetched on first use and cached by the service worker. */
 export function loadExercises(): Promise<LibExercise[]> {
   if (cache) return Promise.resolve(cache)
   inflight ??= fetch(`${import.meta.env.BASE_URL}exercises.json`)

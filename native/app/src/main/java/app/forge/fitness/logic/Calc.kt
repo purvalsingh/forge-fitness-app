@@ -21,7 +21,7 @@ object Calc {
 
     /** Mifflin-St Jeor. */
     fun bmr(sex: String, weightKg: Double, heightCm: Double, age: Int): Int {
-        val base = 10 * weightKg + 6.25 * heightCm - 5 * age.coerceIn(13, 90)
+        val base = 10 * weightKg + 6.25 * heightCm - 5 * age.coerceIn(13, 100)
         return jsRound(if (sex == "male") base + 5 else base - 161)
     }
 
@@ -81,6 +81,18 @@ object Calc {
     fun totalsByMeal(logs: List<FoodLog>) = logs.groupBy { it.meal_type_id }.mapValues { sumTotals(it.value) }
 
     // ---------- adherence ----------
+    /** Working sets (warm-ups excluded) done vs planned in a session. */
+    fun setProgress(s: WorkoutSession): Pair<Int, Int> {
+        val sets = s.exercises.flatMap { it.sets }.filter { it.warmup != true }
+        return sets.count { it.done } to sets.size
+    }
+
+    /** A finished session: 80%+ of working sets = complete, some = partial, none = incomplete. No sets (cardio/class) = complete. */
+    fun workoutCompletion(s: WorkoutSession): String {
+        val (done, total) = setProgress(s)
+        return when { total == 0 || done >= total * 0.8 -> "complete"; done > 0 -> "partial"; else -> "incomplete" }
+    }
+
     data class DayAdherence(val diet: String, val workout: String, val steps: String, val score: Double)
 
     /**
@@ -101,7 +113,7 @@ object Calc {
         }
         // No rest days chosen: a day off within two days of a workout counts as rest (3-5 day plans keep their streak).
         val isRest = isRestDay(date, settings) || (settings.rest_days.isEmpty() && dayPicks[date] == null && trainedRecently)
-        val workout = when { session?.finished_at != null -> "complete"; session != null -> "partial"; isRest -> "na"; else -> "incomplete" }
+        val workout = when { session?.finished_at != null -> workoutCompletion(session); session != null -> "partial"; isRest -> "na"; else -> "incomplete" }
         val stepC = when { steps == null -> "na"; steps >= settings.step_goal -> "complete"; steps >= settings.step_goal * 0.6 -> "partial"; else -> "incomplete" }
         val w = settings.adherence_weights
         val active = listOf(diet to w.diet, workout to w.workout, stepC to w.steps).filter { it.first != "na" }
@@ -114,7 +126,7 @@ object Calc {
         val logs = s.foodLogs.filter { it.date == date }
         return dayAdherence(date, s.target, sumTotals(logs), logs.isNotEmpty(), s.sessions.find { it.date == date },
             s.steps.find { it.date == date }?.steps, s.settings,
-            trainedRecently = (1..2).any { n -> val d = java.time.LocalDate.parse(date).minusDays(n.toLong()).toString(); s.sessions.any { it.date == d && it.finished_at != null } })
+            trainedRecently = (1..2).any { n -> val d = app.forge.fitness.logic.Calc.safeDate(date).minusDays(n.toLong()).toString(); s.sessions.any { it.date == d && it.finished_at != null } })
     }
 
     fun activeDates(s: State) = (s.foodLogs.map { it.date } + s.sessions.map { it.date } + s.steps.map { it.date }).toSortedSet().toList()
@@ -141,10 +153,19 @@ object Calc {
     var dayStartHour = 4
         set(v) { field = v.coerceIn(0, 12) }
     fun today(now: LocalDateTime = LocalDateTime.now()): String = now.minusHours(dayStartHour.toLong()).toLocalDate().toString()
-    fun addDays(date: String, n: Int): String = LocalDate.parse(date).plusDays(n.toLong()).toString()
+    /**
+     * Parse an ISO date without ever throwing. One malformed row (an old build let "2026-12026-11-16" through the
+     * past-workout form) must not take down History, Progress or a session: it is treated as today, so it can be
+     * opened and deleted.
+     */
+    fun safeDate(date: String): LocalDate = runCatching { LocalDate.parse(date) }.getOrElse { LocalDate.now() }
+    /** A real calendar date in yyyy-MM-dd form. */
+    fun isIsoDate(date: String) = Regex("^\\d{4}-\\d{2}-\\d{2}$").matches(date) && runCatching { LocalDate.parse(date) }.isSuccess
+
+    fun addDays(date: String, n: Int): String = safeDate(date).plusDays(n.toLong()).toString()
     fun daysBack(n: Int, from: String = today()) = (0 until n).map { addDays(from, -(n - 1 - it)) }
     /** 0 = Sunday, like JS getDay(). */
-    fun dow(date: String) = LocalDate.parse(date).dayOfWeek.value % 7
+    fun dow(date: String) = app.forge.fitness.logic.Calc.safeDate(date).dayOfWeek.value % 7
 
     fun monthGrid(year: Int, month0: Int): List<String?> {
         val first = LocalDate.of(year, month0 + 1, 1)
@@ -182,7 +203,7 @@ object Calc {
         val w = weights.filter { it.date >= window[0] && it.date <= end }.sortedBy { it.date }
         if (logged.size < 14 || w.size < 2) return null
         val tr = trend(w)
-        val span = ChronoUnit.DAYS.between(LocalDate.parse(w.first().date), LocalDate.parse(w.last().date)).toDouble()
+        val span = ChronoUnit.DAYS.between(app.forge.fitness.logic.Calc.safeDate(w.first().date), app.forge.fitness.logic.Calc.safeDate(w.last().date)).toDouble()
         if (span < 7) return null
         val delta = tr.last().trend - tr.first().trend
         val avg = logged.sumOf { dailyKcal[it]!! } / logged.size

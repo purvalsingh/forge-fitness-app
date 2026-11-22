@@ -23,7 +23,7 @@ export function encryptKeys(userId: string, keys: string[]): string {
 export function decryptKeys(userId: string, blob: string): string[] {
   const [v, iv, tag, data] = blob.split('.')
   if (v !== 'v1' || !iv || !tag || !data) throw new Error('bad ciphertext')
-  const d = createDecipheriv('aes-256-gcm', secret(), Buffer.from(iv, 'base64'))
+  const d = createDecipheriv('aes-256-gcm', secret(), Buffer.from(iv, 'base64'), { authTagLength: 16 })
   d.setAAD(Buffer.from(userId))
   d.setAuthTag(Buffer.from(tag, 'base64'))
   const plain = Buffer.concat([d.update(Buffer.from(data, 'base64')), d.final()]).toString('utf8')

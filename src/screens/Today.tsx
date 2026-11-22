@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useStore, useActiveDate } from '../store'
-import { addDays, sumTotals, totalsByMeal, streak, round1 } from '../lib/calc'
-import { adherenceFor, activeDates, daySteps } from '../lib/derive'
+import { useStore, useActiveDate, useToday } from '../store'
+import { addDays, sumTotals, totalsByMeal, round1 } from '../lib/calc'
+import { streakFor } from '../lib/streak'
+import { daySteps } from '../lib/derive'
 import { Button, Field, Icon, Sheet } from '../ui'
 import { uid } from '../lib/db'
 import { AddFoodSheet } from './AddFood'
@@ -26,7 +27,6 @@ export default function Today() {
   const byMeal = totalsByMeal(logs)
   const session = s.sessions.find(x => x.date === date) ?? null
   const src = { foodLogs: s.foodLogs, sessions: s.sessions, steps: s.steps, target: s.target, settings: s.settings }
-  const adh = adherenceFor(src, date)
   const steps = daySteps(src, date)
   const water = s.water.filter(w => w.date === date).reduce((a, w) => a + w.ml, 0)
   const waterGoal = s.settings.water_goal_ml ?? 2500
@@ -42,7 +42,9 @@ export default function Today() {
     return plan.days[(lastIdx + 1) % plan.days.length] ?? null
   }, [plan, session, s.sessions, isRest])
 
-  const cur = streak(activeDates(src), date, d => adherenceFor(src, d).score >= 0.6)
+  const realToday = useToday()
+  const st = useMemo(() => streakFor(s, realToday), [realToday, s.foodLogs, s.sessions, s.steps, s.settings, s.goal, s.plans, s.mealTypes]) // eslint-disable-line react-hooks/exhaustive-deps
+  const cur = st.current
   const t = s.target
   const pct = t ? Math.min(1, totals.calories / t.calories) : 0
   const remaining = t ? Math.round(t.calories - totals.calories) : 0
@@ -119,7 +121,7 @@ export default function Today() {
               <Link to="/more/target" className="chip mt-3" style={{ color: 'var(--accent)' }}>Set your target →</Link>
             )}
           </div>
-          <Arc value={pct} />
+          {t && <Arc value={pct} />}
         </div>
         {!newUser && <div className="mt-5 grid grid-cols-3 gap-2">
           <Macro label="Protein" v={totals.protein_g} target={t?.protein_g} color="var(--protein)" />
@@ -134,7 +136,8 @@ export default function Today() {
           label="Steps" sub={`goal ${(s.settings.step_goal / 1000).toFixed(0)}k`} />
         <Tile icon="water" onClick={() => setWaterSheet(true)} value={`${round1(water / 1000)}`} unit="L"
           label="Water" sub={`of ${round1(waterGoal / 1000)} L`} done={water >= waterGoal} />
-        <Tile icon="bolt" onClick={() => nav('/adherence')} value={String(cur)} unit="d" label="Streak" sub={`score ${Math.round(adh.score * 100)}%`} accent />
+        <Tile icon="bolt" onClick={() => nav('/adherence')} value={String(cur)} unit="d" label="Streak"
+          sub={st.repairOffer ? 'Repair available' : `${st.freezesLeft} freeze${st.freezesLeft === 1 ? '' : 's'} left`} accent />
       </div>}
 
       {/* Workout */}
@@ -191,7 +194,7 @@ export default function Today() {
               <div className="min-w-0 flex-1">
                 <div className="mono text-[10px] font-bold uppercase tracking-widest" style={{ color: mt ? 'var(--lime)' : 'var(--text-mute)' }}>{m.name} · {m.time}</div>
                 <div className="truncate text-[14px] font-semibold">
-                  {items.length ? items.map(i => i.serving_label ? `${i.name} (${i.serving_label})` : i.name).join(', ') : 'Tap to add'}
+                  {items.length ? items.map(i => i.serving_label && !i.name.includes(`(${i.serving_label})`) ? `${i.name} (${i.serving_label})` : i.name).join(', ') : 'Tap to add'}
                 </div>
                 {mt && <div className="mono text-[11px]" style={{ color: 'var(--text-mute)' }}>
                   <span style={{ color: 'var(--protein)' }}>P {Math.round(mt.protein_g)}g</span> · C {Math.round(mt.carbs_g)}g · F {Math.round(mt.fat_g)}g

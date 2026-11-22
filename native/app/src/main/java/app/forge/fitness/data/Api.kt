@@ -81,11 +81,20 @@ class Api(private val sessionStore: (Session?) -> Unit, initial: Session?) {
 
     fun signOut() = setSession(null)
 
-    /** Deletes the caller's account; the database cascades every row they own. */
-    suspend fun deleteAccount() {
-        val (code, text) = send(authed(Request.Builder().url("$sb/rest/v1/rpc/delete_my_account")).post("{}".toRequestBody(JSON_T)).build())
+    private suspend fun rpc(name: String): String {
+        val (code, text) = send(authed(Request.Builder().url("$sb/rest/v1/rpc/$name")).post("{}".toRequestBody(JSON_T)).build())
         if (code !in 200..299) throw errorOf(code, text)
+        return text
     }
+
+    /** Schedules deletion of the caller's account in 15 days (the database then cascades every row they own). */
+    suspend fun deleteAccount() { rpc("delete_my_account") }
+
+    /** When a scheduled deletion happens (ISO), or null. */
+    suspend fun deletionStatus(): String? = runCatching { json.parseToJsonElement(rpc("account_deletion_status")) }.getOrNull()
+        ?.let { (it as? kotlinx.serialization.json.JsonPrimitive)?.takeIf { p -> p.isString }?.content }
+
+    suspend fun restoreAccount() { rpc("restore_my_account") }
 
     private val refreshLock = kotlinx.coroutines.sync.Mutex()
     private suspend fun token(): String = refreshLock.withLock { tokenLocked() }
@@ -171,7 +180,7 @@ class Api(private val sessionStore: (Session?) -> Unit, initial: Session?) {
 
     // ---------- FORGE API ----------
     /**
-     * One AI task. The server uses the caller's own encrypted Gemini keys and answers within ~22 s.
+     * One AI task. The server uses the caller's own encrypted Gemini keys, or FORGE's shared pool when they have none, and answers within ~26 s.
      * No automatic retry: it would double the wait. Timeouts and gateway errors say "AI was slow", not "server offline".
      */
     suspend fun ai(task: String, payload: JsonElement): JsonObject {

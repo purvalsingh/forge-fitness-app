@@ -1,3 +1,4 @@
+import { createPublicKey, verify, type JsonWebKey as Jwk, type KeyObject } from 'node:crypto'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
 /**
@@ -37,6 +38,39 @@ export const preflight = (req: Request) => new Response(null, { status: 204, hea
 
 export interface Caller { userId: string; db: SupabaseClient }
 
+/** Supabase's public signing keys (ES256), fetched once per warm instance. Public data, safe to cache. */
+let jwks: { at: number; keys: Map<string, KeyObject> } | null = null
+async function signingKey(url: string, kid: string): Promise<KeyObject | null> {
+  if (!jwks || !jwks.keys.has(kid) && Date.now() - jwks.at > 60_000) {
+    const res = await fetch(`${url}/auth/v1/.well-known/jwks.json`, { signal: AbortSignal.timeout(4_000) })
+    const body = res.ok ? await res.json() as { keys?: (Jwk & { kid?: string })[] } : { keys: [] }
+    jwks = { at: Date.now(), keys: new Map((body.keys ?? []).filter(k => k.kid).map(k => [k.kid!, createPublicKey({ key: k, format: 'jwk' })])) }
+  }
+  return jwks.keys.get(kid) ?? null
+}
+
+/**
+ * Verify the session token locally against Supabase's published ES256 key: no network call per request.
+ * Known trade-off: a token stays valid until it expires (≤ 1 h) even after sign-out. A deleted account still can't
+ * use AI, because ai_take()'s usage insert fails its foreign key and the route answers 503.
+ * Returns the user id, or undefined when this token can't be checked locally (then the caller falls back to getUser).
+ */
+export async function verifyLocally(token: string, url: string, now = Date.now()): Promise<string | null | undefined> {
+  const [h, p, sig] = token.split('.')
+  if (!h || !p || !sig) return null
+  try {
+    const header = JSON.parse(Buffer.from(h, 'base64url').toString())
+    if (header.alg !== 'ES256' || typeof header.kid !== 'string') return undefined
+    const key = await signingKey(url, header.kid)
+    if (!key) return undefined
+    const ok = verify('sha256', Buffer.from(`${h}.${p}`), { key, dsaEncoding: 'ieee-p1363' }, Buffer.from(sig, 'base64url'))
+    if (!ok) return null
+    const claims = JSON.parse(Buffer.from(p, 'base64url').toString())
+    if (claims.aud !== 'authenticated' || typeof claims.sub !== 'string' || !(claims.exp * 1000 > now)) return null
+    return claims.sub
+  } catch { return undefined }
+}
+
 /** Resolve the caller from their bearer token. Returns null when it is missing or invalid. */
 export async function caller(req: Request): Promise<Caller | null> {
   const token = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '').trim()
@@ -47,6 +81,10 @@ export async function caller(req: Request): Promise<Caller | null> {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false },
   })
+  const local = await verifyLocally(token, url)
+  if (local === null) return null
+  if (local) return { userId: local, db }
+  // Token type we can't check here (e.g. an old HS256 session): ask Supabase.
   const { data, error } = await db.auth.getUser(token)
   if (error || !data.user) return null
   return { userId: data.user.id, db }

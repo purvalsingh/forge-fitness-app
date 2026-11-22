@@ -204,14 +204,15 @@ export function toCSV(rows: Record<string, unknown>[]): string {
 export function claimDevice(userId: string) {
   try {
     const owner = localStorage.getItem('forge:owner')
-    if (owner && owner !== userId) forgetDevice()
+    if (owner && owner !== userId) void forgetDevice()
     localStorage.setItem('forge:owner', userId)
   } catch { /* storage unavailable */ }
 }
-export function forgetDevice() {
+/** Returns once the physique photos are really gone: await it before reloading the page or the clear can be cut off. */
+export async function forgetDevice(): Promise<void> {
   try {
     for (const k of Object.keys(localStorage)) if (k.startsWith('forge:cache:') || k === OUTBOX || k === 'forge:owner') localStorage.removeItem(k)
   } catch { /* storage unavailable */ }
   // Physique photos too: on a shared computer the next person must not find them.
-  photos.clear().catch(() => {})
+  await photos.clear().catch(() => {})
 }

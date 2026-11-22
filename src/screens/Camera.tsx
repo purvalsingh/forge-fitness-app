@@ -5,6 +5,7 @@ import { ai, AIUnavailable } from '../lib/ai'
 import { compressImage } from '../lib/image'
 import { groundItem, loadCatalog, type Grounded } from '../lib/catalog'
 import { Button, Field, Icon, Notice, Screen } from '../ui'
+import { PHOTO_PRIVACY, photoNotice } from '../lib/privacy'
 import { ReviewItems } from './AddFood'
 
 type Stage = 'capture' | 'analysing' | 'review'
@@ -21,6 +22,7 @@ export default function Camera() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const camRef = useRef<HTMLInputElement>(null)
 
   const [stage, setStage] = useState<Stage>('capture')
   const [live, setLive] = useState<'off' | 'on' | 'denied' | 'unsupported'>('off')
@@ -30,6 +32,7 @@ export default function Camera() {
   const [rejected, setRejected] = useState<{ name: string; reason: string }[]>([])
   const [err, setErr] = useState<string | null>(null)
   const [flash, setFlash] = useState(false)
+  const [privacyOk, setPrivacyOk] = useState(photoNotice.seen)
   const mealTypeId = s.mealTypes[1]?.id ?? s.mealTypes[0]?.id ?? ''
 
   const stop = useCallback(() => {
@@ -54,6 +57,7 @@ export default function Camera() {
   }
 
   async function capture() {
+    photoNotice.mark(); setPrivacyOk(true)
     const v = videoRef.current
     if (!v || !v.videoWidth) return
     setFlash(true); setTimeout(() => setFlash(false), 180)
@@ -116,7 +120,7 @@ export default function Camera() {
                       {live === 'denied' ? 'Camera permission denied' : live === 'unsupported' ? 'Live camera not available' : 'Point at your plate'}
                     </div>
                     <div className="text-[12px]" style={{ color: '#9b928a' }}>
-                      {live === 'off' ? 'Top-down, whole plate in frame, good light.' : 'Use “Photo” to take a picture with your camera app instead.'}
+                      {live === 'off' ? 'Top-down, whole plate in frame, good light.' : 'Tap the camera button to take one with your phone camera instead.'}
                     </div>
                   </div>
                 </div>
@@ -137,13 +141,20 @@ export default function Camera() {
 
         {err && <Notice tone="error">{err}</Notice>}
 
+        {!privacyOk && (
+          <Notice>
+            {PHOTO_PRIVACY}{' '}
+            <button className="font-semibold underline" onClick={() => { photoNotice.mark(); setPrivacyOk(true) }}>Got it</button>
+          </Notice>
+        )}
+
         {!preview ? (
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-            <Button variant="ghost" onClick={() => fileRef.current?.click()}>Photo</Button>
+            <Button variant="ghost" onClick={() => fileRef.current?.click()}>Gallery</Button>
             {live === 'on'
               ? <button aria-label="Capture" onClick={capture} className="press pulse h-[74px] w-[74px] rounded-full border-4"
                   style={{ borderColor: 'var(--text)', background: 'var(--accent)' }} />
-              : <button aria-label="Start camera" onClick={startCamera} className="press grid h-[74px] w-[74px] place-items-center rounded-full"
+              : <button aria-label="Start camera" onClick={() => live === 'denied' || live === 'unsupported' ? camRef.current?.click() : void startCamera()} className="press grid h-[74px] w-[74px] place-items-center rounded-full"
                   style={{ background: 'var(--accent)', color: 'var(--accent-ink)' }}><Icon name="camera" size={30} /></button>}
             <Button variant="ghost" onClick={() => { stop(); nav('/diet') }}>Manual</Button>
           </div>
@@ -156,7 +167,10 @@ export default function Camera() {
             <Button variant="ghost" onClick={() => { setPreview(null); void startCamera() }}>Retake</Button>
           </>
         )}
-        <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden"
+        {/* Fallback when the live camera can't run: phones open the camera for a `capture` input, without the gallery. */}
+        <input ref={camRef} type="file" accept="image/*" capture="environment" className="hidden"
+          onChange={e => { const f = e.target.files?.[0]; if (f) void onFile(f); e.target.value = '' }} />
+        <input ref={fileRef} type="file" accept="image/*" className="hidden"
           onChange={e => { const f = e.target.files?.[0]; if (f) void onFile(f); e.target.value = '' }} />
       </div>
     </Screen>

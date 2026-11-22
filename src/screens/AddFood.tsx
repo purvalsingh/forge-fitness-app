@@ -10,6 +10,11 @@ import {
   type CatalogFood, type Grounded,
 } from '../lib/catalog'
 import { barcodeSupported, lookupBarcode } from '../lib/barcode'
+import { parseMealLocally } from '../lib/hinglish'
+import { asksOil, isOilItem, isRestaurant, OIL, oilLine } from '../lib/portions'
+import { speechSupported, useSpeech } from '../lib/speech'
+import { VOICE_PRIVACY, voiceNotice } from '../lib/privacy'
+import { currentLang } from '../lib/i18n'
 import type { Food, FoodLog, Unit } from '../lib/types'
 
 const UNITS: Unit[] = ['g', 'ml', 'serving', 'piece', 'slice', 'cup', 'tbsp', 'tsp', 'scoop']
@@ -29,7 +34,7 @@ export function AddFoodSheet({ open, onClose, date, mealTypeId, initialTab = 'se
       <div className="mt-3">
         <Tabs value={tab} onChange={setTab} options={[
           { value: 'search', label: 'Search' },
-          { value: 'describe', label: 'AI describe' },
+          { value: 'describe', label: 'Type or say' },
           { value: 'barcode', label: 'Barcode' },
           { value: 'recipes', label: 'Quick meals' },
           { value: 'custom', label: 'Custom' },
@@ -128,7 +133,7 @@ function SearchTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: str
   }, [q, region, s.foods, catalog])
 
   if (picked) {
-    return <PortionPicker food={picked} onBack={() => setPicked(null)} onAdd={async (grams, label) => {
+    return <PortionPicker food={picked} date={date} mealTypeId={mealTypeId} onBack={() => setPicked(null)} onAdd={async (grams, label) => {
       await logFood(s, picked, grams, date, mealTypeId, 'search', label); onDone()
     }} />
   }
@@ -167,7 +172,7 @@ function SearchTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: str
 
       <div className="grid max-h-[44vh] gap-2 overflow-y-auto overscroll-contain">
         {catalog && q.trim() && results.length === 0 && (
-          <div className="text-[13px]" style={{ color: 'var(--text-mute)' }}>No matches. Try “AI describe”, or add it under “Custom”.</div>
+          <div className="text-[13px]" style={{ color: 'var(--text-mute)' }}>No matches. Try “Type or say”, or add it under “Custom”.</div>
         )}
         {results.map(f => <FoodRow key={f.id} f={f} onPick={setPicked} />)}
       </div>
@@ -200,9 +205,12 @@ function FoodRow({ f, onPick }: { f: AnyFood; onPick: (f: AnyFood) => void }) {
  * Quantity in the unit people think in. A dish with a known serving defaults to "1 piece / 1 plate",
  * with the gram weight shown alongside; grams remain one tap away.
  */
-export function PortionPicker({ food, onAdd, onBack }: {
+export function PortionPicker({ food, onAdd, onBack, date, mealTypeId }: {
   food: AnyFood; onAdd: (grams: number, label?: string) => Promise<void>; onBack: () => void
+  /** Where the dish is logged; when given, home-cooked dishes get the oil/ghee question. */
+  date?: string; mealTypeId?: string
 }) {
+  const s = useStore()
   const g = servingGrams(food as CatalogFood)
   const label = (food as CatalogFood).serving_label ?? '1 serving'
   const [mode, setMode] = useState<'serving' | 'grams'>(g ? 'serving' : 'grams')
@@ -217,6 +225,7 @@ export function PortionPicker({ food, onAdd, onBack }: {
   }
   const unit: string = food.unit === '100ml' || food.unit === 'ml' ? 'ml' : food.unit === '100g' || food.unit === 'g' ? 'g' : food.unit
   const quick = unit === 'g' || unit === 'ml' ? [50, 100, 150, 200, 250] : [0.5, 1, 2, 3]
+  const oilStep = useOilStep(date && mealTypeId ? [{ name: food.name, fatPer100: food.unit === '100g' || food.unit === '100ml' ? food.fat_g : undefined }] : [])
 
   return (
     <div className="grid gap-3">
@@ -257,9 +266,13 @@ export function PortionPicker({ food, onAdd, onBack }: {
         </>
       )}
       <MacroRow n={n} />
+      {oilStep.ui}
       <Button disabled={busy || total <= 0 || total > 5000} onClick={async () => {
         setBusy(true)
-        try { await onAdd(round1(total), mode === 'serving' && g ? labelFor(servings) : undefined) } finally { setBusy(false) }
+        try {
+          if (date && mealTypeId) await oilStep.save(s, date, mealTypeId)
+          await onAdd(round1(total), mode === 'serving' && g ? labelFor(servings) : undefined)
+        } finally { setBusy(false) }
       }}>{busy ? 'Adding…' : 'Add to meal'}</Button>
       <Button variant="ghost" onClick={onBack}>Back</Button>
     </div>
@@ -277,7 +290,7 @@ function RecipeTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: str
       {yesterday.length > 0 && (
         <Button variant="quiet" disabled={busy === 'copy'} onClick={async () => {
           setBusy('copy')
-          for (const l of yesterday) await s.save('food_logs', { ...l, id: uid(), date, source: 'copy' } as never)
+          for (const l of yesterday) await s.save('food_logs', { ...l, id: uid(), date, source: 'copy', created_at: undefined } as never)
           setBusy(null); onDone()
         }}>Copy this meal from the day before ({yesterday.length} items)</Button>
       )}
@@ -347,31 +360,93 @@ function RecipeTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: str
 
 function DescribeTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: string; onDone: () => void }) {
   const [text, setText] = useState('')
-  const [items, setItems] = useState<Grounded[] | null>(null)
+  const [items, setItems] = useState<(Grounded & { source?: 'local' })[] | null>(null)
   const [rejected, setRejected] = useState<{ name: string; reason: string }[]>([])
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const { catalog } = useCatalog()
+  const speech = useSpeech()
+  const [voiceSeen, setVoiceSeen] = useState(voiceNotice.seen)
+  const lang = currentLang()
+  const [hindi, setHindi] = useState(false)
+  // Instant, offline: what the local parser already understands, shown while typing.
+  const local = useMemo(() => catalog && text.trim().length > 1 ? parseMealLocally(catalog, text) : null, [catalog, text])
 
   if (items) return <ReviewItems items={items} rejected={rejected} date={date} mealTypeId={mealTypeId} source="ai_text"
     onCancel={() => setItems(null)} onDone={onDone} />
 
+  async function review() {
+    setErr(null)
+    const found = local ?? { items: [], unmatched: [text], tooLarge: [], partial: [] }
+    const why = (n: string) => found.tooLarge.includes(n) ? 'that amount looks too large, check it' : ai.configured ? 'the AI could not read it just now' : 'not recognised offline'
+    // Every phrase matched exactly: no AI, no wait.
+    if (!found.unmatched.length && !found.partial.length && found.items.length) { setItems(found.items); setRejected([]); return }
+    // Offline: the best local guess, with what it couldn't read listed.
+    if (!ai.configured) {
+      if (found.items.length) { setItems(found.items); setRejected(found.unmatched.map(n => ({ name: n, reason: why(n) }))) }
+      else setErr('No foods recognised offline. Name the foods, or use Search.')
+      return
+    }
+    // Anything unclear: the AI reads the WHOLE meal, because words like "with butter a lot" or "restaurant style"
+    // change the other items. Its answer is then grounded to the catalog.
+    setBusy(true)
+    try {
+      const out = await ai.parseFoodText(text)
+      const got = catalog ? out.items.map(i => groundItem(catalog, i)) : out.items
+      if (!got.length) setErr('No foods recognised. Name the foods, or use Search.')
+      else { setItems(got); setRejected(out.rejected ?? []) }
+    } catch (e) {
+      // Say WHY the AI failed (offline, slow, quota, signed out...) instead of hiding it behind the offline guess.
+      const reason = e instanceof AIUnavailable ? e.message : 'the AI could not be reached'
+      if (found.items.length) { setItems(found.items); setRejected([{ name: 'AI', reason: `${reason} Showing the offline guess.` }, ...found.unmatched.map(n => ({ name: n, reason: why(n) }))]) }
+      else setErr(e instanceof AIUnavailable ? e.message : 'Could not analyse that. Enter it manually.')
+    } finally { setBusy(false) }
+  }
+
   return (
     <div className="grid gap-3">
-      <Field label="What did you eat?" hint="Say it like you'd tell a friend: “2 roti, dal tadka and a vada pav”. No quantity = one normal serving.">
-        <textarea rows={3} maxLength={500} value={text} onChange={e => setText(e.target.value)} placeholder="2 roti, 1 katori dal tadka, 1 vada pav" />
+      <Field label="What did you eat?" hint="Type it like you'd say it: “2 roti, 1 katori dal, thoda ghee, chai”. No quantity = one normal serving.">
+        <div className="relative">
+          <textarea rows={3} maxLength={500} value={text} onChange={e => setText(e.target.value)} placeholder="2 roti, 1 katori dal, thoda ghee, chai"
+            className={speechSupported() ? 'pr-14' : ''} />
+          {speechSupported() && (
+            <button aria-label={speech.listening ? 'Stop listening' : 'Say what you ate'} onClick={() => {
+              if (speech.listening) return speech.stop()
+              voiceNotice.mark(); setVoiceSeen(true)
+              speech.start(hindi ? 'hi-IN' : 'en-IN', t => setText(prev => prev.trim() ? `${prev.trim()}, ${t}` : t))
+            }} className="press absolute right-2 top-2 grid h-11 w-11 place-items-center rounded-full"
+              style={{ background: speech.listening ? 'var(--accent)' : 'var(--surface-high)', color: speech.listening ? 'var(--accent-ink)' : 'var(--text)' }}>
+              <Icon name="mic" size={22} />
+            </button>
+          )}
+        </div>
       </Field>
+      {speechSupported() && (lang === 'hi' || lang === 'mr') && (
+        <div className="flex gap-2" role="group" aria-label="Voice language">
+          <button className="chip press" aria-pressed={!hindi} onClick={() => setHindi(false)}>Voice: Hinglish</button>
+          <button className="chip press" aria-pressed={hindi} onClick={() => setHindi(true)}>Voice: हिन्दी</button>
+        </div>
+      )}
+      {speechSupported() && !voiceSeen && <div className="text-[12px]" style={{ color: 'var(--text-mute)' }}>{VOICE_PRIVACY}</div>}
+      {speech.listening && <Notice>Listening… say what you ate.</Notice>}
+      {speech.error && <Notice tone="error">{speech.error}</Notice>}
+      {local && (local.items.length > 0 || local.unmatched.length > 0) && (
+        <div className="grid gap-1" aria-live="polite">
+          {local.items.map((i, k) => (
+            <div key={k} className="mono flex justify-between gap-2 text-[12px]">
+              <span className="truncate">{i.name} · {i.serving_label}</span><span>{i.calories} kcal</span>
+            </div>
+          ))}
+          {(local.unmatched.length > 0 || local.partial.length > 0) && (
+            <div className="text-[12px]" style={{ color: 'var(--text-mute)' }}>{ai.configured ? `Unclear: ${[...local.unmatched, ...local.partial].join(', ')}. The AI will read the whole meal.` : `Not found offline: ${local.unmatched.join(', ')}`}</div>
+          )}
+        </div>
+      )}
       {err && <Notice tone="error">{err}</Notice>}
-      {busy ? <Spinner label="Reading your meal" /> : (
-        <Button disabled={text.trim().length < 2} onClick={async () => {
-          setBusy(true); setErr(null)
-          try {
-            const out = await ai.parseFoodText(text)
-            if (out.items.length === 0) setErr('No foods recognised. Name the foods, or use Search.')
-            else { setItems(catalog ? out.items.map(i => groundItem(catalog, i)) : out.items); setRejected(out.rejected ?? []) }
-          } catch (e) { setErr(e instanceof AIUnavailable ? e.message : 'Could not analyse that. Enter it manually.') }
-          finally { setBusy(false) }
-        }}>Analyse with AI</Button>
+      {busy ? <Spinner label="Reading the rest" /> : (
+        <Button disabled={text.trim().length < 2} onClick={review}>
+          {local && !local.unmatched.length && !local.partial.length && local.items.length ? 'Review and log' : 'Analyse'}
+        </Button>
       )}
     </div>
   )
@@ -445,8 +520,68 @@ function BarcodeTab({ date, mealTypeId, onDone }: { date: string; mealTypeId: st
   )
 }
 
+/**
+ * The once-per-meal oil/ghee question for home-cooked food (dal, sabzi, curry, paratha, tadka, fried).
+ * Per serving: None / A little / Normal / A lot, oil or ghee; restaurant food starts at "A lot".
+ * The answer is saved as its own visible, editable log line ("Ghee, 2 tsp, 90 kcal"), never folded into the dish.
+ */
+function useOilStep(foods: { name: string; fatPer100?: number }[]) {
+  const skip = oilSkip.get()
+  // Lean home-cooked dishes only; one serving per dish (2 katori of dal is one dish, not two oil servings).
+  const cooked = foods.filter(f => asksOil(f.name, f.fatPer100) && !skip.includes(f.name.toLowerCase()))
+  const servings = Math.max(1, cooked.length)
+  const ask = cooked.length > 0 && !foods.some(f => isOilItem(f.name))
+  const restaurant = cooked.some(f => isRestaurant(f.name))
+  const [level, setLevel] = useState<string>(restaurant ? OIL.restaurant_default : OIL.home_default)
+  const [kind, setKind] = useState<'oil' | 'ghee'>('oil')
+  const [noAsk, setNoAsk] = useState(false)
+  const line = ask && level ? oilLine(level, kind, servings) : null
+  const ui = ask ? (
+    <div className="raised grid gap-2 p-3">
+      <div>
+        <div className="text-[15px] font-semibold">Oil or ghee on top of the recipe?</div>
+        <div className="mt-0.5 text-[12px]" style={{ color: 'var(--text-mute)' }}>
+          {servings > 1 ? `${servings} home-cooked dishes. ` : ''}Tadka, ghee on roti: how much was added to each?
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {OIL.levels.map(l => (
+          <button key={l.id} className="chip press !min-h-[44px] justify-center" aria-pressed={level === l.id} onClick={() => setLevel(l.id)}>{l.label}</button>
+        ))}
+      </div>
+      <div className="flex gap-2" role="group" aria-label="Oil or ghee">
+        <button className="chip press !min-h-[44px] flex-1 justify-center" aria-pressed={kind === 'oil'} onClick={() => setKind('oil')}>Oil</button>
+        <button className="chip press !min-h-[44px] flex-1 justify-center" aria-pressed={kind === 'ghee'} onClick={() => setKind('ghee')}>Ghee</button>
+      </div>
+      {line && (
+        <div className="mono flex items-center justify-between text-[12px]">
+          <span>{line.name}, {line.serving_label}</span><b>{line.calories} kcal</b>
+        </div>
+      )}
+      <label className="flex min-h-[44px] items-center gap-2 text-[13px]">
+        <input type="checkbox" checked={noAsk} onChange={e => setNoAsk(e.target.checked)} />
+        Don't ask again for {cooked.length === 1 ? 'this food' : 'these foods'}
+      </label>
+    </div>
+  ) : null
+  async function save(s: ReturnType<typeof useStore>, date: string, mealTypeId: string) {
+    if (line) await s.save('food_logs', {
+      id: uid(), date, meal_type_id: mealTypeId, name: line.name, qty: line.qty, unit: 'g', serving_label: line.serving_label,
+      source: 'manual', calories: line.calories, protein_g: 0, carbs_g: 0, fat_g: line.fat_g,
+    } as never)
+    if (noAsk) oilSkip.add(cooked.map(f => f.name.toLowerCase()))
+  }
+  return { line, ui, save }
+}
+
+/** Foods the user said not to ask about oil for again (per device). */
+const oilSkip = {
+  get(): string[] { try { return JSON.parse(localStorage.getItem('forge:oil-skip') ?? '[]') } catch { return [] } },
+  add(names: string[]) { try { localStorage.setItem('forge:oil-skip', JSON.stringify([...new Set([...oilSkip.get(), ...names])].slice(-200))) } catch { /* private mode */ } },
+}
+
 export function ReviewItems({ items, rejected = [], date, mealTypeId, source, onCancel, onDone }: {
-  items: Grounded[]; rejected?: { name: string; reason: string }[]; date: string; mealTypeId: string
+  items: (Grounded & { source?: 'local' })[]; rejected?: { name: string; reason: string }[]; date: string; mealTypeId: string
   source: FoodLog['source']; onCancel: () => void; onDone: () => void
 }) {
   const s = useStore()
@@ -454,21 +589,23 @@ export function ReviewItems({ items, rejected = [], date, mealTypeId, source, on
   const [edit, setEdit] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const [target, setTarget] = useState({ date, mealTypeId })
-  // Oil, ghee and tadka are the biggest blind spot in Indian food logging: ask once per meal.
-  const [oilG, setOilG] = useState(0)
+  // Oil, ghee and tadka are the biggest blind spot in Indian food logging: ask once per meal, per serving of
+  // home-cooked food, and save it as its own visible line. Restaurant food starts at "A lot".
+  const oilStep = useOilStep(rows.map(r => ({ name: r.name, fatPer100: r.grams ? r.fat_g / r.grams * 100 : undefined })))
+  const oil = oilStep.line
   const eff = rows.map(r => ({
     ...r, calories: r.calories * r.factor, protein_g: r.protein_g * r.factor, carbs_g: r.carbs_g * r.factor, fat_g: r.fat_g * r.factor,
   }))
   const tot = eff.reduce((a, r) => ({
     calories: a.calories + r.calories, protein_g: a.protein_g + r.protein_g, carbs_g: a.carbs_g + r.carbs_g, fat_g: a.fat_g + r.fat_g,
-  }), { calories: oilG * 9, protein_g: 0, carbs_g: 0, fat_g: oilG })
+  }), { calories: oil?.calories ?? 0, protein_g: 0, carbs_g: 0, fat_g: oil?.fat_g ?? 0 })
   const patch = (i: number, p: Partial<(typeof rows)[number]>) => setRows(rs => rs.map((r, j) => j === i ? { ...r, ...p } : r))
 
   return (
     <div className="grid gap-3">
       <div className="flex items-center justify-between">
         <div className="text-[17px] font-bold">We found {rows.length} item{rows.length === 1 ? '' : 's'}</div>
-        <span className="chip">AI estimate</span>
+        <span className="chip">{rows.every(r => r.source === 'local') ? 'FORGE database' : 'AI estimate'}</span>
       </div>
       {rejected.length > 0 && (
         <Notice tone="error">Skipped: {rejected.map(r => `${r.name} — ${r.reason}`).join('; ')}</Notice>
@@ -527,15 +664,7 @@ export function ReviewItems({ items, rejected = [], date, mealTypeId, source, on
         <span>Total</span>
         <span><b className="text-[15px]">{Math.round(tot.calories)} kcal</b> · P {round1(tot.protein_g)} · C {round1(tot.carbs_g)} · F {round1(tot.fat_g)}</span>
       </div>
-      <div>
-        <div className="text-[15px] font-semibold">Extra oil or ghee?</div>
-        <div className="mt-0.5 text-[12px]" style={{ color: 'var(--text-mute)' }}>Tadka, ghee on roti, fried or oily dishes. It's easy to miss.</div>
-        <div className="mt-2 grid grid-cols-4 gap-2">
-          {([[0, 'None'], [5, '1 tsp'], [15, '1 tbsp'], [30, '2 tbsp']] as const).map(([g, l]) => (
-            <button key={g} className="chip press !min-h-[44px] justify-center" aria-pressed={oilG === g} onClick={() => setOilG(g)}>{l}</button>
-          ))}
-        </div>
-      </div>
+      {oilStep.ui}
       <LogTarget value={target} onChange={setTarget} />
       <Button disabled={busy || rows.length === 0} onClick={async () => {
         setBusy(true)
@@ -544,18 +673,14 @@ export function ReviewItems({ items, rejected = [], date, mealTypeId, source, on
             await s.save('food_logs', {
               id: uid(), date: target.date, meal_type_id: target.mealTypeId, name: r.name.slice(0, 80),
               qty: round1(r.grams ? r.grams * r.factor : r.qty * r.factor), unit: r.grams ? 'g' : normUnit(r.unit as Unit),
-              serving_label: r.serving_label, source, food_id: r.matched?.id,
+              serving_label: r.serving_label, source: r.source === 'local' ? 'search' : source, food_id: r.matched?.id,
               calories: round1(r.calories), protein_g: round1(r.protein_g), carbs_g: round1(r.carbs_g), fat_g: round1(r.fat_g),
             } as never)
           }
-          if (oilG > 0) await s.save('food_logs', {
-            id: uid(), date: target.date, meal_type_id: target.mealTypeId, name: 'Cooking oil / ghee', qty: oilG, unit: 'g',
-            serving_label: oilG === 5 ? '1 tsp' : oilG === 15 ? '1 tbsp' : '2 tbsp', source,
-            calories: oilG * 9, protein_g: 0, carbs_g: 0, fat_g: oilG,
-          } as never)
+          await oilStep.save(s, target.date, target.mealTypeId)
           onDone()
         } finally { setBusy(false) }
-      }}>{busy ? 'Saving…' : `Log ${rows.length} item${rows.length === 1 ? '' : 's'}`}</Button>
+      }}>{busy ? 'Saving…' : `Log ${rows.length} item${rows.length === 1 ? '' : 's'}${oil ? ` + ${oil.name.toLowerCase()}` : ''}`}</Button>
       <Button variant="ghost" onClick={onCancel}>Cancel</Button>
     </div>
   )

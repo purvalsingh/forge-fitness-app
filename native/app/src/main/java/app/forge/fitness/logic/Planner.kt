@@ -23,6 +23,8 @@ object Planner {
         val equipment: String? = null,
         val experience: String? = null,
         val name: String? = null,
+        /** The user's saved training limits. */
+        val notes: String? = null,
     )
 
     /** Result returned to the UI: always contains a valid plan. */
@@ -99,13 +101,17 @@ object Planner {
         }
 
         return try {
+            // Deterministic first, AI second: the AI adapts FORGE's own library plan instead of inventing one.
+            val base = template()
             val g = Ai.generatePlan(api, Ai.GeneratePlanInput(
+                baseline = base.days.joinToString("\n") { d -> "${d.name}: " + d.exercises.joinToString(", ") { "${it.name} ${it.sets}x${it.reps}" } },
                 daysPerWeek = req.daysPerWeek,
                 focus = FOCUS_LABELS[req.focus] ?: req.focus,
                 preferences = req.preferences,
                 priorities = req.priorities,
                 equipment = req.equipment,
                 experience = req.experience,
+                notes = req.notes,
             ))
             PlanResult(fromGenerated(g, req), "ai", rationale = g.rationale)
         } catch (e: app.forge.fitness.data.ApiError) {
@@ -115,5 +121,30 @@ object Planner {
             PlanResult(template(), "template",
                 fallbackReason = "The AI could not build a plan just now. Showing a template plan instead.")
         }
+    }
+
+    /** One line per day, the way the AI reads a plan. */
+    fun planLines(p: WorkoutPlan) = p.days.joinToString("\n") { d -> "${d.name}: " + d.exercises.joinToString(", ") { "${it.name ?: it.exercise_id} ${it.sets}x${it.reps}" } }
+
+    data class Revision(val plan: WorkoutPlan, val rationale: String)
+
+    /**
+     * Ask the AI to change an existing plan ("more back, less abs") within the user's limits. Day and exercise ids are
+     * kept where the day/exercise survives, so progression history and today's session still line up. Same as web revisePlan.
+     */
+    suspend fun revisePlan(api: app.forge.fitness.data.Api, plan: WorkoutPlan, request: String, notes: String?): Revision {
+        val focus = plan.focus ?: "strength_aesthetics"
+        val g = Ai.generatePlan(api, Ai.GeneratePlanInput(daysPerWeek = plan.days.size, focus = FOCUS_LABELS[focus] ?: focus,
+            notes = notes, revise = true, current = planLines(plan), request = request))
+        val fresh = fromGenerated(g, PlanRequest(focus, g.days.size))
+        fun norm(x: String?) = (x ?: "").lowercase().replace(Regex("[^a-z0-9]"), "")
+        return Revision(plan.copy(days_per_week = fresh.days.size, updated_at = java.time.Instant.now().toString(),
+            days = fresh.days.mapIndexed { i, d ->
+                val old = plan.days.getOrNull(i)
+                d.copy(id = old?.id ?: d.id, plan_id = plan.id, exercises = d.exercises.map { e ->
+                    val same = old?.exercises?.firstOrNull { norm(it.name) == norm(e.name) }
+                    if (same != null) e.copy(id = same.id, exercise_id = same.exercise_id, progression = same.progression, warmups = same.warmups) else e
+                })
+            }), g.rationale)
     }
 }

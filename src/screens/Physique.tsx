@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useStore, useToday } from '../store'
 import { uid } from '../lib/db'
 import { downscale, photos, splitDataUrl } from '../lib/photos'
-import { ai, AIUnavailable } from '../lib/ai'
+import { ai, aiKeys, AIUnavailable } from '../lib/ai'
+import { ageConfirmed } from '../lib/privacy'
 import { coerceFocus, localRoadmap, reconcile } from '../lib/physique'
 import { FOCUS_LABELS } from '../lib/templates'
 import { requestPlan } from '../lib/planner'
@@ -39,7 +40,15 @@ export default function Physique() {
 
   const previous = s.checkins[0] ?? null
 
+  // Body photos are analysed only on the user's own Gemini key (the server refuses the shared pool): say so up front.
+  const [ownKeys, setOwnKeys] = useState<number | null>(null)
+  useEffect(() => { if (ai.configured) aiKeys.get().then(k => setOwnKeys(k.count)).catch(() => {}) }, [])
+  const [ageOk, setAgeOk] = useState(ageConfirmed.seen)
+  // Under 18: no physique photos and no AI analysis at all (the server refuses too).
+  const minor = (s.profile?.age ?? 18) < 18
+
   async function analyse() {
+    if (minor) return
     setStep('analysing'); setErr(null)
     const local = localRoadmap({ goal, priorities, bodyGoal: s.goal, trainingDays: days })
     let result = local
@@ -48,6 +57,7 @@ export default function Physique() {
     if (ai.configured && Object.keys(pics).length > 0) {
       try {
         const out = await ai.physique({
+          age_confirmed: ageConfirmed.seen(),
           photos: Object.entries(pics).map(([angle, dataUrl]) => {
             const { mime, base64 } = splitDataUrl(dataUrl!)
             return { angle, mimeType: mime, data: base64 }
@@ -97,7 +107,7 @@ export default function Physique() {
   if (step === 'analysing') {
     return <Screen title="Physique Lab" sub="Analysing" back={() => setStep('goal')}>
       <Spinner label="Reviewing your check-in" />
-      <Notice>Your photos are sent once to Google Gemini, using your own key, for this analysis. FORGE does not save them anywhere except this phone. With free Gemini keys, Google may use what you send to improve its products.</Notice>
+      <Notice>Your photos go only to Google's Gemini AI, just for this analysis. FORGE never stores them on its servers; they stay on this phone. FORGE's free AI and free Gemini keys use Google's free tier, where Google may use what you send to improve its products.</Notice>
     </Screen>
   }
 
@@ -106,7 +116,11 @@ export default function Physique() {
       checkinId={pendingId} onDone={() => { setStep('timeline'); setPics({}); setReference(null); setAnalysis(null) }} />
   }
 
-  if (step === 'upload' && (s.profile?.age ?? 18) < 18) {
+  if (!ageOk && (step === 'upload' || step === 'goal')) {
+    return <Screen title="New check-in" back={() => setStep('timeline')}><AgeConfirm onDone={() => setAgeOk(true)} /></Screen>
+  }
+
+  if (minor && (step === 'upload' || step === 'goal')) {
     return (
       <Screen title="New check-in" back={() => setStep('timeline')}>
         <Notice>Physique check-ins are for people 18 and over. You can still track training, food and weight.</Notice>
@@ -118,6 +132,7 @@ export default function Physique() {
     return (
       <Screen title="New check-in" sub="Step 1 · Photos" back={() => setStep('timeline')}>
         <Notice>Your photos stay on this device. They are sent to the AI only when you run an analysis, and are deleted with the check-in.</Notice>
+        {ownKeys === 0 && <Notice tone="warn">AI analysis of body photos needs your own free Gemini key (You → My Gemini AI keys), so they never go through FORGE's shared AI. Without one you still get a calculated roadmap.</Notice>}
         <div className="mt-3 grid grid-cols-2 gap-3">
           {ANGLES.map(a => (
             <PhotoSlot key={a.key} label={a.label} required={a.required} value={pics[a.key]}
@@ -455,15 +470,38 @@ function Result({ analysis, aiUsed, err, goal, priorities, days, checkinId, onDo
   )
 }
 
+/** Physique check-ins are 18+. The stored age defaults to 25, so the user confirms their real age once. */
+function AgeConfirm({ onDone }: { onDone: () => void }) {
+  const s = useStore()
+  const [age, setAge] = useState(String(s.profile?.age ?? ''))
+  const n = Number(age)
+  const ok = Number.isInteger(n) && n >= 13 && n <= 100
+  return (
+    <div className="grid gap-3">
+      <Notice>Physique check-ins are for people 18 and over. Confirm your age to continue.</Notice>
+      <Field label="Your age">
+        <input type="number" inputMode="numeric" min={13} max={100} value={age} onChange={e => setAge(e.target.value)} />
+      </Field>
+      <Button disabled={!ok || !s.profile} onClick={async () => { await s.save('profiles', { ...s.profile!, age: n } as never); ageConfirmed.mark(); onDone() }}>Confirm my age</Button>
+    </div>
+  )
+}
+
 function PhotoSlot({ label, value, onPick, onClear, required, wide }: {
   label: string; value?: string; onPick: (dataUrl: string) => void; onClear: () => void
   required?: boolean; wide?: boolean
 }) {
   const ref = useRef<HTMLInputElement>(null)
+  // Phones open the camera straight away for a `capture` input; the photo goes to this page, not the gallery.
+  const cam = useRef<HTMLInputElement>(null)
   const [err, setErr] = useState<string | null>(null)
+  async function take(f?: File) {
+    if (!f) return
+    try { setErr(null); onPick(await downscale(f)) } catch { setErr('Could not read that image.') }
+  }
   return (
     <div>
-      <button onClick={() => ref.current?.click()}
+      <button onClick={() => cam.current?.click()}
         className="card grid w-full place-items-center overflow-hidden p-0"
         style={{ aspectRatio: wide ? '16 / 10' : '3 / 4' }}>
         {value
@@ -472,11 +510,15 @@ function PhotoSlot({ label, value, onPick, onClear, required, wide }: {
             <span className="grid place-items-center gap-1 p-4 text-center">
               <Icon name="camera" size={20} />
               <span className="text-[12px] font-bold">{label}{required ? ' *' : ''}</span>
-              <span className="text-[10px]" style={{ color: 'var(--text-mute)' }}>Tap to add</span>
+              <span className="text-[10px]" style={{ color: 'var(--text-mute)' }}>Tap to take</span>
             </span>
           )}
       </button>
-      {value && <button onClick={onClear} className="mt-1 w-full text-[11px]" style={{ color: '#D98A8A' }}>Remove</button>}
+      {value
+        ? <button onClick={onClear} className="mt-1 min-h-[32px] w-full text-[11px]" style={{ color: '#D98A8A' }}>Remove</button>
+        : <button onClick={() => ref.current?.click()} className="mt-1 min-h-[32px] w-full text-[11px]" style={{ color: 'var(--text-mute)' }}>From gallery</button>}
+      <input ref={cam} type="file" accept="image/*" capture="environment" className="hidden"
+        onChange={e => { void take(e.target.files?.[0]); e.target.value = '' }} />
       {err && <div className="mt-1 text-[11px]" style={{ color: '#D98A8A' }}>{err}</div>}
       <input ref={ref} type="file" accept="image/*" className="hidden"
         onChange={async e => {
