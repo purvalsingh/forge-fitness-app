@@ -186,7 +186,10 @@ export async function POST(req: Request) {
   // with the full model as fallback. Everything else starts with the full model.
   // Free-tier Flash allows only 20 requests a day per project, Flash-Lite far more. The shared pool is Lite-only;
   // users with their own keys get Lite first for food and full Flash first for plans, reviews and physique.
-  const order = shared ? SHARED_MODELS
+  // Physique: 5 photos. gemini-3-flash-preview took 2+ minutes on them (2026-11-23) and the Lite models often answer
+  // 503 under load, so try the fast, stable models first and the slow preview last.
+  const PHYSIQUE_MODELS = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-3-flash-preview']
+  const order = shared ? SHARED_MODELS : task === 'physique_analysis' ? PHYSIQUE_MODELS
     : FOOD_TASKS.has(task) || task === 'suggest_swap' ? [...MODELS.filter(m => m.includes('lite')), ...MODELS.filter(m => !m.includes('lite'))] : MODELS
   const t0 = Date.now()
   // Photos: no parallel burst, no hedge, and at most 2 sends in total (a second only after an error or quota).
@@ -194,17 +197,17 @@ export async function POST(req: Request) {
   const photo = PHOTO_TASKS.has(task)
   const burst = photo || shared ? 1 : FOOD_TASKS.has(task) ? 3 : 2
   // Food text answers in ~1.2 s on Lite: a second call after 1.5 s cuts the slow tail.
-  const hedge = photo ? Infinity : FOOD_TASKS.has(task) ? 1_500 : undefined
+  const hedge = task === 'physique_analysis' ? 9_000 : photo ? Infinity : FOOD_TASKS.has(task) ? 1_500 : undefined
   let quota = false
   // Google only: no second AI company ever sees a request. 22 s budget; the phone waits 28 s.
-  try { result = await callGemini(keys, request, order, undefined, hedge, burst, photo ? 2 : undefined) } catch (e) {
+  try { result = await callGemini(keys, request, order, photo ? 26_000 : undefined, hedge, burst, task === 'physique_analysis' ? 6 : photo ? 2 : undefined) } catch (e) {
     if (!(e instanceof Quota)) return json(req, { error: 'ai_unavailable' }, 503)
     quota = true; result = null
   }
   console.log(`[ai] ${task} ${result === null ? 'no answer' : 'ok'} ${Date.now() - t0}ms ${shared ? 'shared' : 'own'}`)
   if (result === null && quota) return json(req, { error: 'quota_exhausted', message: shared ? BUSY : 'All your Gemini keys are out of free quota right now. Try later or add another key.' }, 429)
   if (result === null && shared) return json(req, { error: 'ai_busy', message: BUSY }, 429) // 429 so both apps show this message, not "too slow"
-  if (result === null) return json(req, { error: 'ai_slow', message: 'The AI didn\'t answer in time. Try again, or log it manually.' }, 503)
+  if (result === null) return json(req, { error: 'ai_slow', message: task === 'physique_analysis' ? 'Google\'s AI is overloaded right now (not a FORGE fault). Try the check-in again in a few minutes.' : 'Google\'s AI is busy or slow right now. Try again in a minute, or log it manually.' }, 503)
 
   if (FOOD_TASKS.has(task)) {
     const checked = postCheckFood(result)
