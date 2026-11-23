@@ -45,11 +45,51 @@ export function imagesOk(task: string, payload: any): boolean {
   if (task === 'analyze_food_photo') return imageOk(payload?.mimeType, payload?.image)
   if (task === 'physique_analysis') {
     const photos: unknown[] = Array.isArray(payload?.photos) ? payload.photos : []
-    if (photos.length > 4) return false
+    if (photos.length > 6) return false // the app has 5 angles
     const all = [...photos, ...(payload?.reference ? [payload.reference] : [])] as { mimeType?: unknown; data?: unknown }[]
     return all.every(p => imageOk(p?.mimeType, p?.data))
   }
   return true
+}
+
+const MEMORY_TASKS = new Set(['physique_analysis', 'generate_workout_plan', 'suggest_swap', 'coach_chat', 'coach_session', 'target_advice', 'insights'])
+
+/** Saves the equipment typed in the plan builder into the user's training notes (once), so it is remembered. */
+async function rememberEquipment(db: any, equipment: string) {
+  const eq = equipment.trim().slice(0, 200)
+  if (!eq) return
+  const { data } = await db.from('settings').select('id, training_notes').maybeSingle()
+  const notes = String(data?.training_notes ?? '')
+  if (!data?.id || notes.toLowerCase().includes(eq.toLowerCase())) return
+  const next = notes.replace(/\n?Equipment:[^\n]*/i, '').trim()
+  await db.from('settings').update({ training_notes: `${next}${next ? '\n' : ''}Equipment: ${eq}`.slice(0, 1000) }).eq('id', data.id)
+}
+
+/** A short text summary of what FORGE knows about the caller. */
+export async function memory(db: any): Promise<string> {
+  const [st, gl, pl, ck, pr] = await Promise.all([
+    db.from('settings').select('training_notes').maybeSingle(),
+    db.from('goals').select('mode, current_weight_kg, target_weight_kg, training_days_per_week, training_minutes').maybeSingle(),
+    db.from('workout_plans').select('name, days').eq('active', true).limit(1).maybeSingle(),
+    db.from('physique_checkins').select('goal, priorities, analysis').order('created_at', { ascending: false }).limit(1).maybeSingle(),
+    db.from('profiles').select('age, sex, height_cm').maybeSingle(),
+  ])
+  const lines: string[] = []
+  const notes = String(st.data?.training_notes ?? '').trim()
+  if (notes) lines.push(`Limits, conditions and equipment: ${notes.slice(0, 1000)}`)
+  const p = pr.data
+  if (p) lines.push(`Profile: ${[p.age && `${p.age} y`, p.sex, p.height_cm && `${p.height_cm} cm`].filter(Boolean).join(', ')}`)
+  const g = gl.data
+  if (g) lines.push(`Goal: ${g.mode}, ${g.current_weight_kg} kg now, target ${g.target_weight_kg} kg, ${g.training_days_per_week} training days/week, ${g.training_minutes} min sessions`)
+  const plan = pl.data
+  if (plan) {
+    const days = (Array.isArray(plan.days) ? plan.days : []).map((d: any) =>
+      `${d?.name ?? 'Day'}: ${(Array.isArray(d?.exercises) ? d.exercises : []).map((e: any) => e?.name).filter(Boolean).join(', ')}`)
+    lines.push(`Current plan "${plan.name}" (shows the equipment they use): ${days.join(' | ').slice(0, 1500)}`)
+  }
+  const a = ck.data?.analysis
+  if (a) lines.push(`Last physique check-in: ${JSON.stringify({ priorities: a.priorities, composition: a.composition_estimate, focus: a.training?.emphasis }).slice(0, 800)}`)
+  return lines.join('\n')
 }
 
 async function legacyTake(db: any, userId: string, task: string, shared: boolean) {
@@ -101,6 +141,13 @@ export async function POST(req: Request) {
   const LANG_NAME: Record<string, string> = { hi: 'Hindi', mr: 'Marathi' }
   const lang = LANG_NAME[String((body as { lang?: unknown }).lang ?? '')]
   const part = (request as any).contents?.[0]?.parts?.find((p: any) => typeof p.text === 'string')
+  // Memory: what the user already told FORGE (limits, equipment, goal, current plan, last check-in) goes into every
+  // coaching request, so the AI never asks again or suggests something outside it. Read with the caller's JWT (RLS).
+  if (MEMORY_TASKS.has(task) && part) {
+    if (task === 'generate_workout_plan' && typeof body.payload?.equipment === 'string') await rememberEquipment(who.db, body.payload.equipment)
+    const mem = await memory(who.db).catch(() => '')
+    if (mem) part.text += `\n\nWHAT THIS USER ALREADY TOLD FORGE (hard limits: respect every one, never contradict them):\n${mem}`
+  }
   if (lang && !FOOD_TASKS.has(task) && part) part.text += `\n\nWrite every human-readable sentence in simple everyday ${lang} (Devanagari script). Keep food names, exercise names, units and numbers in English.`
 
   // One database round trip: the atomic rate limit (records this request, then checks; migration 0009) and the key row.
