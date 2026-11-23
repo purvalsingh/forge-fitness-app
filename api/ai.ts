@@ -52,6 +52,50 @@ export function imagesOk(task: string, payload: any): boolean {
   return true
 }
 
+/**
+ * Gemini refuses multi-photo requests under load (2+ images: 503 "high demand") while single photos still pass
+ * (measured 2026-11-23). So a check-in goes out as ONE request per photo, all at once, spread across the user's keys,
+ * and the answers are merged. Any photos that come back are enough; none at all = no answer.
+ */
+export async function physiqueSplit(keys: string[], request: any, payload: any, order: string[]) {
+  const text = request.contents[0].parts.find((p: any) => typeof p.text === 'string')?.text ?? ''
+  const photos: any[] = Array.isArray(payload?.photos) ? payload.photos.slice(0, 6) : []
+  const jobs = photos.map((p, i) => ({ ...payload, photos: [p], reference: i === 0 ? payload?.reference : undefined }))
+  if (payload?.reference && photos.length) jobs.push({ ...payload, photos: [photos[0]], reference: undefined }) // front alone, in case front+reference is refused
+  let quota = 0
+  const answers = await Promise.all(jobs.map((pl, i) => {
+    const r: any = buildRequest('physique_analysis', pl)
+    r.contents[0].parts[0].text = text + `\n\nThis request shows ONE angle (${pl.photos[0]?.angle}) of a multi-angle check-in. ` +
+      `Judge only what this angle shows; other angles are analysed separately.`
+    const rotated = [...keys.slice(i % keys.length), ...keys.slice(0, i % keys.length)]
+    return callGemini(rotated, r, order, 26_000, 8_000, 1, 5).catch(e => { if (e instanceof Quota) quota++; return null })
+  }))
+  const got = answers.map((a, i) => (a ? { a, angle: String(jobs[i].photos[0]?.angle ?? '') } : null)).filter(Boolean) as { a: any; angle: string }[]
+  console.log(`[ai] physique split ${got.length}/${jobs.length} answered`)
+  if (!got.length) { if (quota) throw new Quota(); return null }
+  return mergePhysique(got)
+}
+
+/** One analysis from per-photo answers: the front (else first) answer is the base, lists are combined without repeats. */
+export function mergePhysique(got: { a: any; angle: string }[]) {
+  const base = (got.find(g => g.angle === 'front') ?? got[0]).a
+  const union = (pick: (a: any) => unknown, cap: number) => {
+    const seen = new Set<string>(); const out: string[] = []
+    for (const g of got) for (const x of (Array.isArray(pick(g.a)) ? pick(g.a) as unknown[] : [])) {
+      const k = String(x).toLowerCase().trim(); if (k && !seen.has(k)) { seen.add(k); out.push(String(x)) }
+    }
+    return out.slice(0, cap)
+  }
+  return {
+    ...base,
+    strengths: union(a => a?.strengths, 6),
+    priorities: union(a => a?.priorities, 6),
+    observations: union(a => a?.observations, 10),
+    changes_since_last: union(a => a?.changes_since_last, 6),
+    training: { ...base.training, emphasis: union(a => a?.training?.emphasis, 6) },
+  }
+}
+
 const MEMORY_TASKS = new Set(['physique_analysis', 'generate_workout_plan', 'suggest_swap', 'coach_chat', 'coach_session', 'target_advice', 'insights'])
 
 /** Saves the equipment typed in the plan builder into the user's training notes (once), so it is remembered. */
@@ -200,7 +244,10 @@ export async function POST(req: Request) {
   const hedge = task === 'physique_analysis' ? 9_000 : photo ? Infinity : FOOD_TASKS.has(task) ? 1_500 : undefined
   let quota = false
   // Google only: no second AI company ever sees a request. 22 s budget; the phone waits 28 s.
-  try { result = await callGemini(keys, request, order, photo ? 26_000 : undefined, hedge, burst, task === 'physique_analysis' ? 6 : photo ? 2 : undefined) } catch (e) {
+  try {
+    result = task === 'physique_analysis' && !shared ? await physiqueSplit(keys, request, body.payload, order)
+      : await callGemini(keys, request, order, photo ? 26_000 : undefined, hedge, burst, photo ? 2 : undefined)
+  } catch (e) {
     if (!(e instanceof Quota)) return json(req, { error: 'ai_unavailable' }, 503)
     quota = true; result = null
   }
