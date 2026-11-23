@@ -23,8 +23,8 @@ android {
         applicationId = "app.forge.fitness"
         minSdk = 26
         targetSdk = 36
-        versionCode = (project.findProperty("vc") as String?)?.toInt() ?: 44
-        versionName = "3.9.7"
+        versionCode = (project.findProperty("vc") as String?)?.toInt() ?: 45
+        versionName = "3.9.8"
         // The app talks to Supabase through the site's /sb proxy (supabase.co is DNS-blocked on some Indian ISPs).
         buildConfigField("String", "SITE", "\"https://forgefit-india.vercel.app\"")
         buildConfigField("String", "SUPABASE_KEY", "\"${env.getProperty("VITE_SUPABASE_PUBLISHABLE_KEY", "")}\"")

@@ -1,2 +1,3 @@
-Tell FORGE your limits once (like "no lunges: flat feet, knees cave in"): every plan, change and swap now keeps to them.
-New on the Workout plan screen: "Ask FORGE to change this plan". Say what you want more or less of, see the changes highlighted, then apply or discard.
+Physique check-ins now send all 5 photos to the AI and try faster models, so you get a real photo analysis instead of the calculated roadmap.
+The AI now remembers what you told FORGE (your limits, equipment, goal, current plan and last check-in) in every check-in, plan change, swap and coach answer.
+Equipment you type in the plan builder is saved to your training notes.
